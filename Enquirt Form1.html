@@ -1,30 +1,131 @@
 <!doctype html>
 <html>
-	<head><title>"Contact No; DOB; Radio Button"</title>
+<br><center-left><button><a id= "AB" style= "padding: 10px">Close</a></button></center-left>
+	<head><title>"Enquiry Form"</title>
+	<style>
+
+	*{
+	margin: 0;
+	padding: 0px;
+	font-family: 'poppins', sans-serif;
+	box-sizing: browser-box;}
+	 input[type="enter your name"]::placeholder {
+        text-align: left;}
+		
+	#AB{
+	background-color: blue;
+	position: absolute;;
+	background-color: dark blue;
+	background: transparent;
+	color: white;
+	margin-left: 1400px;
+	margin-bottom: 2px;
+	background-color: rgb(50, 86, 248);
+}
+	
+	.container{width: 100%;
+	height: 100vh;
+	background-color: blue;
+	background-size: cover;
+	align items: center;
+	justify-content: center;
+	}
+	form{
+	width: 90%;
+	max--width: 600px;
+	}
+	.input-group{
+	margin-bottom:10px;
+	position: above;
+	margin-left: 500px;
+	margin-top: 0px;
+	text-align: left;
+	}
+	input, textarea{
+	color: white;
+	margin-left: 0px;
+	margin-top: 2px;
+	font-weight: bold;
+	background: transparent;
+	font-size: 15px;
+	font: white;
+    display: inline-block;
+	text-align: left;    
+	}
+	#mn{
+	background-color: dark blue;
+	background: transparent;
+	color: white;
+	margin-left: 14px;
+	margin-bottom: 10px;
+	color: rgba(255, 255, 255, 0.9);
+	background-color: rgb(35, 35, 240);}
+	.input-group
+	{
+	align: center-left;}
+	#pk{
+	border: solid dark blue;
+	cursor: pointer;
+	margin-left: 60px;
+	border-top-left-radius: 35px;
+	border-top-right-radius: 35px;
+	border-bottom-left-radius: 35px;
+	border-bottom-right-radius: 35px;
+left: 0px;
+top: 0px;
+backdrop-filter: blur(15px);
+	}
+	#PQ{
+	background: transparent;
+	color: white;
+	margin-left: 45px;
+	margin-bottom: 10px;
+	color: rgba(255, 255, 255, 0.9);
+	background-color: rgb(35, 35, 240);}
+	
+	#RS{
+	background: transparent;
+	color: white;
+	margin-left: 19px;
+	margin-bottom: 10px;
+	color: rgba(255, 255, 255, 0.9);
+	background-color: rgb(35, 35, 240);}
+	.input-group}
+
+
+	</style>
 	</head>
 	<center><body bgcolor= "blue" text="white">
 	<center><h1> Send Us An Enquiry</h1><br></center>
-	<hr style="border: 1px dashed", Width= "50%",Align= "center"><br>
+	<hr style="border: dashed", Width= "50%",Align= "center"><br>
+	<div class="container">
 	<form>
-			<center>
+
 <a style= "padding: 50px">Your Information</a>
 <a style= "padding: 50px">Podcast Subject</a>
 <a style= "padding: 50px">Language</a>
 <a style= "padding: 50px">Looking For</a>
 <a style= "padding: 50px">Submit</a>
-</center><br>
-				
-				<center>Your Name<br>
-				<input style= "padding: 4px 50px", type="Text" Name="Full Name" placeholder= "Enter Your Name" Size="40"></center><br><br>
+<br><br><br>
+
+				<div class="input-group">
+				Your Name<br>
+				<input style= "padding: 4px 28px", type="Text" Name="Full Name" placeholder= "Enter Your Name" Size="40"></div><br><br>
+				<div class="input-group">
 				Type of Business
-				<button style= "padding: 2px 20px", style= "padding: 5px"><input type="radio" value="INDIVIDUAL" Name="Type">INDIVIDUAL</button>
-				<button style= "padding: 2px 20px", style= "padding: 5px"><input type="radio" value="CORPORATE" Name="Type">CORPORATE</button><br><br>
+				<button id= "mn" style= "padding: 2px 20px", style= "padding: 5px"><input type="radio" value="INDIVIDUAL" Name="Type">INDIVIDUAL</button>
+				<button id= "mn" style= "padding: 2px 20px", style= "padding: 5px"><input type="radio" value="CORPORATE" Name="Type">CORPORATE</button></div><br>
+				<div class="input-group">
 				Do you already have podcast?
-				<input type="radio" value="YES" Name="Question">YES
-				<input type="radio" value="NO" Name="Question">NO<br><br>
+				<button id= "PQ" style= "padding: 2px 15px"><input type="radio" value="YES" Name="Question">YES</button>
+				<button id= "RS" style= "padding: 2px 15px"><input type="radio" value="NO" Name="Question">NO</button></div><br>
+				<div class="input-group">
 				Mobile no<br>
-				<input style= "padding: 4px 110px", type="Mobile no" Name="Mobile no" required="required" placeholder= "+91"><br><br>
+				<input style= "padding: 4px 112px", type="Mobile no" Name="Mobile no" required="required" placeholder= "+91"></div><br>
+				<div class="input-group">
 				Email ID<br>
-				<input style= "padding: 4px 110px", type="name", Name="Email" placeholder= "Enter email id"><br><br><br>
-				<button style= "padding: 6px 50px" type="button">Next</button>
-			</body></center></html>
+				<input style= "padding: 4px 110px", type="name", Name="Email" placeholder= "Enter email id"></div><br>
+				<button id= "pk" style= "padding: 6px 50px"><input type="button" background= "white">Next</button></form></div>
+				
+			</body></html>
+			
