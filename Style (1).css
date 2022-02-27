@@ -1,0 +1,95 @@
+body{
+    margin: 0px;
+    padding: 0px;
+    box-sizing:  border-box;
+}
+.main{
+    width: 100%;
+}
+
+nav{
+    width: 100%;
+ background-color: black;
+    height: 80px;
+   line-height: 80px;
+   padding: 0px 100px;
+   display: flex;
+   justify-content: space-between;
+}
+.logo a{
+    font-size: 30px;
+    color: red;
+    font-weight: bold;
+    margin-left: 100px;
+}
+a{
+    text-decoration: none;
+    color: rgb(195, 194, 197);
+    font-size: 18px;
+    transition: 0.5s all ease;
+}
+ul {
+    margin: 0px;
+}
+ul li{
+float: left;
+padding: 0px 15px;
+list-style: none;
+}
+ul li a:hover{
+    color:red;
+    background-position: center;
+    
+}
+.header{
+    background-image: url(https://source.unsplash.com/user/erondu/1600x900);
+    background-position: center;
+    background-size: 2000px;
+    background-repeat: no-repeat;
+    height: 100vh;
+}
+.content{
+    mask-position: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(0%, 50%);
+    color: rgb(226, 228, 227);
+    text-align: center;
+
+}
+
+.content h1{
+    font-size:50px;
+}
+
+.content p{
+    position: center;
+    padding: 0px 100px;
+    font-size: 20px;
+
+}
+
+button{
+    background: rgb(22, 16, 16);
+    border: 1px solid rgb(185, 23, 23);
+    color: rgb(84, 143, 30);
+    font-size: 20px;
+    padding: 10px 25px;
+    border-radius: 15px;
+    transition: 0.5s all ease;
+    
+
+}
+
+button{
+    border: red;
+    font-weight: bold;
+    font-style: initial;
+background: rgb(221, 213, 213);
+color:rgb(226, 14, 14);
+
+}
+
+.overlay{
+    background: rgba(1, 7, 1, 0.6);
+}
