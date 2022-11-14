@@ -330,9 +330,8 @@ for num in int_list:
  
     # checking condition
     if num % 2 == 0:
-    list_sum = list_sum + num
-        print(num, end=" ")
-        print("total sum of even numbers=", list_sum)
+        list_sum = list_sum + num
+print("total sum of even numbers=", list_sum)
    
 
 Q25. Write a program to display only those numbers from a list that satisfy the following conditions
