@@ -322,14 +322,17 @@ Q23. Write a code that displays the sum of all the even numbers from the given l
 ```
 numbers = [12, 75, 150, 180, 145, 525, 50]
 ```
-Ans. list1 = [12, 75, 150, 180, 145, 525, 50]
+Ans. int_list = [12, 75, 150, 180, 145, 525, 50]
  
 # iterating each number in list
-for num in list1:
+list_sum = 0
+for num in int_list:
  
     # checking condition
     if num % 2 == 0:
+    list_sum = list_sum + num
         print(num, end=" ")
+        print("total sum of even numbers=", list_sum)
    
 
 Q25. Write a program to display only those numbers from a list that satisfy the following conditions
