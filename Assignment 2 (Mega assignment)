@@ -1,2 +1,33 @@
-How can we add an element in a dictionary?
+Que. How can we add an element in a dictionary?
 Ans. 
+dict1 = {"1": "K", "2": "A", "3": "N", "4": "c", "5": "H", '6': "H","7": "N"}
+print(dict1)
+dict1['name'] = "Kanchan"
+print(dict1)
+***********************************************************************************************************************************************************
+Que. Create a dictionary and access all the values in that dictionary.
+Ans. mystock = {"Product": "Headphone", "Price": 2000, "quantity":100, "Instock": "Yes"}
+print(mystock)
+print(mystock["Product"])
+***********************************************************************************************************************************************************
+
+Que. Create a nested dictionary and access all the element in the inner dictionary.
+Ans. mystock = {'Dict1':{"Product": "Headphone", "Price": 2000, "quantity":100, "Instock": "Yes"},
+'Dict2':{"Name": "Chitra", "Profile": "Application Support"}}
+
+print(mystock)
+print(mystock["Dict2"])
+print(mystock["Dict1"])
+
+Using For loop:
+
+print("ID:")
+for id in mystock:
+    print(id)
+    print()
+
+print("Keys:")
+for id in mystock:
+    for k in mystock[id]:
+            print(k, "=", mystock[id][k])
+print()
