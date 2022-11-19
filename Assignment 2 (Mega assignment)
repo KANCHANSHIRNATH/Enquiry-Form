@@ -255,6 +255,181 @@ print("Index:")
 for Index in lst:
     print(Index)
     print()
+ **********************************************************************************************************************************************************************
+ Que. Take a list as an input from the user and find the length of the list.
+ Ans. Lst = (input("Enter list:"))
+print(Lst)
+size = len(Lst)
+print(size)
+********************************************************************************************************************************************************************
+Que. Add the word "Big" in the 3rd index of the given list.
+
+lst = ["Welcome", "to", "Data", "course"]
+Ans. 
+lst = ["Welcome", "to", "Data", "course"]
+print(lst)
+lst.insert(2, "Big")
+print(lst)
+
+Output: ['Welcome', 'to', 'Big', 'Data', 'course']
+
+lst = ["Welcome", "to", "Data", "course"]
+print(lst)
+lst.insert(3, "Big")
+print(lst)
+
+Output: ['Welcome', 'to', 'Data',  'Big', 'course']
+*************************************************************************************************************************************************************
+
+ Que. What is a tuple? How is it different from list?
+ Ans. 
+ Tuples are ordered collection of data items. They store multiple items in a single variable. Tuple items are separated by commas and enclosed within round brackets (). Tuples are unchangeable meaning we can not alter them after creation.
+
+Example:
+
+tuple1 = (1,2,2,3,5,4,6)
+tuple2 = ("Red", "Green", "Blue")
+print(tuple1)
+print(tuple2)
+
+Output:
+(1, 2, 2, 3, 5, 4, 6)
+('Red', 'Green', 'Blue')
+
+Difference: 
+List:                                                                    Touple:
+List are mutable                                                         Tuples are immutable
+Iterations are time-consuming                                            Iterations are comparatively Faster
+Inserting and deleting items is easier with a list.                      Accessing the elements is best accomplished with a tuple data type.
+Lists consume more memory                                                Tuple consumes less than the list
+Lists have several built-in methods.                                     A tuple does not have many built-in methods because of immutability
+A unexpected change or error is more likely to occur in a list.          In a tuple, changes and errors don't usually occur because of immutability.
+*******************************************************************************************************************************************************************
+
+Que. How can you create a tuple in Python?
+Ans. Create a Tuple:
+
+thistuple = ("apple", "banana", "cherry")
+print(thistuple)
+*******************************************************************************************************************************************************************
+Que. Create a tuple and try to add your name in the tuple. Are you able to do it? Support your answer with reason.
+Ans. 
+thistuple = ("apple", "banana", "cherry")
+print(thistuple)
+thistuple.insert("Kanchan")
+print(thistuple)
+
+Output:
+C:\Users\HP\PycharmProjects\MyProject\venv\Scripts\python.exe C:/Users/HP/PycharmProjects/MyProject/Demo2.py
+('apple', 'banana', 'cherry')
+Traceback (most recent call last):
+  File "C:\Users\HP\PycharmProjects\MyProject\Demo2.py", line 15, in <module>
+    thistuple.insert("Kanchan")
+AttributeError: 'tuple' object has no attribute 'insert'
+
+Reason:
+The Python "AttributeError: 'tuple' object has no attribute 'append'" occurs when we try to call the append() method on a tuple instead of a list. 
+To solve the error, use a list instead of a tuple because tuples are immutable.
+***********************************************************************************************************************************************************
+Que. Can two tuple be appended. If yes, write a code for it. If not, why?
+Ans. 
+We can appended two touples:
+
+touple1 = ('one', 'two', 'three', 'four')
+touple2 = (1, 2, 3, 4)
+Append = touple1 + touple2
+print(Append)
+***********************************************************************************************************************************************************
+Que. Take a tuple as an input and print the count of elements in it.
+Ans.
+touple = ('one', 'two', 'three', 'four')
+size = len(touple)
+print(size)
+
+Output:
+4
+******************************************************************************************************************************************************
+Que. . What are sets in Python? and How can you create a set?
+Ans. 
+Sets are used to store multiple items in a single variable.
+
+Set is one of 4 built-in data types in Python used to store collections of data, the other 3 are List, Tuple, and Dictionary, all with different qualities and usage.
+
+A set is a collection which is unordered, unchangeable*, and unindexed.
+Duplicate value will be avoided.
+
+Example:
+thisset = {"apple", "banana", "cherry"}
+print(thisset)
+
+Output:
+{"apple", "banana", "cherry"}
+****************************************************************************************************************************************************************
+Que. Try to add multiple values using add() function.
+Ans. 
+
+*Add an item to a set, using the add() method:
+
+thisset = {"apple", "banana", "cherry"}
+
+thisset.add("orange")
+
+print(thisset)
+
+Output:
+{'apple', 'banana', 'cherry', 'orange'}
+*****************************************************************************************************************************************************************
+Que. How is update() different from add()?
+Ans. 
+set.add() Function:
+set.add(element)
+It accepts an element as an argument and if that element is not already present in the set, then it adds that to the set. It returns nothing i.e. None.
+
+set.update() Function:
+set.update(*args)
+It expects a single or multiple iterable sequences as arguments and appends all the elements in these iterable sequences to the set. It returns nothing i.e. None.
+
+Use add() function to add a single element. Whereas use update() function to add multiple elements to the set.
+add() is faster than update().
+add () accepts immutable parameters only. Whereas accepts iterable sequences.
+add() accepts a single parameter, whereas update() can accept multiple sequences.
+************************************************************************************************************************************************************
+Que. What is clear() in sets?
+Ans. The clear() method removes all elements in a set.
+
+Remove all elements from the fruits set:
+
+fruits = {"apple", "banana", "cherry"}
+
+fruits.clear()
+
+print(fruits)
+
+Output: set()
+*************************************************************************************************************************************************************
+Que. What is frozen set?
+Ans. 
+Python frozenset() Method creates an immutable Set object from an iterable. It is a built-in Python function. As it is a set object therefore we cannot have duplicate values in the frozenset.
+Syntax : frozenset(iterable_object_name)
+Parameter : iterable_object_name
+
+This function accepts iterable object as input parameter.
+Return :  Returns an equivalent frozenset object.
+# passing an empty tuple
+nu = ()
+ 
+# converting tuple to frozenset
+fnum = frozenset(nu)
+ 
+# printing empty frozenset object
+print("frozenset Object is : ", fnum)
+
+Output:
+frozenset Object is :  frozenset()
+************************************************************************************************************************************************************
+Que. How is frozen set different from set?
+Ans. 
+
 
 
 
