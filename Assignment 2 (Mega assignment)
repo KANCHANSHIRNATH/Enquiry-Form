@@ -429,7 +429,13 @@ frozenset Object is :  frozenset()
 ************************************************************************************************************************************************************
 Que. How is frozen set different from set?
 Ans. 
+Set is represented by curly braces like this {} or you can use set(). You can’t use only curly braces to create an empty set, this will create a dictionary. You can use set() if you want to create an empty set. Sets can include any immutable data type like string, number, tuple, etc. You can also include mutable data type like list, dictionary, etc.
 
+A frozenset is an unordered and unindexed collection of unique elements. It is immutable and it is hashable. It is also called an immutable set. Since the elements are fixed, unlike sets you can't add or remove elements from the set.
+
+Frozensets are hashable, you can use the elements as a dictionary key or as an element from another set. Frozensets are represented by the built-in function which is frozenset(). It returns an empty set if there are no elements present in it. You can use frozenset() if you want to create an empty set.
+
+Que. 
 
 
 
