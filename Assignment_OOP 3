@@ -1,1 +1,203 @@
-Que. 
+Que.  What is the purpose of Python's OOP?
+Ans. 
+1) Object-oriented programming is an approach for modeling concrete, real-world things, like cars, as well as relations between things, like companies and employees, students and teachers, and so on. OOP models real-world entities as software objects that have some data associated with them and can perform certain functions.
+
+2) Object could represent a person with properties like a name, age, and address and behaviors such as walking, talking, breathing, and running. Or it could represent an email with properties like a recipient list, subject, and body and behaviors like adding attachments and sending.
+
+Provides a clear program structure and a clean code
+Facilitates easy maintenance and modification of existing code
+Since the class is sharable, the code can be reused
+Since the class is sharable, the code can be reused.
+
+Que. Where does an inheritance search look for an attribute?
+Ans. 
+An inheritance search looks for an attribute first in the instance object, then in the class the instance was created from, then in all higher superclasses, progressing from left to right (by default). The search stops at the first place the attribute is found.
+
+Que. How do you distinguish between a class object and an instance object?
+Ans. Classes are a kind of factory for creating multiple instances. Classes also support operator overloading methods, which instances inherit, and treat any functions nested in the class as methods for processing instances.
+
+Que. What makes the first argument in a class’s method function special?
+Ans. It always receives the instance object that is the implied subject of the method call. It’s usually called 'self' by convention.
+
+Que. What is the purpose of the init method?
+Ans. If the __init__ method is coded or inherited in a class, Python calls it automatically each time an instance of that class is created.
+class New():
+def __init__(self, arg1, arg2):
+self.first_var = arg1
+self.second_var = arg2
+
+Que.  What is the process for creating a class instance?
+Ans. You create a class instance by calling the class name as though it were a function; any arguments passed into the class name show up as arguments two and beyond in the __init__ constructor method.
+
+x = ClassName()
+y = AnotherClass(arg1, arg2)
+
+Que. What is the process for creating a class?
+Ans.
+
+class Monkey:
+    Pass
+ 
+# instantiate the class Monkey and assign it to a variable Monkey
+Monkey = Monkey()
+print(Monkey)
+
+Output:
+<__main__.Pokemon object at 0x0000027B56ADD730>
+
+Our Python custom class is empty, it simply returns the address where the object is stored.
+
+Que. How would you define the superclasses of a class?
+Ans. They are classes which are used to inherit from.
+
+class Siblings(Girl, Boy): ...
+
+In this case Girl and Boy are superclasses for Siblings subclass.
+
+Que. What is the relationship between classes and modules?
+Ans. 
+Modules are collections of methods and constants. They cannot generate instances. Classes may generate instances (objects), and have per-instance state (instance variables).
+
+Modules may be mixed in to classes and other modules. The mixed in module’s constants and methods blend into that class’s own, augmenting the class’s functionality. Classes, however, cannot be mixed in to anything.
+
+A class may inherit from another class, but not from a module.
+
+A module may not inherit from anything.
+
+Que. How do you make instances and classes?
+Ans. 
+To create instances of a class, you call the class using class name and pass in whatever arguments its __init__ method accepts.
+
+"This would create first object of Employee class"
+emp1 = Employee("Zara", 2000)
+"This would create second object of Employee class"
+emp2 = Employee("Manni", 5000)
+You access the object's attributes using the dot operator with object. Class variable would be accessed using class name as follows −
+
+emp1.displayEmployee()
+emp2.displayEmployee()
+print "Total Employee %d" % Employee.empCount
+
+Que.  Where and how should be class attributes created?
+Ans.
+To define a class attribute, you place it outside of the __init__() method. For example, the following defines pi as a class attribute:
+class Circle:
+    pi = 3.14159
+
+    def __init__(self, radius):
+        self.radius = radius
+
+    def area(self):
+        return self.pi * self.radius**2
+
+    def circumference(self):
+        return 2 * self.pi * self.radius
+Code language: Python (python)
+After that, you can access the class attribute via instances of the class or via the class name:
+
+object_name.class_attribute
+class_name.class_attribute
+Code language: Oracle Rules Language (ruleslanguage)
+In the area() and circumference() methods, we access the pi class attribute via the self variable.
+
+Outside the Circle class, you can access the pi class attribute via an instance of the Circle class or directly via the Circle class. For example:
+
+c = Circle(10)
+print(c.pi)
+print(Circle.pi)
+Code language: Python (python)
+Output:
+
+3.14159
+3.14159
+
+Que. Where and how are instance attributes created?
+Ans. Attributes are just the properties that specify the information associated with each class object.
+To add instance attributes to our class, first of all, we create the class itself and give it a name ClassName.
+
+Next, we add some instance attributes which are usually defined inside a method called the constructor method. This method is defined using the keyword def like any function in Python, and this method name should be __init__. The first parameter for this method should be (self) which is a reference to the object itself 
+Then we can list all of our instance attributes using the dot operator.
+
+class ClassName:
+def __init__(self):
+        self.instance_atrr1 = None
+        self.instance_atrr2 = None
+new_object = ClassName()
+
+In the previous code snippet, we have two instance attributes: instance_atrr1, and instance_atrr2 and their initial value is None.
+
+In the last line, we are creating an object from the class. This is done by writing the class name and then () like if I am calling function. What happens beyond the scene is that the constructor method is auto-called and the object is auto-passed to this method with the name “self”. Inside the constructor, the two attributes will be attached to the object with their initial value.
+
+Que. What does the term "self" in a Python class mean?
+Ans. self will be a reference for that object and using the dot operator the instance attributes are attached to the object itself.
+Within __init__ we pass the first parameters self which represents an object from a class that is currently being defined, and usually, we attach instance attributes to these objects using the dot operator.
+
+Que. How does a Python class handle operator overloading?
+Ans. Python operators work for built-in classes. But the same operator behaves differently with different types. For example, the + operator will perform arithmetic addition on two numbers, merge two lists, or concatenate two strings.
+
+This feature in Python that allows the same operator to have different meaning according to the context is called operator overloading.
+Example:
+class Point:
+    def __init__(self, x=0, y=0):
+        self.x = x
+        self.y = y
+
+
+p1 = Point(1, 2)
+p2 = Point(2, 3)
+print(p1+p2)
+
+Output:
+
+Traceback (most recent call last):
+  File "<string>", line 9, in <module>
+    print(p1+p2)
+TypeError: unsupported operand type(s) for +: 'Point' and 'Point'
+
+To overload the + operator, we will need to implement __add__() function in the class. With great power comes great responsibility. We can do whatever we like, inside this function. But it is more sensible to return a Point object of the coordinate sum.
+
+class Point:
+    def __init__(self, x=0, y=0):
+        self.x = x
+        self.y = y
+
+    def __str__(self):
+        return "({0},{1})".format(self.x, self.y)
+
+    def __add__(self, other):
+        x = self.x + other.x
+        y = self.y + other.y
+        return Point(x, y)
+Now let's try the addition operation again:
+
+class Point:
+    def __init__(self, x=0, y=0):
+        self.x = x
+        self.y = y
+
+    def __str__(self):
+        return "({0},{1})".format(self.x, self.y)
+
+    def __add__(self, other):
+        x = self.x + other.x
+        y = self.y + other.y
+        return Point(x, y)
+
+
+p1 = Point(1, 2)
+p2 = Point(2, 3)
+
+print(p1+p2)
+Run Code
+Output
+
+(3,5)
+What actually happens is that, when you use p1 + p2, Python calls p1.__add__(p2) which in turn is Point.__add__(p1,p2). After this, the addition operation is carried out the way we specified.
+
+Similarly, we can overload other operators as well.
+
+Que. When do you consider allowing operator overloading of your classes?
+Ans. Its giving extended meaning beyond their predefined operational meaning. For example operator + is used to add two integers as well as join two strings and merge two lists. It is achievable because ‘+’ operator is overloaded by int class and str class.
+Operators in Python work for built-in classes, like int, str, list, etc. But you can extend their operability such that they work on objects of user-defined classes
+too.
+Operators in Python work for built-in classes, like int, str, list, etc. But you can extend their operability such that they work on objects of user-defined classes too.
