@@ -202,3 +202,228 @@ Operators in Python work for built-in classes, like int, str, list, etc. But you
 too.
 Operators in Python work for built-in classes, like int, str, list, etc. But you can extend their operability such that they work on objects of user-defined classes too.
 ***********************************************************************************************************************************************************************
+Que 16. What is the most popular form of operator overloading?
+Ans. A very popular and convenient example is the Addition (+) operator.
+
+Just think how the ‘+’ operator operates on two numbers and the same operator operates on two strings. It performs “Addition” on numbers whereas it performs “Concatenation” on strings.
+**********************************************************************************************************************************************************************
+Que 17. What are the two most important concepts to grasp in order to comprehend Python OOP code?
+Ans. Encapsulation, Abstraction, Inheritance, Polymorphism are most important concepts in Python OOP code.
+**********************************************************************************************************************************************************************
+Que 18. Describe three applications for exception processing.
+Ans. 
+
+Exceptions occur for numerous reasons, including invalid user input, code errors, device failure, the loss of a network connection, insufficient memory to run an application, a memory conflict with another program, a program attempting to divide by zero or a user attempting to open files that are unavailable.
+
+When an exception occurs, specialized programming language constructs, interrupt hardware mechanisms or operating system interprocess communication facilities handle the exception.
+
+Exception handling differs from error handling in that the former involves conditions an application might catch versus serious problems an application might want to avoid. In contrast, error handling helps maintain the normal flow of software program execution.
+
+1) We can define our own exception types if we would like to have more control over what will happen in specific conditions.
+
+class InvalidStudentAgeException(Exception):
+    def __init__(self, student_age, error_message="Student age should be in 2-10 range"):
+        self.student_age = student_age
+        self.error_message = error_message
+        super().__init__(self.error_message)
+student_age = int(input("Enter Student age: "))
+if not 1 < student_age < 11:
+        raise InvalidStudentAgeException(student_age)
+Output:
+Enter Student age: 54
+Traceback (most recent call last):
+  File "ErrorsAndExceptions.py", line 68, in <module>
+    raise InvalidStudentAgeException(student_age)
+__main__.InvalidStudentAgeException: Student age should be in 2-10 range: 54 is not a valid age
+
+Output:
+Enter Student age: 56
+Traceback (most recent call last):
+  File "C:\Users\HP\PycharmProjects\MyProject\Demo2.py", line 8, in <module>
+    raise InvalidStudentAgeException(student_age)
+__main__.InvalidStudentAgeException: Student age should be in 2-10 range
+
+2)
+# Python code to catch an exception and handle it using try and except code blocks
+
+a = ["Python", "Exceptions", "try and except"]
+try:
+    # looping through the elements of the array a, choosing a range that goes beyond the length of the array
+    for i in range(4):
+        print("The index and element from the array is", i, a[i])
+    # if an error occurs in the try block, then except block will be executed by the Python interpreter
+except:
+    print("Index out of range") 
+*********************************************************************************************************************************************************************
+Que 19. What happens if you don't do something extra to treat an exception?
+Ans. 
+
+Why should you use Exceptions?
+Here are the reasons for using exceptions in Python:
+
+1) Exception handling allows you to separate error-handling code from normal code.
+2) An exception is a Python object which represents an error.
+3) As with code comments, exceptions helps you to remind yourself of what the program expects.
+4) It clarifies the code and enhances readability.
+5) Allows you to stimulate consequences as the error-handling takes place at one place and in one manner.
+6) An exception is a convenient method for handling error messages.
+7) In Python, you can raise an exception in the program by using the raise exception method.
+8) Raising an exception helps you to break the current code execution and returns the exception back to expection until it is handled.
+9) Processing exceptions for components which can’t handle them directly.
+Example:
+while True:
+    x = int(input("Please enter a number: "))
+    print("%s squared is %s" % (x, x**2))
+    When you enter a string or any other character that is not a number, like "one", the program will raise a "Value Error" exception:
+ This is where handling exceptions comes in. You need to know how to properly handle exceptions, especially in production environments, because if they are not handled your program won't know what to do and will crash.
+ 
+ With exception:
+ while True:
+    try:
+        x = int(input("Please enter a number: "))
+        print("%s squared is %s" % (x, x**2))
+    except ValueError:
+        print("Please enter a valid number!")
+Output:
+Please enter a number: 4
+4 squared is 16
+Please enter a number: four
+Please enter a valid number
+***********************************************************************************************************************************************************************
+Que 20. Describe two methods for triggering exceptions in your script.
+Ans. 
+SystemExit -->	Raised when the sys.exit() function is called
+TypeError -->	Raised when two different types are combined
+UnboundLocalError -->	Raised when a local variable is referenced before assignment
+UnicodeError -->	Raised when a unicode problem occurs
+**********************************************************************************************************************************************************************
+Que 21. Identify two methods for specifying actions to be executed at termination time, regardless of whether or not an exception exists.
+Ans. 
+1) Try - except Method:
+# Python code to catch an exception and handle it using try and except code blocks
+
+a = ["Python", "Exceptions", "try and except"]
+try:
+    # looping through the elements of the array a, choosing a range that goes beyond the length of the array
+    for i in range(4):
+        print("The index and element from the array is", i, a[i])
+    # if an error occurs in the try block, then except block will be executed by the Python interpreter
+except:
+    print("Index out of range") 
+2) AssertionError Method:
+import sys
+assert ('linux' in sys.platform), "This code runs on Linux only."
+
+Output:
+  Traceback (most recent call last):
+  File "<input>", line 2, in <module>
+  AssertionError: This code runs on Linux only.
+***********************************************************************************************************************************************************************
+
+Que 22. What is the purpose of the try statement?
+Ans. 
+The try block lets you test a block of code for errors.
+When an error occurs, or exception as we call it, Python will normally stop and generate an error message.
+
+These exceptions can be handled using the try statement:
+try:
+  print(x)
+except:
+  print("An exception occurred")
+*********************************************************************************************************************************************************************
+Que 23. What is the purpose of the raise statement?
+Ans. Python raise Keyword is used to raise exceptions or errors. The raise keyword raises an error and stops the control flow of the program. It is used to bring up the current exception in an exception handler so that it can be handled further up the call stack.
+***********************************************************************************************************************************************************************
+Que 24. What does the assert statement do, and what other statement is it like?
+Ans. 
+The assert keyword is used when debugging code.
+The assert keyword lets you test if a condition in your code returns True, if not, the program will raise an AssertionError.
+***********************************************************************************************************************************************************************
+Que 25. What is the purpose of the with/as argument, and what other statement is it like?
+Ans. In Python, with statement is used in exception handling to make the code cleaner and much more readable. It simplifies the management of common resources like file streams. Observe the following code example on how the use of with statement makes code cleaner. 
+**********************************************************************************************************************************************************************
+Que 26.  What are *args, **kwargs?
+Ans. *args specifies the number of non-keyworded arguments that can be passed and the operations that can be performed on the function in Python whereas **kwargs is a variable number of keyworded arguments that can be passed to a function that can perform dictionary operations.
+args enable us to pass the variable number of non-keyword arguments to functions, but we cannot use this to pass keyword arguments. Keyword arguments mean that they contain a key-value pair, like a Python dictionary.
+
+**kwargs allows us to pass any number of keyword arguments.
+
+In Python, these keyword arguments are passed to the program as a Python dictionary.
+
+Python will consider any variable name with two asterisks(**) before it as a keyword argument.
+**********************************************************************************************************************************************************************
+Que 27. How can I pass optional or keyword parameters from one function to another?
+Ans. To pass, collect the arguments using the * and ** in the function’s parameter list. Through this, you will get the positional arguments as a tuple and the keyword arguments as a dictionary. Pass these arguments when calling another function by using * and ** −
+
+def f(a, *args, **kwargs):
+   ...
+   kwargs['width'] = '14.3c'
+   ...
+   g(a, *args, **kwargs)
+**********************************************************************************************************************************************************************
+Que 28.  What are Lambda Functions?
+Ans.
+A lambda function is an anonymous function (i.e., defined without a name) that can take any number of arguments but, unlike normal functions, evaluates and returns only one expression.
+
+A lambda function in Python has the following syntax:
+
+lambda parameters: expression
+
+The anatomy of a lambda function includes three elements:
+
+The keyword lambda — an analog of def in normal functions
+The parameters — support passing positional and keyword
+arguments, just like normal functions
+The body — the expression for given parameters being evaluated
+with the lambda function
+Note that, unlike a normal function, we don’t surround the parameters of a lambda function with parentheses. If a lambda function takes two or more parameters, we list them with a comma.
+
+We use a lambda function to evaluate only one short expression (ideally, a single-line) and only once, meaning that we aren’t going to apply this function later. Usually, we pass a lambda function as an argument to a higher-order function (the one that takes in other functions as arguments), such as Python built-in functions like filter(), map(), or reduce().
+*********************************************************************************************************************************************************************
+Que 29. Explain the use of the 'nonlocal' keyword in Python.
+Ans. 
+
+The nonlocal keyword is used to work with variables inside nested functions, where the variable should not belong to the inner function.
+Use the keyword nonlocal to declare that the variable is not local.
+
+def myfunc1():
+  x = "John"
+  def myfunc2():
+    x = "hello"
+  myfunc2()
+  return x
+
+print(myfunc1())
+********************************************************************************************************************************************************************
+Que 30. What is the global keyword?
+Ans. 
+A global keyword is a keyword that allows a user to modify a variable outside the current scope. It is used to create global variables in Python from a non-global scope, i.e. inside a function. Global keyword is used inside a function only when we want to do assignments or when we want to change a variable. Global is not needed for printing and accessing.
+# global variable
+a = 15
+b = 10
+ 
+# function to perform addition
+def add():
+    c = a + b
+    print(c)
+ 
+ 
+# calling a function
+add()
+********************************************************************************************************************************************************************
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  
+
+
+
