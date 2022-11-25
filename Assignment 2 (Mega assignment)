@@ -698,10 +698,10 @@ Ans.
 **********************************************************************************************************************************************************************
 Q 44. Why do we call Python as a general purpose and high-level programming language?
  Ans. Python is a general-purpose programming language as for its easy readability. This language has been used to create popular websites and products, including Instagram’s backend, Google, Spotify, Netflix, and more. Alsois its high level programming language as it is not tied to a system architecture. You can write Python code as well as run it on any device or computer.
-
+**********************************************************************************************************************************************************************
 Q 45. Why is Python called a dynamically typed language?
 Ans. Python doesn't have problem even if we don't declare the type of variable. It define the type of variable in the runtime of the program. Python also take cares of the memory management which is crucial in programming. So, Python is a dynamically typed language.
-
+**********************************************************************************************************************************************************************
 Q 46. List some pros and cons of Python programming language?
 Ans. 
 Pros:
@@ -717,7 +717,7 @@ Cons:
 3) While using Python , you can expect to see runtime errors because of the dynamical typing feature of this programming language.
 4) Python consumes a lot of memory space
 5) Not easy to test.
-
+**********************************************************************************************************************************************************************
 Q 47. In what all domains can we use Python?
 Ans. 
 1) Python is used in Data Visualization to create plots and graphical representations.
@@ -726,7 +726,7 @@ Ans.
 4) It is used to create web applications.
 5) It can be used to handle databases.
 6) It is used in business and accounting to perform complex mathematical operations along with quantitative and qualitative analysis.
-
+*********************************************************************************************************************************************************************
 Q 48. What are variable and how can we declare them?
 Ans.
 Variable is a name given to a specific memory location which stores the information that can be manipulated and referenced later by the programmer within the code. In python, the programmer does not need to declare the variable type explicitly, we just need to assign the value to the variable.
@@ -760,10 +760,10 @@ print(val)
 Output: Enter your value: 165
         165
         >>>
-
+*********************************************************************************************************************************************************************
 Q 50. What is the default datatype of the value that has been taken as an input using input() function?
 Ans. The default datatype of the value that has been taken as an input using input() function would be the string.
-
+*********************************************************************************************************************************************************************
 Q 51. What is type casting?
 Ans. Similar to type conversion, type casting is done when we want to specify a type on a variable. 
 
@@ -787,7 +787,7 @@ Output:
 13.0
 29
 6.67
-
+**********************************************************************************************************************************************************************
 Q 52. What are keywords?
 Ans. Keywords in Python are reserved words that can not be used as a variable name, function name, or any other identifier.
 
@@ -805,10 +805,10 @@ print(keyword.kwlist)
 The list of keywords is : 
 
 [‘False’, ‘None’, ‘True’, ‘and’, ‘as’, ‘assert’, ‘async’, ‘await’, ‘break’, ‘class’, ‘continue’, ‘def’, ‘del’, ‘elif’, ‘else’, ‘except’, ‘finally’, ‘for’, ‘from’, ‘global’, ‘if’, ‘import’, ‘in’, ‘is’, ‘lambda’, ‘nonlocal’, ‘not’, ‘or’, ‘pass’, ‘raise’, ‘return’, ‘try’, ‘while’, ‘with’, ‘yield’]
-
-Q1 53 Can we use keywords as a variable? Support your answer with reason.
+********************************************************************************************************************************************************************
+Q 53 Can we use keywords as a variable? Support your answer with reason.
 Ans. The keyword cannot be used as an identifier, function, and variable name.
-
+**********************************************************************************************************************************************************************
 Q 54. Write a code to take a number as an input from the user and check if the number is odd or even.
 Ans. 
 Number which odd or even:
@@ -818,7 +818,7 @@ if ( Number % 2 == 0 ):
         print("Number is even")
 else:
         print("Number is odd")
-
+**********************************************************************************************************************************************************************
 Q 55. Write a code to take the age of person as an input and if age >= 18 display "I can vote". If age is < 18 display "I can't vote".
 Ans.
 
@@ -827,7 +827,7 @@ if age >= 18:
      print ("I can vote")
 else:
         print ("I can't vote")
-
+**********************************************************************************************************************************************************************
 Q 56. Write a code to take 3 numbers as an input from the user and display the greatest no as output.
 Ans.
 a = int(input('Enter first number  : '))
@@ -845,7 +845,7 @@ if c > a and c > b:
 
 print(largest, "is the largest of three numbers.")
 
-
+*********************************************************************************************************************************************************************
 Q 57 Indentation refers to the spaces at the beginning of a code line.
 
 Ans. Where in other programming languages the indentation in code is for readability only, the indentation in Python is very important.
@@ -855,10 +855,10 @@ Python uses indentation to indicate a block of code.
 Example
 if 5 > 2:
   print("Five is greater than two!")
-
+*********************************************************************************************************************************************************************
 Q 58. How can we throw some output in Python?
 Ans. The basic way to do output is the print statement. To end the printed line with a newline, add a print statement without any objects. This will print to any object that implements write(), which includes file objects
-
+********************************************************************************************************************************************************************
 Q 59. What are operators in Python?
 These are the special symbols in python and are used to execute an Arithmetic or Logical computation. An operator alone cannot perform an activity, it needs an Operand. What is an operand? An Operand is a value that the operator needs to complete a task.
 We have multiple operators in Python, and each operator is subdivided into other operators. Let’s list them down and know about each operator in detail.
@@ -872,7 +872,7 @@ Membership operators
 Special operators
 Identity operators
 Membership operators
-
+*******************************************************************************************************************************************************************
 Q 60. What are boolean operator?
 Ans. The logical operators and, or and not are also referred to as boolean operators. While and as well as or operator needs two operands, which may evaluate to true or false, not operator needs one operand evaluating to true or false.
 
@@ -907,7 +907,7 @@ The not operator returns true if its operand is a false expression and returns f
 False
 >>> not(a>10)
 True
-
+**********************************************************************************************************************************************************************
 Q 61. What will the output of the following?
 ```
 1 or 0
@@ -930,7 +930,7 @@ output :- False
 
 1 or 0 or 0
 output :- 1
-
+**********************************************************************************************************************************************************************
 Q 62 & Q 63. What are conditional statements in Python and What is use of 'if', 'elif' and 'else' keywords
 
 A conditional statement as the name suggests itself, is used to handle conditions in your program. These statements guide the program while making decisions based on the conditions encountered by the program.
@@ -1002,7 +1002,7 @@ elif (num > 0):
         print("Number is greater than 20")
 else:
     print("Number is zero")
-
+*********************************************************************************************************************************************************************
 Q 64. What is difference between / and // operators?
 Ans.
 Normal Division: Divides the value on the left by the one one the right. Notice that division results in a floating-point value
@@ -1013,13 +1013,13 @@ Print(divide)
 Output: 3.333333333333
 
 Floor Division: Divides and returns the integer value.
-
+**********************************************************************************************************************************************************************
 Q 65. Write a code that gives following as an output.
 ```
 iNeuroniNeuroniNeuroniNeuron
 Ans.
 print("iNeuron"*4)
-
+*********************************************************************************************************************************************************************
 Q 66. Write a code that displays the sum of all the even numbers from the given list.
 ```
 numbers = [12, 75, 150, 180, 145, 525, 50]
@@ -1034,7 +1034,7 @@ for num in int_list:
     if num % 2 == 0:
         list_sum = list_sum + num
 print("total sum of even numbers=", list_sum)
-   
+**********************************************************************************************************************************************************************   
 
 Q 67. Write a program to display only those numbers from a list that satisfy the following conditions
 
