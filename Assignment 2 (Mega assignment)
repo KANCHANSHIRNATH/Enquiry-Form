@@ -1,17 +1,17 @@
-Que. How can we add an element in a dictionary?
+Que 1. How can we add an element in a dictionary?
 Ans. 
 dict1 = {"1": "K", "2": "A", "3": "N", "4": "c", "5": "H", '6': "H","7": "N"}
 print(dict1)
 dict1['name'] = "Kanchan"
 print(dict1)
 ***********************************************************************************************************************************************************
-Que. Create a dictionary and access all the values in that dictionary.
+Que 2. Create a dictionary and access all the values in that dictionary.
 Ans. mystock = {"Product": "Headphone", "Price": 2000, "quantity":100, "Instock": "Yes"}
 print(mystock)
 print(mystock["Product"])
 ***********************************************************************************************************************************************************
 
-Que. Create a nested dictionary and access all the element in the inner dictionary.
+Que 3. Create a nested dictionary and access all the element in the inner dictionary.
 Ans. mystock = {'Dict1':{"Product": "Headphone", "Price": 2000, "quantity":100, "Instock": "Yes"},
 'Dict2':{"Name": "Chitra", "Profile": "Application Support"}}
 
@@ -33,7 +33,7 @@ for id in mystock:
 print()
 ***********************************************************************************************************************************************************
 
-Que. What is a string? How can we declare string in Python?
+Que 4. What is a string? How can we declare string in Python?
 Ans. Strings are sequences of characters. Our name can be considered a string. Or, say you live in Sidney, then your country name is "Sedney", which is a string.
      To create a string, put the sequence of characters inside either single quotes, double quotes, or triple quotes and then assign it to a variable.
      Example:
@@ -55,7 +55,7 @@ double_quote_multiple_characters = "aeiou"
 <class 'str'> <class 'str'>
 *************************************************************************************************************************************************************
 
-Que. How can we access the string using its index?
+Que 5. How can we access the string using its index?
 Ans. Note the first element has index 0. You access the first element with the index 0, second element with the index 1, and so on
 >>>  lang = "python"
 >>>  print(lang[0])
@@ -64,36 +64,36 @@ Ans. Note the first element has index 0. You access the first element with the i
 >>>  print(lang[-3]) # access the third letter from the end.
 'h'
 *********************************************************************************************************************************************************
-Que. Write a code to get the desired output of the following
+Que 6. Write a code to get the desired output of the following
 string = "Big Data iNeuron"
 desired_output = "iNeuron"
 Ans. string = "Big Data iNeuron"
 print(string[9:16]
 **********************************************************************************************************************************************************
 
-Que. Write a code to get the desired output of the following
+Que 7. Write a code to get the desired output of the following
 
 string = "Big Data iNeuron"
 desired_output = "norueNi"
 Ans. string = "Big Data iNeuron"
 print(string[::-1])     
 *********************************************************************************************************************************************************
- Que. Resverse the string given in the above question.
+ Que 8. Resverse the string given in the above question.
 Ans. string = "Big Data iNeuron"
 print(string[::-1]) 
 ****************************************************************************************************************************************************
-Que. How can you delete entire string at once?
+Que 9. How can you delete entire string at once?
 Ans. string = "Big Data iNeuron"
         del string
         print(string)
 *******************************************************************************************************************************************************
-Que. How can you print the below string?
+Que 10. How can you print the below string?
 'iNeuron's Big Data Course'
 Ans.
 
 print("'iNeuron's Big Data Course'")
 ********************************************************************************************************************************************************
-Que. What is a list in Python?
+Que 11. What is a list in Python?
 Ans. 
 Lists are ordered collection of data items.
 They store multiple items in a single variable.
@@ -110,14 +110,14 @@ Output:
 [1, 2, 2, 3, 5, 4, 6]
 ['Red', 'Green', 'Blue']
 *****************************************************************************************************************************************************
-Que.  How can you create a list in Python?
+Que 12.  How can you create a list in Python?
 Ans. 
 lst1 = [1,2,2,3,5,4,6]
 lst2 = ["Red", "Green", "Blue"]
 print(lst1)
 print(lst2)
 ****************************************************************************************************************************************************
-Que. How can we access the elements in a list?
+Que 13. How can we access the elements in a list?
 Ans. 
 Each item/element in a list has its own unique index. This index can be used to access any particular item from the list. The first item has index [0], second item has index [1], third item has index [2] and so on.
 
@@ -245,7 +245,7 @@ Output:
 Here, jump index is 3. Hence it prints every 3rd element within given index.
 ******************************************************************************************************************************************************************
 
- Que. Write a code to access the word "iNeuron" from the given list.
+ Que 14. Write a code to access the word "iNeuron" from the given list.
 
 lst = [1,2,3,"Hi",[45,54, "iNeuron"], "Big Data"]
 Ans. 
@@ -256,13 +256,13 @@ for Index in lst:
     print(Index)
     print()
  **********************************************************************************************************************************************************************
- Que. Take a list as an input from the user and find the length of the list.
+ Que 15. Take a list as an input from the user and find the length of the list.
  Ans. Lst = (input("Enter list:"))
 print(Lst)
 size = len(Lst)
 print(size)
 ********************************************************************************************************************************************************************
-Que. Add the word "Big" in the 3rd index of the given list.
+Que 16. Add the word "Big" in the 3rd index of the given list.
 
 lst = ["Welcome", "to", "Data", "course"]
 Ans. 
@@ -281,7 +281,7 @@ print(lst)
 Output: ['Welcome', 'to', 'Data',  'Big', 'course']
 *************************************************************************************************************************************************************
 
- Que. What is a tuple? How is it different from list?
+ Que 17. What is a tuple? How is it different from list?
  Ans. 
  Tuples are ordered collection of data items. They store multiple items in a single variable. Tuple items are separated by commas and enclosed within round brackets (). Tuples are unchangeable meaning we can not alter them after creation.
 
@@ -306,13 +306,13 @@ Lists have several built-in methods.                                     A tuple
 A unexpected change or error is more likely to occur in a list.          In a tuple, changes and errors don't usually occur because of immutability.
 *******************************************************************************************************************************************************************
 
-Que. How can you create a tuple in Python?
+Que 18. How can you create a tuple in Python?
 Ans. Create a Tuple:
 
 thistuple = ("apple", "banana", "cherry")
 print(thistuple)
 *******************************************************************************************************************************************************************
-Que. Create a tuple and try to add your name in the tuple. Are you able to do it? Support your answer with reason.
+Que 19. Create a tuple and try to add your name in the tuple. Are you able to do it? Support your answer with reason.
 Ans. 
 thistuple = ("apple", "banana", "cherry")
 print(thistuple)
@@ -331,7 +331,7 @@ Reason:
 The Python "AttributeError: 'tuple' object has no attribute 'append'" occurs when we try to call the append() method on a tuple instead of a list. 
 To solve the error, use a list instead of a tuple because tuples are immutable.
 ***********************************************************************************************************************************************************
-Que. Can two tuple be appended. If yes, write a code for it. If not, why?
+Que 20. Can two tuple be appended. If yes, write a code for it. If not, why?
 Ans. 
 We can appended two touples:
 
@@ -340,7 +340,7 @@ touple2 = (1, 2, 3, 4)
 Append = touple1 + touple2
 print(Append)
 ***********************************************************************************************************************************************************
-Que. Take a tuple as an input and print the count of elements in it.
+Que 21. Take a tuple as an input and print the count of elements in it.
 Ans.
 touple = ('one', 'two', 'three', 'four')
 size = len(touple)
@@ -349,7 +349,7 @@ print(size)
 Output:
 4
 ******************************************************************************************************************************************************
-Que. . What are sets in Python? and How can you create a set?
+Que 22.  What are sets in Python? and How can you create a set?
 Ans. 
 Sets are used to store multiple items in a single variable.
 
@@ -365,7 +365,7 @@ print(thisset)
 Output:
 {"apple", "banana", "cherry"}
 ****************************************************************************************************************************************************************
-Que. Try to add multiple values using add() function.
+Que 23. Try to add multiple values using add() function.
 Ans. 
 
 *Add an item to a set, using the add() method:
@@ -379,7 +379,7 @@ print(thisset)
 Output:
 {'apple', 'banana', 'cherry', 'orange'}
 *****************************************************************************************************************************************************************
-Que. How is update() different from add()?
+Que 24. How is update() different from add()?
 Ans. 
 set.add() Function:
 set.add(element)
@@ -394,7 +394,7 @@ add() is faster than update().
 add () accepts immutable parameters only. Whereas accepts iterable sequences.
 add() accepts a single parameter, whereas update() can accept multiple sequences.
 ************************************************************************************************************************************************************
-Que. What is clear() in sets?
+Que 25. What is clear() in sets?
 Ans. The clear() method removes all elements in a set.
 
 Remove all elements from the fruits set:
@@ -407,7 +407,7 @@ print(fruits)
 
 Output: set()
 *************************************************************************************************************************************************************
-Que. What is frozen set?
+Que 26. What is frozen set?
 Ans. 
 Python frozenset() Method creates an immutable Set object from an iterable. It is a built-in Python function. As it is a set object therefore we cannot have duplicate values in the frozenset.
 Syntax : frozenset(iterable_object_name)
@@ -427,15 +427,282 @@ print("frozenset Object is : ", fnum)
 Output:
 frozenset Object is :  frozenset()
 ************************************************************************************************************************************************************
-Que. How is frozen set different from set?
+Que 27. How is frozen set different from set?
 Ans. 
 Set is represented by curly braces like this {} or you can use set(). You can’t use only curly braces to create an empty set, this will create a dictionary. You can use set() if you want to create an empty set. Sets can include any immutable data type like string, number, tuple, etc. You can also include mutable data type like list, dictionary, etc.
 
 A frozenset is an unordered and unindexed collection of unique elements. It is immutable and it is hashable. It is also called an immutable set. Since the elements are fixed, unlike sets you can't add or remove elements from the set.
 
 Frozensets are hashable, you can use the elements as a dictionary key or as an element from another set. Frozensets are represented by the built-in function which is frozenset(). It returns an empty set if there are no elements present in it. You can use frozenset() if you want to create an empty set.
+***********************************************************************************************************************************************************
+Que 28. Write a python program to print below pattern.
 
-Que. 
+* 
+* * 
+* * * 
+* * * * 
+Ans. 
+
+i=j=1
+while(i<=4):
+	while(j<=i):
+		print("*", end='')
+		j+=1
+	print()
+	j=1
+	i+=1
+*************************************************************************************************************************************************************    
+ Que 29. Write a python program to print below pattern.
+  
+    *
+   **
+  ***
+ ****
+*****
+Ans.
+
+n=5
+i=j=k=1
+while(i<=n):
+	while(k<=(n-i)):
+		print(" ", end='')
+		k+=1
+	k=1
+	while(j<=i):
+		print("*", end='')
+		j+=1
+	j=1
+	print()
+	i+=1
+******************************************************************************************************************************************************************  
+Que 30. Write a python program to print below pattern.
+   
+    * 
+   * * 
+  * * * 
+ * * * * 
+* * * * * 
+Ans. 
+
+n=5
+i=j=k=1
+while(i<=n):
+	while(k<=(n-i)):
+		print(" ", end='')
+		k+=1
+	k=1
+	while(j<=i):
+		print("* ", end='')
+		j+=1
+	j=1
+	print()
+	i+=1
+ ***************************************************************************************************************************************************************   
+ Que 31. Write a python program to print below pattern.
+
+1 
+1 2 
+1 2 3 
+1 2 3 4 
+1 2 3 4 5
+Ans. 
+i=j=1
+while(i<=3):
+	while(j<=i):
+		print(j, end='')
+		j+=1
+	print()
+	j=1
+	i+=1
+*****************************************************************************************************************************************************************    
+Que 32. Write a python program to print below pattern.
+
+A 
+B B 
+C C C 
+D D D D 
+E E E E E 
+
+Ans. 
+n=4
+x=65
+i=j=1
+while(i<=n):
+	while(j<=i):
+		print(chr(x), end='')
+		j+=1
+	j=1
+	print()
+	i+=1
+	x+=1
+********************************************************************************************************************************************************************
+Que 33. Write a Python program to convert a list of tuples into dictionary
+Input : [('Sachin', 10), ('MSD', 7), ('Kohli', 18), ('Rohit', 45)]
+Output : {'Sachin': 10, 'MSD': 7, 'Kohli': 18, 'Rohit': 45}
+
+Ans. 
+def Convert(tup, di):
+    for a, b in tup:
+        di.setdefault(a, []).append(b)
+    return di
+tups = [('Sachin', 10), ('MSD', 7), ('Kohli', 18), ('Rohit', 45)]
+dictionary = {}
+print(Convert(tups, dictionary))
+*********************************************************************************************************************************************************************
+Que 34. Write a Python program to create a list of tuples from given list having number and its cube in each tuple.
+Input: list = [9, 5, 6]
+Output: [(9, 729), (5, 125), (6, 216)]
+
+Ans.
+list = [9, 5, 6]
+res = [(val, pow(val, 3)) for val in list]
+print(res)
+*********************************************************************************************************************************************************************
+Que 35. Write a Python program to get all combinations of 2 tuples.
+
+Input : test_tuple1 = (7, 2), test_tuple2 = (7, 8)
+Output : [(7, 7), (7, 8), (2, 7), (2, 8), (7, 7), (7, 2), (8, 7), (8, 2)]
+An. 
+from itertools import chain, product
+#  tuples
+tuple1 = (7, 2)
+tuple2 = (7, 8)
+#  original tuples
+print("The tuple 1 : " + str(tuple1))
+print("The tuple 2 : " + str(tuple2))
+# All pair combinations of 2 tuples
+result = list(chain(product(tuple1, tuple2), product(tuple2, tuple1)))
+#  result
+print("The resultant tuple : " + str(result))
+*********************************************************************************************************************************************************************
+Que 36. Write a Python program to sort a list of tuples by second item.
+
+Input : [('for', 24), ('Geeks', 8), ('Geeks', 30)] 
+Output : [('Geeks', 8), ('for', 24), ('Geeks', 30)]
+Ans. 
+
+def Sort_Tuple(tup):
+
+    lst = len(tup)
+    for i in range(0, lst):
+
+        for j in range(0, lst - i - 1):
+            if (tup[j][1] > tup[j + 1][1]):
+                temp = tup[j]
+                tup[j] = tup[j + 1]
+                tup[j + 1] = temp
+    return tup
+
+
+# Driver Code
+tup = [('for', 24), ('Geeks', 8), ('Geeks', 30)]
+
+print(Sort_Tuple(tup))
+********************************************************************************************************************************************************************
+Que 37. What is union() in sets? Explain via code.
+Ans. 
+The union() method returns a set that contains all items from the original set, and all items from the specified set(s).
+
+You can specify as many sets you want, separated by commas.
+
+It does not have to be a set, it can be any iterable object.
+
+If an item is present in more than one set, the result will contain only one appearance of this item.
+
+Syntax: set.union(set1, set2...)
+x = {"a", "b", "c"}
+y = {"f", "d", "a"}
+z = {"c", "d", "e"}
+
+result = x.union(y, z)
+
+print(result)
+***********************************************************************************************************************************************************************
+Que 38. What is intersection() in sets? Explain via code.
+Ans.
+The intersection() method returns a set that contains the similarity between two or more sets.
+
+Meaning: The returned set contains only items that exist in both sets, or in all sets if the comparison is done with more than two sets.
+
+Syntax: set.intersection(set1, set2 ... etc)
+x = {"a", "b", "c"}
+y = {"c", "d", "e"}
+z = {"f", "g", "c"}
+
+result = x.intersection(y, z)
+
+print(result)
+********************************************************************************************************************************************************************
+Que 39. What is dictionary ibn Python?
+Ans.
+
+Dictionaries are used to store data values in key:value pairs.
+
+A dictionary is a collection which is ordered*, changeable and do not allow duplicates.
+
+As of Python version 3.7, dictionaries are ordered. In Python 3.6 and earlier, dictionaries are unordered.
+Create and print a dictionary:
+
+thisdict = {
+  "brand": "Ford",
+  "model": "Mustang",
+  "year": 1964
+}
+print(thisdict)
+********************************************************************************************************************************************************************
+Q 40. How is dictionary different from all other data structures.
+Ans. 
+Dictionary is a hashed structure of key and value pairs.
+Dictionary is created by placing elements in { } as “key”:”value”, each key value pair is separated by commas “, “
+The keys of dictionary can be of any data type.
+The elements are accessed via key-values.
+There is no guarantee for maintaining order.
+It is more efficient to use a dictionary for lookup of elements because it takes less time to traverse in the dictionary than a list.
+The dictionary is preferred because of less time and less space storage as dictionaries are implemented in the form of hash tables from python3.6 so it is never a space-time trade-off problem in dictionaries.
+***********************************************************************************************************************************************************************
+Q 41. How can we delare a dictionary in Python?
+Ans.
+A dictionary in Python is made up of key-value pairs.
+
+In the two sections that follow you will see two ways of creating a dictionary.
+
+The first way is by using a set of curly braces, {}, and the second way is by using the built-in dict() function.
+#creating dictionary:
+dict1 = {"1": "K", "2": "A", "3": "N", "4": "c", "5": "H", '6': "H","7": "N"}
+print(dict1)
+
+How to Create An Empty Dictionary in Python:
+To create an empty dictionary, first create a variable name which will be the name of the dictionary.
+
+Then, assign the variable to an empty set of curly braces, {}.
+
+#create an empty dictionary
+my_dictionary = {}
+
+print(my_dictionary)
+
+#to check the data type use the type() function
+print(type(my_dictionary))
+
+#output
+
+#{}
+#<class 'dict'>
+**********************************************************************************************************************************************************************
+Q 42. What will the output of the following?
+
+var = {}
+print(type(var))
+Ans.
+<class 'dict'>
+**********************************************************************************************************************************************************************
+Q 43. 
+
+
+
+
+
+
 
 
 
