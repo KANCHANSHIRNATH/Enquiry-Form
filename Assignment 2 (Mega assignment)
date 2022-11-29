@@ -1062,56 +1062,314 @@ inputs = input().split(', ')
 print(func(inputs))
 *********************************************************************************************************************************************************************
 Q 68 Can we take more than one input from the user using single input() function? If yes, how? If no, why?
+Ans.
+The split() method is used to split the Python string, but we can use it to get the multiple values.
+Syntax:- input().split(separator, maxsplit)  
+Parameters -
+The separator parameter breaks the input by the specified separator. By default, whitespace is the specified separator.
+The split() method is used to split the Python string, but we can use it to get the multiple values.
+
+Let's understand the following example.
+a, b, c = input("Enter three values: ").split()  
+print("Enter Your First Name: ", a)  
+print("Enter Your Last Name: ", b)  
+print("Enter Your Class: ", c)  
+print()  
 ****************************************************************************************************************************************************************************
 Q 69. How can you delete entire string at once?
-**********************************************************************************
+Ans.
+str = "Python Class"
+del(str)
+**********************************************************************************************************************************************************************
 Q 70. What is escape sequence?
-********************************************************************
+Ans.
+Escape sequences – Escape sequences are control character used to move the cursor and print characters such as ‘, “. \ and so on.
+ Escape Sequence	   Meaning
+\a                      Bell
+\b                      Backspace
+\f                      Formfeed
+\n                      NewLine
+\r                      Carriage Return
+\t                      Horizontal Tab
+\v                      Vertical Tab
+\newline                Backslash and NewLine Ignored
+
+
+ Escape Sequence      Meaning
+\\                   Backslash
+\’                   Single Quote
+\”                   Double Quote
+**********************************************************************************************************************************************************************
 Q 71. Create a set and add "iNeuron" in your set.
-***************************************************************************
+set = {'smile', 'happy', 'awesome'}
+print(set)
+set.add("iNeuron")
+print(set)
+**********************************************************************************************************************************************************************
 Q 72. What is the use of get() function?
-**********************************************************************
+Ans.
+The get() method returns the value of the item with the specified key.
+Syntax:-
+dictionary.get(keyname, value)
+Example:- 
+car = {
+  "brand": "Ford",
+  "model": "Mustang",
+  "year": 1964
+}
+
+x = car.get("price", 15000)
+
+print(x)
+**********************************************************************************************************************************************************************
 Q 73. What is the use of items() function?
+Ans.
+The items() method returns a list containing a tuple for each key value pair. The view object contains the key-value pairs of the dictionary, as tuples in a list.
+Syntax:-
+dictionary.items()
+Example:- 
+car = {
+  "brand": "Ford",
+  "model": "Mustang",
+  "year": 1964
+}
+
+x = car.items()
+print(x)
+
+O/p:- dict_items([('brand', 'Ford'), ('model', 'Mustang'), ('year', 2018)])
 ********************************************************************************
 Q 74. What is the use of pop() function?
-*************************************************************************************
-Q 75. What is the use of popitems() function?
-***************************************************************************
-Q 76. Write a Python program to find the factorial of a given number.
-***************************************************************************
-Q 77. Write a Python program to calculate the simple interest. Formula to calculate simple interest is SI = (PRT)/100
-**********************************************************************************************************************************
-Q 78. Write a Python program to calculate the compound interest. Formula of compound interest is A = P(1+ R/100)^t.
-***********************************************************************************************************************************
-Q 79. Write a Python program to check if a number is prime or not.
-*********************************************************************************
- Q 79. Write a Python program to check if a number is prime or not.
-*****************************************************************************
-Q 80. Write a Python program to check Armstrong Number.
-************************************************************************************
-Q 81. Write a Python program to find the n-th Fibonacci Number.
-*************************************************************************************************
-Q 82. Write a Python program to interchange the first and last element in a list.
-************************************************************************************************************************************************
-Q 83. Write a Python program to swap two elements in a list.
-**********************************************************************************************************
-Q 84. Write a Python program to find N largest element from a list.
-*****************************************************************************************************************
-Q 85. Write a Python program to find cumulative sum of a list.
-******************************************************************************************************************
-Q 86. Write a Python program to check if a string is palindrome or not.
-*******************************************************************************************************************
-Q 87. Write a Python program to remove i'th element from a string.
-**********************************************************************************************************************
-Q 88. Write a Python program to check if a substring is present in a given string.
-**********************************************************************************************************************
-Q 89. Write a Python program to find words which are greater than given length k.
-************************************************************************************************************************
-Q 90. Write a Python program to extract unquire dictionary values.
-**************************************************************************************************************************
-Q91. Write a Python program to merge two dictionary.
-******************************************************************************************************************************
+Ans. 
+Pop() function removes the element with the specified key.
 
+Syntax:-
+dictionary.pop(keyname, defaultvalue)
+
+Parameter:-
+1. keyname :- Required. The keyname of the item you want to remove
+2. defaultvalue	(Optional).:- A value to return if the specified key do not exist.
+If this parameter is not specified, and the no item with the specified key is found, an error is raised.
+
+Example:-
+car = {
+  "brand": "Ford",
+  "model": "Mustang",
+  "year": 1964
+}
+x = car.pop("model")
+print(x)
+**********************************************************************************************************************************************************************
+Q 75. What is the use of popitems() function?
+Ans. 
+The popitem() method removes the item that was last inserted into the dictionary. In versions before 3.7, the popitem() method removes a random item.
+Syntax:
+dictionary.popitem()
+
+Example:-
+car = {
+  "brand": "Ford",
+  "model": "Mustang",
+  "year": 1964
+}
+x = car.popitem()
+print(x)
+**********************************************************************************************************************************************************************
+Q 76. Write a Python program to find the factorial of a given number.
+Ans. 
+i = 1
+fact = 1
+while(i <= 4 ):
+    fact = fact*i
+    i = i + 1
+print("factorial is", fact)
+*********************************************************************************************************************************************************************
+Q 77. Write a Python program to calculate the simple interest. Formula to calculate simple interest is SI = (PRT)/100
+*********************************************************************************************************************************************************************
+Q 78. Write a Python program to calculate the compound interest. Formula of compound interest is A = P(1+ R/100)^t.
+*********************************************************************************************************************************************************************
+Q 79. Write a Python program to check if a number is prime or not.
+********************************************************************************************************************************************************************
+Q 79. Write a Python program to check if a number is prime or not.
+**********************************************************************************************************************************************************************
+Q 80. Write a Python program to check Armstrong Number.
+*********************************************************************************************************************************************************************
+Q 81. Write a Python program to find the n-th .
+*********************************************************************************************************************************************************************
+Q 82. Write a Python program to interchange the first and last element in a list.
+*********************************************************************************************************************************************************************
+Q 83. Write a Python program to swap two elements in a list.
+*********************************************************************************************************************************************************************
+Q 84. Write a Python program to find N largest element from a list.
+*********************************************************************************************************************************************************************
+Q 85. Write a Python program to find cumulative sum of a list.
+*********************************************************************************************************************************************************************
+Q 86. Write a Python program to check if a string is palindrome or not.
+*********************************************************************************************************************************************************************
+Q 87. Write a Python program to remove i'th element from a string.
+*********************************************************************************************************************************************************************
+Q 88. Write a Python program to check if a substring is present in a given string.
+*********************************************************************************************************************************************************************
+Q 89. Write a Python program to find words which are greater than given length k.
+*********************************************************************************************************************************************************************
+Q 90. Write a Python program to extract unquire dictionary values.
+**********************************************************************************************************************************************************************
+Q 91. Write a Python program to merge two dictionary.
+**********************************************************************************************************************************************************************
+Q 92. What is the  use of pass statement?
+Ans. Pass Statement is used to do nothing. It can be used inside a loop or if statement to represent no operation. Pass is useful when we need statement syntactically correct but we do not want to do any operation.
+
+Example:-
+if(condition):
+	pass
+else:
+	Statements 
+
+while condition:
+	if(condition):
+		pass
+	Statements
+Rest of Code
+*********************************************************************************************************************************************************************
+Q 93. What is the use of range() function?
+Ans.
+range() function is used to generate a sequence of integers starting from 0 by default, and increments by 1 by default, till j-1. 
+Syntax:- 
+range(start, stop, stepsize)
+Start – Starting position. If we do not mention start by default it’s 0
+*Stop – Ending position. The range of integers stops one element prior to stop. If stop is j then it will stop at exact j-1
+Stepsize – Increment by stepsize. If we do not mention start by default it’s 1
+
+Syntax:-  range( j )		0, 1, 2, 3, 4,………..., j-1
+Ex:-  range(10)		0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+
+Syntax:- range(i, j)		i, i+1, i+2. i+3,….., j-1  
+Ex:- range(1, 10)		1, 2, 3, 4, 5, 6, 7, 8, 9
+
+Syntax: - range(i, j, k)	i, i+k, i+2k, i+3k, i+4k,….., j-1
+range(1, 10, 2)		1, 3, 5, 7, 9
+
+range(-1, -10, -2)	-1  -3  -5  -7  -9
+range(10, 0, -1)	10  9  8  7  6  5  4  3  2  1
+
+All argument must be integers, whether its positive or negative
+You can not pass a string or float number or any other type in a start, stop and stepsize.
+The stepsize value should not be zero.
+**********************************************************************************************************************************************************************
+Q 94. How can you loop over a dictionary?
+Ans.
+You can loop through a dictionary by using a for loop.
+When looping through a dictionary, the return value are the keys of the dictionary, but there are methods to return the values as well.
+
+Example
+#Print all key names in the dictionary, one by one:
+for x in thisdict:
+    print(x)
+#Print all values in the dictionary, one by one:
+for x in thisdict:
+  print(thisdict[x])  
+#You can also use the values() function to return values of a dictionary:
+for x in thisdict.values():
+  print(x)
+#Loop through both keys and values, by using the items() function:
+for x, y in thisdict.items():
+  print(x, y)
+*******************************************************************************************************************************************************************
+ Q 95. What is the use of break statement?
+ Ans.
+ Break statement is used to jump out of loop to process the next statement in the program.
+while condition:
+	if(condition):
+		break
+Rest of Code
+*******************************************************************************************************************************************************************
+Q 96. What is the use of continue statement?
+Ans.
+Continue statement is used in a loop to go back to the beginning of the loop.
+while condition:
+	if(condition):
+		continue
+Rest of Code
+*********************************************************************************************************************************************************************
+Q 97. What is the use of keys() function?
+Ans.
+The keys() method returns a view object. The view object contains the keys of the dictionary, as a list.
+Syntax:-
+dictionary.keys()
+
+Example:-
+car = {
+  "brand": "Ford",
+  "model": "Mustang",
+  "year": 1964
+}
+x = car.keys()
+print(x)
+**********************************************************************************************************************************************************************
+Q 98. What are loops in Python?
+Ans. 
+Loop Control Statements:-
+Loop control statements are used when a section of code may either be executed a fixed number of times, or while some condition is true.
+*********************************************************************************************************************************************************************
+Q 99. What is the difference between for and while loops?
+Ans.
+A for loop is a control flow statement that executes code for a predefined number of iterations. The keyword used in this control flow statement is “for”. When the number of iterations is already known, the for loop is used.
+
+The for loop is divided into two parts −
+Header − This part specifies the iteration of the loop. In the header part, the loop variable is also declared, which tells the body which iteration is being executed.
+Body − The body part contains the statement executed per iteration.
+
+The initialization, condition checking, and iteration statements are written at the beginning of the loop.
+It is used only when the number of iterations is known beforehand.
+If the condition is not mentioned in the 'for' loop, then the loop iterates the infinite number of times.
+The initialization is done only once, and it is never repeated.
+The iteration statement is written at the beginning.
+Hence, it executes once all statements in the loop have been executed.
+
+Syntax
+for(initialization; condition; iteration){
+   //body of the 'for' loop
+}
+
+Example-
+# input list
+inputList = [10, 20, 30, 40, 50]
+print("Input list elements:")
+# traversing through all elements of the list using for loop
+for element in inputList:
+   # printing each element of the list
+   print(element)
+   
+2. While Loop
+A loop that runs a single statement or a set of statements for a given true condition. This loop is represented by the keyword "while." When the number of iterations is unknown, a "while" loop is used. The statement is repeated until the boolean value is false. Because the condition is tested at the beginning of a while loop, it is also known as the pre-test loop.
+
+The initialization and condition checking are done at the beginning of the loop.
+It is used only when the number of iterations isn’t known.
+If the condition is not mentioned in the 'while' loop, it results in a compilation error.
+If the initialization is done when the condition is being checked, then initialization occurs every time the loop is iterated through.
+The iteration statement can be written within any point inside the loop.
+
+Syntax:-
+while ( condition) {
+   statements;
+   //body of the loop
+}
+
+Example:-
+# Initializing a dummy variable with 1
+i = 1
+# Iterate until the given condition is true
+while i < 10:
+   # printing the current value of the above variable
+   print(i)
+   # incrementing the value of i value by 1
+   i += 1
+*********************************************************************************************************************************************************************
+Q 100. How many type of loop are there in Python?
+Ans. 
+1. While
+2. For
+********************************************************************************************************************************************************************
 
 
 
