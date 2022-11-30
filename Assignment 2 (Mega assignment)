@@ -1205,6 +1205,14 @@ Q 84. Write a Python program to find N largest element from a list.
 Q 85. Write a Python program to find cumulative sum of a list.
 *********************************************************************************************************************************************************************
 Q 86. Write a Python program to check if a string is palindrome or not.
+Ans.
+
+abc = input("Enter your string:")
+print(abc[::-1])
+if(abc == abc[::-1]):
+	print("Palindrome")
+else:
+	print("Not a Palindrome")
 *********************************************************************************************************************************************************************
 Q 87. Write a Python program to remove i'th element from a string.
 Ans.
