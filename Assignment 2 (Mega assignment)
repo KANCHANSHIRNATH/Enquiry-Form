@@ -1211,8 +1211,35 @@ Q 87. Write a Python program to remove i'th element from a string.
 Q 88. Write a Python program to check if a substring is present in a given string.
 *********************************************************************************************************************************************************************
 Q 89. Write a Python program to find words which are greater than given length k.
+Ans. 
+def display(k, string):
+    xyz = []
+    abc = string.split(" ")
+    for i in abc:
+        if len(i) >= k:
+            xyz.append(i)
+    return xyz
+
+
+k = 5
+string = "I am there for you! Professional"
+print(display(k, string))
 *********************************************************************************************************************************************************************
 Q 90. Write a Python program to extract unquire dictionary values.
+Ans. 
+dict1 = {'A': [1, 3, 5, 4],
+         'B': [4, 6, 8, 10],
+         'C': [6, 12, 4, 8],
+         'D': [5, 7, 2]}
+
+print("The original dictionary is : ", dict1)
+
+# Using list comprehension, values() and sorted()
+res = list(sorted({ele for val in dict1.values() for ele in val}))
+
+# print result
+print("The unique values list is : ", res)
+# calling a function
 **********************************************************************************************************************************************************************
 Q 91. Write a Python program to merge two dictionary.
 **********************************************************************************************************************************************************************
