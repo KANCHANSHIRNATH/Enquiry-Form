@@ -411,8 +411,78 @@ def add():
 # calling a function
 add()
 ********************************************************************************************************************************************************************
-    
-    
+Que 31. What are your options for recovering from an exception in your script?
+Ans. We will place the code into try and except block.
+The try statement works as follows.
+First, the try clause (the statement(s) between the try and except keywords) is executed.
+If no exception occurs, the except clause is skipped and execution of the try statement is finished.
+If an exception occurs during execution of the try clause, the rest of the clause is skipped. Then, if its type matches the exception named after the except keyword, the except clause is executed, and then execution continues after the try/except block. 
+*********************************************************************************************************************************************************************
+Que 32. What are the two most popular try statement variations?
+Ans.  A try statement, often referred to as a try block, in fact consists of at least two parts: 1 try and except variations.
+The code we want to safeguard goes inside the try portion of the block. Afterwards, we define what happens when something goes wrong within the except.
+
+try:
+   print(x)
+except Exception:
+   print("Something broke!")
+# Something broke!
+
+In the example above, we use the catch-all value Exception to route any exception to this portion of the block. 
+
+2. Try with multiple except
+You can define multiple except blocks within a try, specifying the exact type of exception that should be routed to each. Additionally, you can set the error message to a variable—e is common—so it can be used in your program.
+try:
+   print(int(x))
+except NameError:
+  print("The variable is undefined")   
+except Exception as e:
+   print(e)
+
+3. Try/Except/Else
+When attaching an else statement to the end of a try/except, this code will be executed after the try has been completed, but only if no exceptions occur.
+while True:
+  try:
+    num = int(input("Enter an int: "))
+  except Exception as e:
+    print(e)
+  else:
+    print("Thank you for the integer!")
+    break
+
+4. Try/Except/Finally
+When attaching a finally statement to the end of a try/except, this code will be executed after the try has been completed, regardless of exceptions.
+count = 0
+while True:
+  try:
+    num = int(input("Enter an int: "))
+    break
+  except Exception as e:
+    print(e)
+  finally:
+    count += 1
+    print("Attempt #:",count)
+--------------------------------------------------------------------------------------------------
+    Q25. What is the purpose of the raise statement?
+
+    Ans:- Python raise Keyword is used to raise exceptions or errors. The raise keyword raises an error and stops the control flow of the program. It is used to bring up the current exception in an exception handler so that it can be handled further up the call stack.
+**********************************************************************************************************************************************************************
+ Que 33. Inheritance is a powerful feature in object oriented programming.
+Ans. It refers to defining a new class with little or no modification to an existing class. The new class is called derived (or child) class and the one from which it inherits is called the base (or parent) class.
+***********************************************************************************************************************************************************************
+Que 34. Suppose class C inherits from classes A and B as class C(A,B).Classes A and B both have their own versions of method func(). If we call func() from an object of class C, which version gets invoked?
+Ans. 
+***********************************************************************************************************************************************************************
+Que35. Which methods/functions do we use to determine the type of instance and inheritance?
+Ans. The isinstance() method checks whether an object is an instance of a class whereas issubclass() method asks whether one class is a subclass of another class (or other classes).
+1. isinstance(object, classinfo)
+Return true if the object argument is an instance of the classinfo argument, or of a (direct, indirect or virtual) subclass thereof.
+
+
+2. issubclass(class, classinfo)
+Return true if class is a subclass (direct, indirect or virtual) of classinfo. A class is considered a subclass of itself.
+***********************************************************************************************************************************************************************
+                                ---------------------------------------***-----------------------------------------------------
     
     
     
