@@ -1371,6 +1371,13 @@ while(i<n):
 print(abc)
 *********************************************************************************************************************************************************************
 Q 88. Write a Python program to check if a substring is present in a given string.
+Ans:-
+MyString1 = "A geek in need is a geek indeed"
+ 
+if "need" in MyString1:
+    print("Yes! it is present in the string")
+else:
+    print("No! it is not present")
 *********************************************************************************************************************************************************************
 Q 89. Write a Python program to find words which are greater than given length k.
 Ans. 
