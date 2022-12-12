@@ -1,0 +1,132 @@
+Que 1. How do you load a CSV file into a Pandas DataFrame?
+Ans. 
+import pandas as pd 
+# creating a data frame
+df = pd.read_csv("File_name")
+print df
+**********************************************************************************************************************************************************************
+Que 2. How do you check the data type of a column in a Pandas DataFrame?
+Ans. 
+# importing pandas package
+import pandas as pd
+
+# create a Pandas DataFrame
+df = pd.DataFrame({'Col1':[4.1, 23.43], 'Col2':['a', 'w'], 'Col3':[1, 8]})
+
+print("DataFrame:")
+print(df)
+
+#
+ apply the dtype attribute
+result = df.dtypes
+
+print("Output:")
+print(result)
+
+Output: 
+DataFrame:
+      Col1 Col2 Col3
+0     4.10    a    1
+1    23.43    w    8
+
+Output:
+Col1    float64
+Col2     object
+Col3      int64
+dtype: object
+**********************************************************************************************************************************************************************
+Que 3. How do you select rows from a Pandas DataFrame based on a condition?
+Ans.
+# importing pandas
+import pandas as pd
+  
+record = {
+  
+ 'Name': ['Rahul', 'Sumit', 'Mahi', 'Rajal', 'Srushti', 'Megha' ],
+ 'Age': [20, 22, 21, 19, 24, 25],
+ 'Stream': ['Math', 'Commerce', 'Science', 'Math', 'Math', 'Science'],
+ 'Percentage': [92, 90, 96, 80, 88, 95, 98] }
+  
+# create a dataframe
+dataframe = pd.DataFrame(record, columns = ['Name', 'Age', 'Stream', 'Percentage'])
+  
+print("Given Dataframe :\n", dataframe) 
+  
+# selecting rows based on condition
+rslt_df = dataframe[dataframe['Percentage'] > 80]
+  
+print('\nResult dataframe :\n', rslt_df)
+**********************************************************************************************************************************************************************
+Que 4. How do you rename columns in a Pandas DataFrame?
+Ans.
+# Import pandas package
+import pandas as pd
+  
+# Define a dictionary containing ICC rankings
+rankings = {'test': ['India', 'South Africa', 'England',
+                            'New Zealand', 'Australia'],
+            'odi': ['England', 'India', 'New Zealand',
+                            'South Africa', 'Pakistan'],
+            't20': ['Pakistan', 'India', 'Australia',
+                            'England', 'New Zealand']}
+  
+# Convert the dictionary into DataFrame
+rankings_pd = pd.DataFrame(rankings)
+  
+# Before renaming the columns
+print(rankings_pd)
+  
+rankings_pd.rename(columns = {'test':'TEST'}, inplace = True)
+  
+# After renaming the columns
+print("\nAfter modifying first column:\n", rankings_pd.columns)
+***********************************************************************************************************************************************************************
+Que 5. How do you drop columns in a Pandas DataFrame?
+Ans.
+
+record = {
+  
+ 'Name': ['Rahul', 'Sumit', 'Mahi', 'Rajal', 'Srushti', 'Megha' ],
+ 'Age': [20, 22, 21, 19, 24, 25],
+ 'Stream': ['Math', 'Commerce', 'Science', 'Math', 'Math', 'Science'],
+ 'Percentage': [92, 90, 96, 80, 88, 95, 98] }
+ 
+# Convert the dictionary into DataFrame
+df = pd.DataFrame(record)
+  
+# Remove column name 'A'
+df.drop(['A'], axis=1)
+***********************************************************************************************************************************************************************
+Que 6. How do you find the unique values in a column of a Pandas DataFrame?
+Ans. 
+
+record = {
+  
+ 'Name': ['Rahul', 'Rajal', 'Mahi', 'Rajal', 'Rahul', 'Megha' ],
+ 'Age': [20, 22, 21, 19, 24, 25],
+ 'Stream': ['Math', 'Commerce', 'Science', 'Math', 'Math', 'Science'],
+ 'Percentage': [92, 90, 96, 80, 88, 95, 98] }
+ 
+# Convert the dictionary into DataFrame 
+df = pd.DataFrame(record)
+  
+# Get the unique values of 'B' column
+df.Name.unique()
+***********************************************************************************************************************************************************************
+Que 7. How do you find the number of missing values in each column of a Pandas DataFrame?
+Ans.
+import pandas as pd
+import numpy as np
+pd.set_option('display.max_rows', None)
+#pd.set_option('display.max_columns', None)
+df = pd.DataFrame({
+'Marks':[90,66,70,0,90,40,0,0,70,80,0],
+'Adm_date': ['2012-10-05','2012-09-10',np.nan,'2012-08-17','2012-09-10','2012-07-27','2012-09-10','2012-10-10','2012-10-10','2012-06-27','2012-08-17'],
+'Stud_id':[3002,3001,3001,3003,3002,3001,3001,3004,3003,3002,3001],
+print("Original Orders DataFrame:")
+print(df)
+print("\nNumber of missing values of the said dataframe:")
+print(df.isna().sum())
+***********************************************************************************************************************************************************************
+Que 8. How do you fill missing values in a Pandas DataFrame with a specific value?
+Ans.
