@@ -130,3 +130,473 @@ print(df.isna().sum())
 ***********************************************************************************************************************************************************************
 Que 8. How do you fill missing values in a Pandas DataFrame with a specific value?
 Ans.
+df.fillna(method='ffill', inplace=True)
+df.fillna(method='bfill', inplace=True)
+
+Que. How do you concatenate two Pandas DataFrames?
+Ans. 
+df1 = pd.DataFrame(np.random.randint(25, size=(4, 4)),
+                   index=["1", "2", "3", "4"],
+                   columns=["A", "B", "C", "D"])
+ 
+df2 = pd.DataFrame(np.random.randint(25, size=(6, 4)),
+                   index=["5", "6", "7", "8", "9", "10"],
+                   columns=["A", "B", "C", "D"])
+                   
+df3 = pd.DataFrame(np.random.randint(25, size=(4, 4)),
+                   columns=["A", "B", "C", "D"])
+ 
+df4 = pd.DataFrame(np.random.randint(25, size=(4, 4)),
+                   columns=["E", "F", "G", "H"])
+ 
+display(df1, df2, df3, df4)                  
+                   
+# concatenating df1 and df2 along rows
+vertical_concat = pd.concat([df1, df2], axis=0)
+ 
+# concatenating df3 and df4 along columns
+horizontal_concat = pd.concat([df3, df4], axis=1)
+ 
+display(vertical_concat, horizontal_concat)  
+***********************************************************************************************************************************************************************
+Que 10. How do you merge two Pandas DataFrames on a specific column?
+Ans.
+df3 = pd.DataFrame(np.random.randint(25, size=(4, 4)),
+                   columns=["A", "B", "C", "D"])
+ 
+df4 = pd.DataFrame(np.random.randint(25, size=(4, 4)),
+                   columns=["E", "F", "G", "H"])
+                   
+display(df3, df4)  
+
+# concatenating df3 and df4 along columns
+horizontal_concat = pd.concat([df3, df4], axis=1)
+***********************************************************************************************************************************************************************
+Que 11. How do you group data in a Pandas DataFrame by a specific column and apply an aggregation function?
+Ans.
+data[data['item'] == 'call'].groupby('month').agg(
+max_duration=pd.NamedAgg(column='duration', aggfunc=max), 
+min_duration=pd.NamedAgg(column='duration', aggfunc=min), 
+total_duration=pd.Named(column='duration', aggfunc=sum), 
+num_days=pd.NamedAgg(column='date', aggfunc=lambda x: (max(x) - min(x).days))
+
+#item --> Select these rows
+#month --> group by this month
+#duration -->Work on these columns
+#max, min, sum --> Perform these operations
+#ma_duration, min_duration, total_duration --> Rename the output
+***********************************************************************************************************************************************************************
+Q 12. How do you pivot a Pandas DataFrame?
+Ans. 
+import pandas as pd
+import numpy as np
+df = pd.DataFrame({'fff': ['one', 'one', 'one', 'two', 'two',
+                           'two'],
+                   'bbb': ['P', 'Q', 'R', 'P', 'Q', 'R'],
+                   'baa': [2, 3, 4, 5, 6, 7],
+                   'zzz': ['h', 'i', 'j', 'k', 'l', 'm']})
+df
+
+df.pivot(index='fff', columns='bbb', values='baa')
+df.pivot(index='fff', columns='bbb')['baa']
+df.pivot(index='fff', columns='bbb', values=['baa', 'zzz'])
+***********************************************************************************************************************************************************************
+Que 13. How do you change the data type of a column in a Pandas DataFrame?
+Ans. 
+>>> s = pd.Series(["8", 6, "7.5", 3, "0.9"]) # mixed string and numeric values
+>>> s
+0      8
+1      6
+2    7.5
+3      3
+4    0.9
+dtype: object
+
+>>> pd.to_numeric(s) # convert everything to float values
+0    8.0
+1    6.0
+2    7.5
+3    3.0
+4    0.9
+dtype: float64
+
+# convert Series
+my_series = pd.to_numeric(my_series)
+
+# convert column "a" of a DataFrame
+df["a"] = pd.to_numeric(df["a"])
+
+# convert all columns of DataFrame
+df = df.apply(pd.to_numeric) # convert all columns of DataFrame
+
+# convert just columns "a" and "b"
+df[["a", "b"]] = df[["a", "b"]].apply(pd.to_numeric)
+***********************************************************************************************************************************************************************
+Que 14. How do you sort a Pandas DataFrame by a specific column?
+Ans.
+
+print(df)
+
+        0          1     2
+0   354.7      April   4.0
+1    55.4     August   8.0
+2   176.5   December  12.0
+3    95.5   February   2.0
+4    85.6    January   1.0
+5     152       July   7.0
+6   238.7       June   6.0
+7   104.8      March   3.0
+8   283.5        May   5.0
+9   278.8   November  11.0
+10  249.6    October  10.0
+11  212.7  September   9.0
+
+df.sort_values('2')
+final_df = df.sort_values(by=['2'], ascending=False)
+sorted_df = df.sort_values(by=['Column_name'], ascending=True)
+
+df.sort_values(by=['2'], inplace=True)
+
+# or
+
+df.sort_values(by = '2', inplace = True)
+
+# or
+
+df.sort_values('2', inplace = True)
+
+df = df.sort_values(by=['2'])
+***********************************************************************************************************************************************************************
+Que 15 How do you create a copy of a Pandas DataFrame?
+Ans.
+import pandas as pd
+
+data = {
+  "name": ["Sally", "Mary", "John"],
+  "qualified": [True, False, False]
+}
+
+df = pd.DataFrame(data)
+print(df)
+
+#Make a copy:
+
+newdf = df.copy()
+
+print(newdf)
+***********************************************************************************************************************************************************************
+Que 16. How do you filter rows of a Pandas DataFrame by multiple conditions?
+Ans.
+# import module
+import pandas as pd
+ 
+# assign data
+dataFrame = pd.DataFrame({'Name': [' RACHEL  ', ' MONICA  ', ' PHOEBE  ',
+                                   '  ROSS    ', 'CHANDLER', ' JOEY    '],
+                           
+                          'Age': [30, 35, 37, 33, 34, 30],
+                           
+                          'Salary': [100000, 93000, 88000, 120000, 94000, 95000],
+                           
+                          'JOB': ['DESIGNER', 'CHEF', 'MASUS', 'PALENTOLOGY',
+                                  'IT', 'ARTIST']})
+ 
+# display dataframe
+display(dataFrame)
+
+# filter dataframe
+display(dataFrame.loc[(dataFrame['Salary']>=100000) & (dataFrame['Age']< 40) & (dataFrame['JOB'].str.startswith('D')),
+                    ['Name','JOB']])
+filtered_values = np.where((dataFrame['Salary']>=100000) & (dataFrame['Age']< 40) & (dataFrame['JOB'].str.startswith('D')))
+print(filtered_values)
+
+display(dataFrame.loc[filtered_values])
+display(dataFrame.loc[(dataFrame['Salary']>=100000) & (dataFrame['Age']< 40) & (dataFrame['JOB'].str.startswith('D')),
+                    ['Name','JOB']])
+                    
+filtered_values = np.where((dataFrame['Salary']>=100000) & (dataFrame['Age']< 40) & (dataFrame['JOB'].str.startswith('D')))
+print(filtered_values)
+display(dataFrame.loc[filtered_values])
+
+display(dataFrame[dataFrame.eval("Salary <=100000 & (Age <40) & JOB.str.startswith('A').values")])
+***********************************************************************************************************************************************************************
+Que 17. How do you calculate the mean of a column in a Pandas DataFrame?
+Ans.
+
+# Below are quick example
+# Using DataFrame.mean() method to get column average
+df2 = df["Fee"].mean()
+
+# Using DataFrame.mean() to get entire column mean
+df2 = df.mean()
+
+# Using multiple columns mean using DataFrame.mean()
+df2 = df[["Fee","Discount"]].mean()
+
+# Average of each column using DataFrame.mean()
+df2 = df.mean(axis=0)
+
+# Find the mean including NaN values using DataFrame.mean()
+df2 = df.mean(axis = 0, skipna = False)
+
+# Using DataFrame.describe() method
+df2 = df.describe()
+***********************************************************************************************************************************************************************
+Que 18. How do you calculate the standard deviation of a column in a Pandas DataFrame?
+
+Ans.
+Standard deviation is calculated using the function .std(). However, the Pandas library creates the Dataframe object and then the function .std() is applied on that Dataframe.
+import pandas as pd
+import numpy as np
+ 
+#Create a DataFrame
+d = {
+    'Name':['Alisa','Bobby','Cathrine','Madonna','Rocky','Sebastian','Jaqluine',
+   'Rahul','David','Andrew','Ajay','Teresa'],
+   'Score1':[62,47,55,74,31,77,85,63,42,32,71,57],
+   'Score2':[89,87,67,55,47,72,76,79,44,92,99,69],
+   'Score3':[56,86,77,45,73,62,74,89,71,67,97,68]}
+
+df = pd.DataFrame(d)
+answer= df.std()
+print("The standard deviations of the 3 columns are:")
+print (answer)
+***********************************************************************************************************************************************************************
+Que 19. How do you calculate the correlation between two columns in a Pandas DataFrame?
+Ans.
+# import pandas module
+import pandas as pd
+
+# create dataframe with 3 columns
+data = pd.DataFrame({
+	"column1": [12, 23, 45, 67],
+	"column2": [67, 54, 32, 1],
+	"column3": [34, 23, 56, 23]
+}
+)
+# display dataframe
+print(data)
+
+# correlation between column 1 and column2
+print(data['column1'].corr(data['column2']))
+
+# correlation between column 2 and column3
+print(data['column2'].corr(data['column3']))
+
+# correlation between column 1 and column3
+print(data['column1'].corr(data['column3']))
+***********************************************************************************************************************************************************************
+Que 20. How do you select specific columns in a DataFrame using their labels?
+Ans.
+import pandas as pd
+import numpy as np
+'df = pd.DataFrame({'fff': ['one', 'one', 'one', 'two', 'two',
+                           'two'],
+                   'bbb': ['P', 'Q', 'R', 'P', 'Q', 'R'],
+                   'baa': [2, 3, 4, 5, 6, 7],
+                   'zzz': ['h', 'i', 'j', 'k', 'l', 'm']})
+df
+
+#Selecting column based on their name
+df['fff']
+
+#Selecting a subset of columns based on difference of columns
+df[df.columns.difference(['fff','bbb'])]
+
+#Passing a list in the brackets lets you select multiple columns at the same time.
+df[['fff','bbb']]
+
+#Selecting a subset of columns that is in a list
+df[df.columns[~df.columns.isin(['fff','bbb'])]]
+
+#Selecting columns based on their data type
+df.loc[:,(df.dtypes=='float64').values]
+
+#Selecting columns based on how their column name starts
+df.loc[:,df.columns.str.startswith('ff')]
+#Selecting columns based on how their column name ends
+df.loc[:,df.columns.str.endswith('al')]
+
+***********************************************************************************************************************************************************************
+Que 21. How do you select specific rows in a DataFrame using their indexes?
+Ans. 
+import pandas as pd
+import numpy as np
+
+#create DataFrame
+df = pd.DataFrame(np.random.rand(6,2), index=range(0,18,3), columns=['A', 'B'])
+
+#select the 3rd, 4th, and 5th rows of the DataFrame
+df.iloc[[2, 3, 4]]
+
+#select the 3rd, 4th, and 5th rows of the DataFrame
+df.iloc[2:5]
+
+#select the rows with index labels '3', '6', and '9'
+df.loc[[3, 6, 9]]
+
+The Difference Between .iloc and .loc
+The examples above illustrate the subtle difference between .iloc an .loc:
+
+.iloc selects rows based on an integer index. So, if you want to select the 5th row in a DataFrame, you would use df.iloc[[4]] since the first row is at index 0, the second row is at index 1, and so on.
+.loc selects rows based on a labeled index. So, if you want to select the row with an index label of 5, you would directly use df.loc[[5]].
+
+***********************************************************************************************************************************************************************
+Que 22. How do you sort a DataFrame by a specific column?
+Ans. 
+Important arguments are,
+axis : If axis is 0, then dataframe will sorted based on row index labels. Default is 0
+If axis is 1, then dataframe will sorted based on column names.
+ascending : If True sort in ascending else sort in descending order. Default is True
+inplace : If True, perform operation in-place in Dataframe
+na_position : Decides the position of NaNs after sorting i.e. irst puts NaNs at the beginning, last puts NaNs at the end
+Default value is ‘first’
+
+DataFrame.sort_index(axis=0, level=None, ascending=True, inplace=False, kind='quicksort', na_position='last', sort_remaining=True, by=None)
+
+# List of Tuples
+students = [ ('Jack', 34, 'Sydney') ,
+             ('Riti', 31, 'Delhi' ) ,
+             ('Aadi', 16, 'New York') ,
+             ('Riti', 32, 'Delhi' ) ,
+             ('Riti', 33, 'Delhi' ) ,
+             ('Riti', 35, 'Mumbai' )
+              ]
+# Create a DataFrame object
+dfObj = pd.DataFrame(students, columns=['Name', 'Marks', 'City'], index=['b', 'a', 'f', 'e', 'd', 'c'])
+
+# sort a dataframe in place based on column names
+dfObj.sort_index(inplace=True, axis=1)
+print('Contents of Dataframe sorted in Place based on Column Names are :')
+print(dfObj)
+
+ # sort a dataframe in descending order based on column names
+   modDfObj = dfObj.sort_index(ascending=False, axis=1
+***********************************************************************************************************************************************************************
+Que 23. How do you create a new column in a DataFrame based on the values of another column?
+Ans.
+We can add/append a new column to the DataFrame based on the values of another column using df.assign(), df.apply(), and, np.where() functions and return a new Dataframe after adding a new column.
+
+
+import pandas as pd
+import numpy as np
+technologies= {
+    'Courses':["Spark","PySpark","Hadoop","Python","Pandas"],
+    'Fee' :[22000,25000,23000,24000,26000],
+    'Discount':[1000,2300,1000,1200,2500]
+          }
+
+df = pd.DataFrame(technologies)
+print(df)
+
+# Add column using arithmetic operation
+# based on existing columns 
+df["Final_Fee"] = df["Fee"] - df["Discount"]
+print(df)
+
+# Add New Column from Existing Column
+df = pd.DataFrame(technologies)
+df1 = df.assign(Discount_Percent=lambda x: x.Fee * x.Discount / 100)
+print(df1)
+
+# Add column using np.where()
+df['Discount_rating'] = np.where(df['Discount'] > 2000, 'Good', 'Bad')
+print(df)
+
+# Add column using apply()
+df['Final_fee'] = df.apply(lambda x: x['Fee'] - x['Discount'], axis=1)
+print(df)
+
+# Add column to DataFrame using loc[]
+df['Without_discount'] = df.loc[:,['Fee', 'Discount']].sum(axis=1)
+print(df)
+
+***********************************************************************************************************************************************************************
+Que 24. How do you remove duplicates from a DataFrame?
+Ans.
+
+The drop_duplicates() method removes duplicate rows.
+Use the subset parameter if only some specified columns should be considered when looking for duplicates. 
+
+Syntax:
+dataframe.drop_duplicates(subset, keep, inplace, ignore_index)
+
+import pandas as pd
+  
+data = {
+    "A": ["TeamA", "TeamB", "TeamB", "TeamC", "TeamA"],
+    "B": [50, 40, 40, 30, 50],
+    "C": [True, False, False, False, True]
+}
+  
+df = pd.DataFrame(data)
+  
+display(df.drop_duplicates())
+
+#Removing rows with the same First Name 
+
+# importing pandas package
+import pandas as pd
+  
+# making data frame from csv file
+data = pd.read_csv("employees.csv")
+  
+# sorting by first name
+data.sort_values("First Name", inplace=True)
+  
+# dropping ALL duplicate values
+data.drop_duplicates(subset="First Name",
+                     keep=False, inplace=True)
+  
+# displaying data
+data
+
+# length before adding row
+length1 = len(data)
+  
+# manually inserting duplicate of a row of row 440
+data.loc[1001] = [data["First Name"][440],
+                  data["Gender"][440],
+                  data["Start Date"][440],
+                  data["Last Login Time"][440],
+                  data["Salary"][440],
+                  data["Bonus %"][440],
+                  data["Senior Management"][440],
+                  data["Team"][440]]
+  
+# length after adding row
+length2 = len(data)
+  
+# sorting by first name
+data.sort_values("First Name", inplace=True)
+  
+# dropping duplicate values
+data.drop_duplicates(keep=False, inplace=True)
+  
+# length after removing duplicates
+length3 = len(data)
+  
+# printing all data frame lengths
+print(length1, length2, length3)
+***********************************************************************************************************************************************************************
+Que 25. What is the difference between .loc and .iloc in Pandas?
+Ans.
+The Difference Between .iloc and .loc
+The examples above illustrate the subtle difference between .iloc an .loc:
+
+.iloc selects rows based on an integer index. So, if you want to select the 5th row in a DataFrame, you would use df.iloc[[4]] since the first row is at index 0, the second row is at index 1, and so on.
+.loc selects rows based on a labeled index. So, if you want to select the row with an index label of 5, you would directly use df.loc[[5]].
+***********************************************************************************************************************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
