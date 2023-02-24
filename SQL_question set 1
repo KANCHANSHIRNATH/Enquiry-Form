@@ -194,20 +194,457 @@ OR
 SELECT employee_id, COUNT(team_id) OVER (PARTITION BY team_id) team_size
 FROM Employee
 *********************************************************************************************************************************************************************
+Q21. employee_id is the primary key for this table.
+Each row of this table contains the ID of each employee and their respective team.
+Write an SQL query to find the team size of each of the employees.
+Return result table in any order.
+The query result format is in the following example.
+Explanation:
+Employees with Id 1,2,3 are part of a team with team_id = 8.
+An employee with Id 4 is part of a team with team_id = 7.
+Employees with Id 5,6 are part of a team with team_id = 9
+Ans.
+SELECT employee_id, COUNT(*) as team_size
+FROM Employee
+GROUP BY employee_id;
+**********************************************************************************************************************************************************************QQ22. country_id is the primary key for this table.
+Each row of this table contains the ID and the name of one country. (country_id, day) is the primary key for this table.
+Each row of this table indicates the weather state in a country for one day.
+Write an SQL query to find the type of weather in each country for November 2019.
+The type of weather is:
+● Cold if the average weather_state is less than or equal 15,
+● Hot if the average weather_state is greater than or equal to 25, and
+● Warm otherwise.
+Return result table in any order.
+The query result format is in the following example.
+Explanation:
+Average weather_state in the USA in November is (15) / 1 = 15 so the weather type is Cold.
+Average weather_state in Australia in November is (-2 + 0 + 3) / 3 = 0.333 so the weather type is Cold.
+Average weather_state in Peru in November is (25) / 1 = 25 so the weather type is Hot.
+The average weather_state in China in November is (16 + 18 + 21) / 3 = 18.333 so the weather type is
+warm.
+Average weather_state in Morocco in November is (25 + 27 + 31) / 3 = 27.667 so the weather type is
+Hot.
+We know nothing about the average weather_state in Spain in November so we do not include it in the
+result table
+
+Ans.
+
+SELECT c.country_name, 
+       CASE 
+         WHEN AVG(w.weather_state) >= 25 THEN 'Hot'
+         WHEN AVG(w.weather_state) <= 15 THEN 'Cold'
+         ELSE 'Warm'
+       END AS weather_type
+FROM Countries c 
+INNER JOIN Weather w ON c.country_id = w.country_id
+WHERE w.day >= '2019-11-01' AND w.day <= '2019-11-30'
+GROUP BY c.country_id, c.country_name
+
+***********************************************************************************************************************************************************************
+Q23. (product_id, start_date, end_date) is the primary key for this table.
+Each row of this table indicates the price of the product_id in the period from start_date to end_date.
+For each product_id there will be no two overlapping periods. That means there will be no two
+intersecting periods for the same product_id. There is no primary key for this table, it may contain duplicates.
+Each row of this table indicates the date, units, and product_id of each product sold.
+Write an SQL query to find the average selling price for each product. average_price should be
+rounded to 2 decimal places.
+Return the result table in any order.
+The query result format is in the following example. Explanation:
+Average selling price = Total Price of Product / Number of products sold.
+Average selling price for product 1 = ((100 * 5) + (15 * 20)) / 115 = 6.96
+Average selling price for product 2 = ((200 * 15) + (30 * 30)) / 230 = 16.96
+Ans.
+
+SELECT p.product_id, ROUND(SUM(p.price * u.units) / SUM(u.units), 2) as average_price
+FROM Prices p
+JOIN UnitsSold u ON p.product_id = u.product_id AND u.purchase_date BETWEEN p.start_date AND p.end_date
+GROUP BY p.product_id;
+***********************************************************************************************************************************************************************
+Q24. (player_id, event_date) is the primary key of this table.
+This table shows the activity of players of some games.
+Each row is a record of a player who logged in and played a number of games (possibly 0) before
+logging out on someday using some device.
+Write an SQL query to report the first login date for each player.
+Return the result table in any order.
+The query result format is in the following example.
+Ans. 
+SELECT player_id, MIN(event_date) AS first_login
+FROM Activity
+GROUP BY player_id;
+
+***********************************************************************************************************************************************************************
+Q25. (player_id, event_date) is the primary key of this table.
+This table shows the activity of players of some games.
+Each row is a record of a player who logged in and played a number of games (possibly 0) before
+logging out on someday using some device.
+Write an SQL query to report the device that is first logged in for each player.
+Return the result table in any order.
+The query result format is in the following example.
+Ans.
+
+SELECT a.player_id, a.device_id
+FROM Activity a
+JOIN (
+  SELECT player_id, MIN(event_date) AS first_login
+  FROM Activity
+  GROUP BY player_id
+) b ON a.player_id = b.player_id AND a.event_date = b.first_login
 
 
+SELECT player_id, device_id
+FROM Activity
+WHERE (player_id, event_date) IN (
+  SELECT player_id, MIN(event_date)
+  FROM Activity
+  GROUP BY player_id
+)
 
+***********************************************************************************************************************************************************************
+Q26. product_id is the primary key for this table.
+This table contains data about the company's products. There is no primary key for this table. It may have duplicate rows.
+product_id is a foreign key to the Products table.
+unit is the number of products ordered in order_date.
+Write an SQL query to get the names of products that have at least 100 units ordered in February 2020
+and their amount.
+Return result table in any order.
+The query result format is in the following example. Explanation:
+Products with product_id = 1 is ordered in February a total of (60 + 70) = 130.
+Products with product_id = 2 is ordered in February a total of 80.
+Products with product_id = 3 is ordered in February a total of (2 + 3) = 5.
+Products with product_id = 4 was not ordered in February 2020.
+Products with product_id = 5 is ordered in February a total of (50 + 50) = 100.
 
+Ans.
 
+SELECT p.product_name, SUM(o.unit) AS unit
+FROM Products p
+JOIN Orders o ON p.product_id = o.product_id
+WHERE o.order_date >= '2020-02-01' AND o.order_date <= '2020-02-29'
+GROUP BY p.product_id
+HAVING SUM(o.unit) >= 100
+ORDER BY p.product_name;
+**********************************************************************************************************************************************************************
+Q27. user_id is the primary key for this table.
+This table contains information of the users signed up in a website. Some emails are invalid.
+Write an SQL query to find the users who have valid emails.
+A valid e-mail has a prefix name and a domain where:
+● The prefix name is a string that may contain letters (upper or lower case), digits, underscore
+'_', period '.', and/or dash '-'. The prefix name must start with a letter.
+● The domain is '@leetcode.com'.
+Return the result table in any order.
+The query result format is in the following example. Explanation:
+The mail of user 2 does not have a domain.
+The mail of user 5 has the # sign which is not allowed.
+The mail of user 6 does not have the leetcode domain.
+The mail of user 7 starts with a period.
+Ans.
 
+SELECT user_id, name, mail
+FROM Users
+WHERE mail LIKE '[A-Za-z]%@leetcode.com'
+AND mail NOT LIKE '%[^A-Za-z0-9_.-]@leetcode.com'
+AND mail NOT LIKE '%.@leetcode.com'
+AND mail NOT LIKE '%-@leetcode.com'
 
+SELECT user_id, name, mail
+FROM Users
+WHERE mail REGEXP '^[a-zA-Z][a-zA-Z0-9_.-]*@leetcode\.com$'
+***********************************************************************************************************************************************************************
+Q28. customer_id is the primary key for this table.
+This table contains information about the customers in the company.
+Table: Product. product_id is the primary key for this table.
+This table contains information on the products in the company.
+price is the product cost. order_id is the primary key for this table.
+This table contains information on customer orders.
+customer_id is the id of the customer who bought "quantity" products with id "product_id".
+Order_date is the date in format ('YYYY-MM-DD') when the order was shipped.
+Write an SQL query to report the customer_id and customer_name of customers who have spent at
+least $100 in each month of June and July 2020.
+Return the result table in any order.
+The query result format is in the following example.
+Explanation:
+Winston spent $300 (300 * 1) in June and $100 ( 10 * 1 + 45 * 2) in July 2020.
+Jonathan spent $600 (300 * 2) in June and $20 ( 2 * 10) in July 2020.
+Moustafa spent $110 (10 * 2 + 45 * 2) in June and $0 in July 2020.
+Ans.
+WITH cte AS (
+  SELECT 
+    customer_id, 
+    name, 
+    DATE_FORMAT(order_date, '%Y-%m') AS month,
+    SUM(price * quantity) AS total_spent
+  FROM Customers 
+  JOIN Orders ON Customers.customer_id = Orders.customer_id 
+  JOIN Product ON Orders.product_id = Product.product_id 
+  WHERE order_date BETWEEN '2020-06-01' AND '2020-07-31'
+  GROUP BY customer_id, month
+)
+SELECT customer_id, name 
+FROM cte
+WHERE month IN ('2020-06', '2020-07')
+GROUP BY customer_id, name
+HAVING MIN(total_spent) >= 100 AND COUNT(DISTINCT month) = 2;
+***********************************************************************************************************************************************************************Q29. (program_date, content_id) is the primary key for this table.
+This table contains information about the programs on the TV.
+content_id is the id of the program in some channel on the TV. content_id is the primary key for this table.
+Kids_content is an enum that takes one of the values ('Y', 'N') where:
+'Y' means content for kids, otherwise 'N' is not content for kids.
+content_type is the category of the content as movies, series, etc.
+Write an SQL query to report the distinct titles of the kid-friendly movies streamed in June 2020.
+Return the result table in any order.
+The query result format is in the following example.
+Explanation:
+"Leetcode Movie" is not a content for kids.
+"Alg. for Kids" is not a movie.
+"Database Sols" is not a movie
+"Alladin" is a movie, content for kids and was streamed in June 2020.
+"Cinderella" was not streamed in June 2020.
+Ans.
+SELECT DISTINCT c.title
+FROM TVProgram p
+JOIN Content c ON p.content_id = c.content_id
+WHERE c.Kids_content = 'Y'
+AND c.content_type = 'Movies'
+AND EXTRACT(MONTH FROM p.program_date) = 6
+**********************************************************************************************************************************************************************
+Q30. (id, year) is the primary key of this table.
+The table has information about the id and the year of each inventory and the corresponding net
+present value. (id, year) is the primary key of this table.
+The table has information about the id and the year of each inventory query. Write an SQL query to find the npv of each query of the Queries table.
+Return the result table in any order.
+The query result format is in the following example. Explanation:
+The npv value of (7, 2018) is not present in the NPV table, we consider it 0.
+The npv values of all other queries can be found in the NPV table.
 
+Ans.
+SELECT q.id, q.year, COALESCE(n.npv, 0) as npv
+FROM Queries q
+LEFT JOIN NPV n ON q.id = n.id AND q.year = n.year
+**********************************************************************************************************************************************************************
+Q31. (id, year) is the primary key of this table.
+The table has information about the id and the year of each inventory and the corresponding net
+present value.
+(id, year) is the primary key of this table.
+The table has information about the id and the year of each inventory query.
+Write an SQL query to find the npv of each query of the Queries table.
+Return the result table in any order.
+The query result format is in the following example.Explanation:
+The npv value of (7, 2018) is not present in the NPV table, we consider it 0.
+The npv values of all other queries can be found in the NPV table.
 
+Ans.
+SELECT Queries.id, Queries.year, COALESCE(NPV.npv, 0) AS npv
+FROM Queries
+LEFT JOIN NPV ON Queries.id = NPV.id AND Queries.year = NPV.year
 
+***********************************************************************************************************************************************************************
+Q32. id is the primary key for this table.
+Each row of this table contains the id and the name of an employee in a company.
+(id, unique_id) is the primary key for this table.
+Each row of this table contains the id and the corresponding unique id of an employee in the
+company.
+Write an SQL query to show the unique ID of each user, If a user does not have a unique ID replace just
+show null.
+Return the result table in any order.
+The query result format is in the following example.
+Explanation:
+Alice and Bob do not have a unique ID, We will show null instead.
+The unique ID of Meir is 2.
+The unique ID of Winston is 3.
+The unique ID of Jonathan is 1.
+Ans.
+SELECT e.id, e.name, eu.unique_id
+FROM Employees e
+LEFT JOIN EmployeeUNI eu ON e.id = eu.id
+ORDER BY e.id
+***********************************************************************************************************************************************************************
+Q33. id is the primary key for this table.
+name is the name of the user. id is the primary key for this table.
+user_id is the id of the user who travelled the distance "distance".
+Write an SQL query to report the distance travelled by each user.
+Return the result table ordered by travelled_distance in descending order, if two or more users
+travelled the same distance, order them by their name in ascending order.
+The query result format is in the following example. Explanation:
+Elvis and Lee travelled 450 miles, Elvis is the top traveller as his name is alphabetically smaller than
+Lee.
+Bob, Jonathan, Alex, and Alice have only one ride and we just order them by the total distances of the
+ride.
+Donald did not have any rides, the distance travelled by him is 0.
+Ans.
+SELECT Users.name AS name, COALESCE(SUM(Rides.distance), 0) AS travelled_distance
+FROM Users
+LEFT JOIN Rides ON Users.id = Rides.user_id
+GROUP BY Users.name
+ORDER BY travelled_distance DESC, name ASC;
+***********************************************************************************************************************************************************************
+Q34. product_id is the primary key for this table.
+This table contains data about the company's products.
+There is no primary key for this table. It may have duplicate rows.
+product_id is a foreign key to the Products table.
+unit is the number of products ordered in order_date.
+Write an SQL query to get the names of products that have at least 100 units ordered in February 2020
+and their amount.
+Return result table in any order.
+The query result format is in the following example.
+Ans.
+SELECT p.product_name, SUM(o.unit) AS amount
+FROM Products p 
+JOIN Orders o ON p.product_id = o.product_id
+WHERE o.order_date BETWEEN '2020-02-01' AND '2020-02-29'
+GROUP BY p.product_name
+HAVING SUM(o.unit) >= 100;
+***********************************************************************************************************************************************************************
+Q35. movie_id is the primary key for this table.
+The title is the name of the movie.
+user_id is the primary key for this table.(movie_id, user_id) is the primary key for this table.
+This table contains the rating of a movie by a user in their review.
+created_at is the user's review date.
+Write an SQL query to:
+● Find the name of the user who has rated the greatest number of movies. In case of a tie,
+return the lexicographically smaller user name.
+● Find the movie name with the highest average rating in February 2020. In case of a tie, return
+the lexicographically smaller movie name.
+The query result format is in the following example.
+Explanation:
+Daniel and Monica have rated 3 movies ("Avengers", "Frozen 2" and "Joker") but Daniel is smaller
+lexicographically.
+Frozen 2 and Joker have a rating average of 3.5 in February but Frozen 2 is smaller lexicographically.
+Ans. 
+SELECT name AS results
+FROM (
+  SELECT user_id, name, COUNT(*) AS num_ratings
+  FROM Users
+  JOIN MovieRating ON Users.user_id = MovieRating.user_id
+  GROUP BY user_id
+  ORDER BY num_ratings DESC, name ASC
+  LIMIT 1
+) AS t1;
 
+SELECT title AS results
+FROM (
+  SELECT movie_id, title, AVG(rating) AS avg_rating
+  FROM Movies
+  JOIN MovieRating ON Movies.movie_id = MovieRating.movie_id
+  WHERE created_at >= '2020-02-01' AND created_at < '2020-03-01'
+  GROUP BY movie_id
+  HAVING AVG(rating) = (
+    SELECT MAX(avg_rating)
+    FROM (
+      SELECT movie_id, AVG(rating) AS avg_rating
+      FROM Movies
+      JOIN MovieRating ON Movies.movie_id = MovieRating.movie_id
+      WHERE created_at >= '2020-02-01' AND created_at < '2020-03-01'
+      GROUP BY movie_id
+    ) AS t2
+  )
+  ORDER BY avg_rating DESC, title ASC
+  LIMIT 1
+) AS t3;
+**********************************************************************************************************************************************************************
+Q36. id is the primary key for this table.
+name is the name of the user. id is the primary key for this table.
+user_id is the id of the user who travelled the distance "distance".
+Write an SQL query to report the distance travelled by each user.
+Return the result table ordered by travelled_distance in descending order, if two or more users
+travelled the same distance, order them by their name in ascending order.
+The query result format is in the following example. Explanation:
+Elvis and Lee travelled 450 miles, Elvis is the top traveller as his name is alphabetically smaller than
+Lee.
+Bob, Jonathan, Alex, and Alice have only one ride and we just order them by the total distances of the
+ride.
+Donald did not have any rides, the distance travelled by him is 0.
+Ans.
+SELECT Users.name, COALESCE(SUM(Rides.distance), 0) AS travelled_distance
+FROM Users
+LEFT JOIN Rides ON Users.id = Rides.user_id
+GROUP BY Users.id
+ORDER BY travelled_distance DESC, Users.name ASC;
+**********************************************************************************************************************************************************************
+Q37. id is the primary key for this table.
+Each row of this table contains the id and the name of an employee in a company.(id, unique_id) is the primary key for this table.
+Each row of this table contains the id and the corresponding unique id of an employee in the
+company.
+Write an SQL query to show the unique ID of each user, If a user does not have a unique ID replace just
+show null.
+Return the result table in any order.
+The query result format is in the following example.Explanation:
+Alice and Bob do not have a unique ID, We will show null instead.
+The unique ID of Meir is 2.
+The unique ID of Winston is 3.
+The unique ID of Jonathan is 1.
+Ans
+SELECT EmployeeUNI.unique_id, Employees.name
+FROM Employees
+LEFT JOIN EmployeeUNI ON Employees.id = EmployeeUNI.id
+ORDER BY Employees.id;
+***********************************************************************************************************************************************************************
+Q38. id is the primary key of this table.
+The table has information about the id of each department of a university. id is the primary key of this table.
+The table has information about the id of each student at a university and the id of the department
+he/she studies at.
+Write an SQL query to find the id and the name of all students who are enrolled in departments that no
+longer exist.
+Return the result table in any order.
+The query result format is in the following example. Explanation:
+John, Daiana, Steve, and Jasmine are enrolled in departments 14, 33, 74, and 77 respectively.
+Department 14, 33, 74, and 77 do not exist in the Departments table
+Ans. 
 
-
-
+SELECT Students.id, Students.name
+FROM Students
+LEFT JOIN Departments ON Students.department_id = Departments.id
+WHERE Departments.id IS NULL
+***********************************************************************************************************************************************************************Q39. This table does not have a primary key, it may contain duplicates.
+This table contains the duration of a phone call between from_id and to_id.
+from_id != to_id
+Write an SQL query to report the number of calls and the total call duration between each pair of
+distinct persons (person1, person2) where person1 < person2.
+Return the result table in any order.
+The query result format is in the following example. Explanation:
+Users 1 and 2 had 2 calls and the total duration is 70 (59 + 11).
+Users 1 and 3 had 1 call and the total duration is 20.
+Users 3 and 4 had 4 calls and the total duration is 999 (100 + 200 + 200 + 499).
+Ans.
+SELECT
+  from_id AS person1,
+  to_id AS person2,
+  COUNT(*) AS call_count,
+  SUM(duration) AS total_duration
+FROM
+  Calls
+WHERE
+  from_id < to_id
+GROUP BY
+  from_id,
+  to_id;
+**********************************************************************************************************************************************************************
+Q40. (product_id, start_date, end_date) is the primary key for this table.
+Each row of this table indicates the price of the product_id in the period from start_date to end_date.
+For each product_id there will be no two overlapping periods. That means there will be no two
+intersecting periods for the same product_id.
+There is no primary key for this table, it may contain duplicates.
+Each row of this table indicates the date, units, and product_id of each product sold.
+Write an SQL query to find the average selling price for each product. average_price should be
+rounded to 2 decimal places.
+Return the result table in any order.
+The query result format is in the following example.
+Explanation:
+Average selling price = Total Price of Product / Number of products sold.
+Average selling price for product 1 = ((100 * 5) + (15 * 20)) / 115 = 6.96
+Average selling price for product 2 = ((200 * 15) + (30 * 30)) / 230 = 16.96
+Ans.
+SELECT
+  UnitsSold.product_id,
+  ROUND(SUM(price * units) / SUM(units), 2) AS average_price
+FROM
+  Prices
+  JOIN UnitsSold ON Prices.product_id = UnitsSold.product_id AND
+                    UnitsSold.purchase_date >= Prices.start_date AND
+                    UnitsSold.purchase_date <= Prices.end_date
+GROUP BY
+  UnitsSold.product_id;
+***********************************************************************************************************************************************************************
 
 
 
