@@ -645,6 +645,220 @@ FROM
 GROUP BY
   UnitsSold.product_id;
 ***********************************************************************************************************************************************************************
+Q41. (name, product_id) is the primary key for this table.
+Each row of this table contains the information of the products in each warehouse. product_id is the primary key for this table.
+Each row of this table contains information about the product dimensions (Width, Length, and Height)
+in feets of each product.
+Write an SQL query to report the number of cubic feet of volume the inventory occupies in each
+warehouse.
+Return the result table in any order.
+The query result format is in the following example. 
+Ans.
+SELECT w.name as warehouse_name, SUM(p.Width * p.Length * p.Height * w.units) as volume
+FROM Warehouse w
+JOIN Products p
+ON w.product_id = p.product_id
+GROUP BY w.name;
+***********************************************************************************************************************************************************************
+Q42. (sale_date, fruit) is the primary key for this table.
+This table contains the sales of "apples" and "oranges" sold each day.
+Write an SQL query to report the difference between the number of apples and oranges sold each day.
+Return the result table ordered by sale_date.
+The query result format is in the following example. Explanation:
+Day 2020-05-01, 10 apples and 8 oranges were sold (Difference 10 - 8 = 2).
+Day 2020-05-02, 15 apples and 15 oranges were sold (Difference 15 - 15 = 0).
+Day 2020-05-03, 20 apples and 0 oranges were sold (Difference 20 - 0 = 20).
+Day 2020-05-04, 15 apples and 16 oranges were sold (Difference 15 - 16 = -1)
+Ans.
+SELECT s1.sale_date, (s1.sold_num - s2.sold_num) as diff
+FROM Sales s1
+JOIN Sales s2 ON s1.sale_date = s2.sale_date
+WHERE s1.fruit = 'apples' AND s2.fruit = 'oranges'
+ORDER BY s1.sale_date;
+**********************************************************************************************************************************************************************
+Q43. (player_id, event_date) is the primary key of this table.
+This table shows the activity of players of some games.
+Each row is a record of a player who logged in and played a number of games (possibly 0) before
+logging out on someday using some device.
+Write an SQL query to report the fraction of players that logged in again on the day after the day they
+first logged in, rounded to 2 decimal places. In other words, you need to count the number of players
+that logged in for at least two consecutive days starting from their first login date, then divide that
+number by the total number of players.
+The query result format is in the following example.
+Ans. 
+SELECT ROUND(COUNT(DISTINCT a1.player_id, a1.event_date + INTERVAL 1 DAY) / COUNT(DISTINCT a1.player_id), 2) AS fraction
+FROM Activity a1
+JOIN Activity a2
+ON a1.player_id = a2.player_id AND a1.event_date = a2.event_date - INTERVAL 1 DAY
+***********************************************************************************************************************************************************************
+Q44. id is the primary key column for this table.
+Each row of this table indicates the name of an employee, their department, and the id of their
+manager.
+If managerId is null, then the employee does not have a manager.
+No employee will be the manager of themself.
+Write an SQL query to report the managers with at least five direct reports.
+Return the result table in any order.
+The query result format is in the following example.
+Ans. 
+SELECT e1.name
+FROM Employee e1
+JOIN Employee e2 ON e1.id = e2.managerId
+GROUP BY e1.id, e1.name
+HAVING COUNT(e2.id) >= 5;
+***********************************************************************************************************************************************************************
+Q45. student_id is the primary key column for this table.
+dept_id is a foreign key to dept_id in the Department tables.
+Each row of this table indicates the name of a student, their gender, and the id of their department. dept_id is the primary key column for this table.
+Each row of this table contains the id and the name of a department.
+Write an SQL query to report the respective department name and number of students majoring in
+each department for all departments in the Department table (even ones with no current students).
+Return the result table ordered by student_number in descending order. In case of a tie, order them by
+dept_name alphabetically.
+The query result format is in the following example.
+Ans.
+SELECT d.dept_name, COUNT(s.student_id) AS student_number
+FROM Department d
+LEFT JOIN Student s ON d.dept_id = s.dept_id
+GROUP BY d.dept_name
+ORDER BY student_number DESC, d.dept_name ASC;
+*************************************************************************************************************************************************************************
+Q46. There is no primary key for this table. It may contain duplicates.
+product_key is a foreign key to the Product table.
+product_key is the primary key column for this table.
+Write an SQL query to report the customer ids from the Customer table that bought all the products in
+the Product table.
+Return the result table in any order.
+The query result format is in the following example.Explanation:
+The customers who bought all the products (5 and 6) are customers with IDs 1 and 3.\
+
+Ans.
+SELECT customer_id
+FROM Customer
+WHERE product_key IN (SELECT DISTINCT product_key FROM Product)
+GROUP BY customer_id
+HAVING COUNT(DISTINCT product_key) = (SELECT COUNT(DISTINCT product_key) FROM Product)
+***********************************************************************************************************************************************************************
+Q47. (project_id, employee_id) is the primary key of this table.
+employee_id is a foreign key to the Employee table.
+Each row of this table indicates that the employee with employee_id is working on the project with
+project_id.
+employee_id is the primary key of this table.
+Each row of this table contains information about one employee.
+Write an SQL query that reports the most experienced employees in each project. In case of a tie,
+report all employees with the maximum number of experience years.
+Return the result table in any order.
+The query result format is in the following example.Explanation:
+Both employees with id 1 and 3 have the most experience among the employees of the first project.
+For the second project, the employee with id 1 has the most experience.
+Ans.
+SELECT p.project_id, e.employee_id
+FROM Project p
+INNER JOIN Employee e ON p.employee_id = e.employee_id
+INNER JOIN (
+  SELECT project_id, MAX(experience_years) AS max_exp
+  FROM Project
+  INNER JOIN Employee ON Project.employee_id = Employee.employee_id
+  GROUP BY project_id
+) AS subquery
+ON p.project_id = subquery.project_id AND e.experience_years = subquery.max_exp;
+***********************************************************************************************************************************************************************
+Q48. book_id is the primary key of this table.order_id is the primary key of this table.
+book_id is a foreign key to the Books table.
+Write an SQL query that reports the books that have sold less than 10 copies in the last year,
+excluding books that have been available for less than one month from today. Assume today is
+2019-06-23.
+Return the result table in any order.
+The query result format is in the following example.
+Ans.
+SELECT b.book_id, b.name
+FROM Books b
+LEFT JOIN (
+  SELECT book_id, SUM(quantity) AS total_quantity
+  FROM Orders
+  WHERE dispatch_date >= DATE_SUB('2019-06-23', INTERVAL 1 YEAR)
+  GROUP BY book_id
+) o ON b.book_id = o.book_id
+WHERE o.total_quantity IS NULL OR o.total_quantity < 10
+AND b.available_from < DATE_SUB('2019-06-23', INTERVAL 1 MONTH);
+***********************************************************************************************************************************************************************
+Q49. (student_id, course_id) is the primary key of this table.
+Write a SQL query to find the highest grade with its corresponding course for each student. In case of
+a tie, you should find the course with the smallest course_id.
+Return the result table ordered by student_id in ascending order.
+The query result format is in the following example.
+Ans.
+SELECT e.student_id, e.course_id, e.grade
+FROM Enrollments e
+INNER JOIN (
+  SELECT student_id, MAX(grade) AS max_grade
+  FROM Enrollments
+  GROUP BY student_id
+) max_grades
+ON e.student_id = max_grades.student_id AND e.grade = max_grades.max_grade
+WHERE e.course_id = (
+  SELECT MIN(course_id)
+  FROM Enrollments
+  WHERE student_id = e.student_id AND grade = max_grades.max_grade
+)
+ORDER BY student_id ASC;
+***********************************************************************************************************************************************************************
+Q50. team_id is the primary key of this table.
+Each row of this table represents a single football team. match_id is the primary key of this table.
+Each row is a record of a finished match between two different teams.
+Teams host_team and guest_team are represented by their IDs in the Teams table (team_id), and they
+scored host_goals and guest_goals goals, respectively.
+The winner in each group is the player who scored the maximum total points within the group. In the
+case of a tie, the lowest player_id wins.
+Write an SQL query to find the winner in each group.
+Return the result table in any order.
+The query result format is in the following example.
+Ans. 
+SELECT
+    p.group_id,
+    MIN(p.player_id) AS player_id
+FROM
+    (
+        SELECT
+            host_team AS team_id,
+            SUM(CASE
+                WHEN host_goals > guest_goals THEN 3
+                WHEN host_goals = guest_goals THEN 1
+                ELSE 0
+            END) AS points,
+            group_id
+        FROM
+            Matches
+            JOIN Teams ON host_team = team_id
+        GROUP BY
+            host_team,
+            group_id
+            
+        UNION ALL
+            
+        SELECT
+            guest_team AS team_id,
+            SUM(CASE
+                WHEN guest_goals > host_goals THEN 3
+                WHEN guest_goals = host_goals THEN 1
+                ELSE 0
+            END) AS points,
+            group_id
+        FROM
+            Matches
+            JOIN Teams ON guest_team = team_id
+        GROUP BY
+            guest_team,
+            group_id
+    ) AS t
+    JOIN Players AS p ON t.team_id = p.player_id
+GROUP BY
+    t.group_id,
+    t.points
+HAVING
+    MAX(t.points) = t.points
+ORDER BY
+    t.group_id
+*************************************************************************************************************************************************************************
 
 
 
