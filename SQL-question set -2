@@ -1,0 +1,626 @@
+Q51. name is the primary key column for this table.
+Each row of this table gives information about the name of a country, the continent to which it
+belongs, its area, the population, and its GDP value.
+A country is big if:
+● it has an area of at least three million (i.e., 3000000 km2), or
+● it has a population of at least twenty-five million (i.e., 25000000).
+Write an SQL query to report the name, population, and area of the big countries.
+Return the result table in any order.
+The query result format is in the following example.
+Ans. 
+SELECT name, population, area
+FROM World
+WHERE area >= 3000000 OR population >= 25000000;
+*************************************************************************************************************************************************************************
+Q52. id is the primary key column for this table.
+Each row of this table indicates the id of a customer, their name, and the id of the customer who
+referred them.
+Write an SQL query to report the names of the customer that are not referred by the customer with id
+= 2.
+Return the result table in any order.
+The query result format is in the following example.
+Ans.
+SELECT name FROM Customer
+WHERE referee_id IS NULL OR referee_id <> 2;
+*************************************************************************************************************************************************************************
+Q53. id is the primary key column for this table.
+Each row of this table indicates the ID and name of a customer. id is the primary key column for this table.
+customerId is a foreign key of the ID from the Customers table.
+Each row of this table indicates the ID of an order and the ID of the customer who ordered it.
+Write an SQL query to report all customers who never order anything.
+Return the result table in any order.
+The query result format is in the following example.
+Ans. 
+SELECT Customers.name AS Customers
+FROM Customers
+LEFT JOIN Orders ON Customers.id = Orders.customerId
+WHERE Orders.id IS NULL
+*********************************************************************************************************************************************************************
+Q54. employee_id is the primary key for this table.
+Each row of this table contains the ID of each employee and their respective team.
+Write an SQL query to find the team size of each of the employees.
+Return result table in any order.
+The query result format is in the following example.
+Explanation:
+Employees with Id 1,2,3 are part of a team with team_id = 8.
+Employee with Id 4 is part of a team with team_id = 7.
+Employees with Id 5,6 are part of a team with team_id = 9
+Ans. 
+SELECT e1.employee_id, COUNT(*) AS team_size
+FROM Employee e1
+JOIN Employee e2 ON e1.team_id = e2.team_id
+GROUP BY e1.employee_id;
+*******************************************************************************************************************************************************************
+Q55. id is the primary key for this table.
+Each row of this table contains the name of a person and their phone number.
+Phone number will be in the form 'xxx-yyyyyyy' where xxx is the country code (3 characters) and
+yyyyyyy is the phone number (7 characters) where x and y are digits. Both can contain leading zeros.
+country_code is the primary key for this table.
+Each row of this table contains the country name and its code. country_code will be in the form 'xxx'
+where x is digits. There is no primary key for this table, it may contain duplicates.
+Each row of this table contains the caller id, caller id and the duration of the call in minutes. caller_id
+!= callee_id
+A telecommunications company wants to invest in new countries. The company intends to invest in
+the countries where the average call duration of the calls in this country is strictly greater than the
+global average call duration.
+Write an SQL query to find the countries where this company can invest.
+Return the result table in any order.
+The query result format is in the following example.
+Explanation:
+The average call duration for Peru is (102 + 102 + 330 + 330 + 5 + 5) / 6 = 145.666667
+The average call duration for Israel is (33 + 4 + 13 + 13 + 3 + 1 + 1 + 7) / 8 = 9.37500
+The average call duration for Morocco is (33 + 4 + 59 + 59 + 3 + 7) / 6 = 27.5000
+Global call duration average = (2 * (33 + 4 + 59 + 102 + 330 + 5 + 13 + 3 + 1 + 7)) / 20 = 55.70000
+Since Peru is the only country where the average call duration is greater than the global average, it is
+the only recommended country.
+Ans. 
+SELECT c.name AS country
+FROM Person p1
+JOIN Calls ON p1.id = caller_id
+JOIN Person p2 ON callee_id = p2.id
+JOIN Country c ON LEFT(p1.phone_number, 3) = c.country_code
+GROUP BY c.name
+HAVING AVG(duration) > (
+    SELECT (SUM(duration) * 1.0) / COUNT(DISTINCT caller_id, callee_id)
+    FROM Calls
+)
+*********************************************************************************************************************************************************************
+Q56. order_number is the primary key for this table.
+This table contains information about the order ID and the customer ID.
+Write an SQL query to find the customer_number for the customer who has placed the largest
+number of orders.
+The test cases are generated so that exactly one customer will have placed more orders than any
+other customer.
+The query result format is in the following example.
+Explanation:
+The customer with number 3 has two orders, which is greater than either customer 1 or 2 because
+each of them only has one order.
+So the result is customer_number 3.
+Follow up: What if more than one customer has the largest number of orders, can you find all the
+customer_number in this case?
+Ans. 
+SELECT customer_number
+FROM Orders
+GROUP BY customer_number
+HAVING COUNT(*) = (
+    SELECT COUNT(*)
+    FROM Orders
+    GROUP BY customer_number
+    ORDER BY COUNT(*) DESC
+    LIMIT 1
+)
+**********************************************************************************************************************************************************************
+Q57. order_number is the primary key for this table.
+This table contains information about the order ID and the customer ID.
+Write an SQL query to find the customer_number for the customer who has placed the largest
+number of orders.
+The test cases are generated so that exactly one customer will have placed more orders than any
+other customer.
+The query result format is in the following example. Explanation:
+The customer with number 3 has two orders, which is greater than either customer 1 or 2 because
+each of them only has one order.
+So the result is customer_number 3.
+Follow up: What if more than one customer has the largest number of orders, can you find all the
+customer_number in this case
+Ans. 
+
+SELECT customer_number
+FROM Orders
+GROUP BY customer_number
+HAVING COUNT(*) = (
+    SELECT COUNT(*) AS num_orders
+    FROM Orders
+    GROUP BY customer_number
+    ORDER BY num_orders DESC
+    LIMIT 1
+);
+**********************************************************************************************************************************************************************
+Q58. seat_id is an auto-increment primary key column for this table.
+Each row of this table indicates whether the ith seat is free or not. 1 means free while 0 means
+occupied.
+Write an SQL query to report all the consecutive available seats in the cinema.
+Return the result table ordered by seat_id in ascending order.
+The test cases are generated so that more than two seats are consecutively available.
+The query result format is in the following example.
+
+Ans.
+WITH groups AS (
+  SELECT seat_id, free, 
+         SUM(CASE WHEN free = 1 AND COALESCE(LAG(free) OVER (ORDER BY seat_id), 0) = 0 
+                  THEN 1 ELSE 0 END) OVER (ORDER BY seat_id) AS group_num
+  FROM Cinema
+)
+SELECT MIN(seat_id) AS seat_id
+FROM groups
+WHERE free = 1
+  AND group_num IN (
+    SELECT group_num
+    FROM groups
+    WHERE free = 1
+    GROUP BY group_num
+    HAVING COUNT(*) > 1
+  )
+  AND COALESCE(LEAD(free) OVER (ORDER BY seat_id), 0) = 0
+GROUP BY group_num
+ORDER BY seat_id;
+***********************************************************************************************************************************************************************
+Q59. sales_id is the primary key column for this table.
+Each row of this table indicates the name and the ID of a salesperson alongside their salary,
+commission rate, and hire date.
+com_id is the primary key column for this table.
+Each row of this table indicates the name and the ID of a company and the city in which the company
+is located.
+order_id is the primary key column for this table.
+com_id is a foreign key to com_id from the Company table.
+sales_id is a foreign key to sales_id from the SalesPerson table.
+Each row of this table contains information about one order. This includes the ID of the company, the
+ID of the salesperson, the date of the order, and the amount paid.Write an SQL query to report the names of all the salespersons who did not have any orders related to
+the company with the name "RED".
+Return the result table in any orderExplanation:
+According to orders 3 and 4 in the Orders table, it is easy to tell that only salesperson John and Pam
+have sales to company RED, so we report all the other names in the table salesperson.
+Ans.
+SELECT name
+FROM SalesPerson
+WHERE sales_id NOT IN (
+    SELECT DISTINCT sales_id
+    FROM Orders
+    JOIN Company ON Orders.com_id = Company.com_id
+    WHERE Company.name = 'RED'
+)
+**********************************************************************************************************************************************************************
+Q60. (x, y, z) is the primary key column for this table.
+Each row of this table contains the lengths of three line segments.
+Write an SQL query to report for every three line segments whether they can form a triangle.
+Return the result table in any order.
+The query result format is in the following example.
+Input:
+Triangle table:
+x y z
+13 15 30
+10 20 15
+Ans.
+SELECT x, y, z, 
+  CASE
+    WHEN x + y > z AND x + z > y AND y + z > x THEN "Yes"
+    ELSE "No"
+  END AS triangle
+FROM Triangle;
+***********************************************************************************************************************************************************************
+Q61. x is the primary key column for this table.
+Each row of this table indicates the position of a point on the X-axis.
+Write an SQL query to report the shortest distance between any two points from the Point table.
+The query result format is in the following example.
+Explanation:
+The shortest distance is between points -1 and 0 which is |(-1) - 0| = 1.
+Follow up: How could you optimise your query if the Point table is ordered in ascending order?
+Ans. 
+SELECT MIN(distance) AS shortest
+FROM (
+  SELECT ABS(p1.x - p2.x) AS distance
+  FROM Point p1
+  JOIN Point p2 ON p1.x < p2.x
+  ORDER BY p1.x ASC
+) distances;
+**********************************************************************************************************************************************************************
+Q62. timestamp is the primary key column for this table.
+Write a SQL query for a report that provides the pairs (actor_id, director_id) where the actor has
+cooperated with the director at least three times.
+Return the result table in any order.
+The query result format is in the following example.
+Explanation:
+The only pair is (1, 1) where they cooperated exactly 3 times.
+Ans. 
+SELECT actor_id, director_id 
+FROM ActorDirector 
+GROUP BY actor_id, director_id 
+HAVING COUNT(*) >= 3;
+***********************************************************************************************************************************************************************
+Q63. (sale_id, year) is the primary key of this table.
+product_id is a foreign key to the Product table.
+Each row of this table shows a sale on the product product_id in a certain year.
+Note that the price is per unit.
+product_id is the primary key of this table.
+Each row of this table indicates the product name of each product.
+Write an SQL query that reports the product_name, year, and price for each sale_id in the Sales table.
+Return the resulting table in any order.
+The query result format is in the following example. Explanation:
+From sale_id = 1, we can conclude that Nokia was sold for 5000 in the year 2008.
+From sale_id = 2, we can conclude that Nokia was sold for 5000 in the year 2009.
+From sale_id = 7, we can conclude that Apple was sold for 9000 in the year 2011.
+Ans. 
+SELECT p.product_name, s.year, s.price
+FROM Sales s
+JOIN Product p ON s.product_id = p.product_id;
+**********************************************************************************************************************************************************************
+Q64. (project_id, employee_id) is the primary key of this table.
+employee_id is a foreign key to the Employee table.
+Each row of this table indicates that the employee with employee_id is working on the project with
+project_id.
+employee_id is the primary key of this table.
+Each row of this table contains information about one employee.
+Write an SQL query that reports the average experience years of all the employees for each project,
+rounded to 2 digits.
+Return the result table in any order.
+The query result format is in the following example.
+Explanation:
+The average experience years for the first project is (3 + 2 + 1) / 3 = 2.00 and for the second project is
+(3 + 2) / 2 = 2.50
+Ans. 
+SELECT project_id, ROUND(AVG(experience_years), 2) AS average_years
+FROM Project
+JOIN Employee ON Project.employee_id = Employee.employee_id
+GROUP BY project_id;
+***********************************************************************************************************************************************************************
+Q65. product_id is the primary key of this table.
+Each row of this table indicates the name and the price of each product.This table has no primary key, it can have repeated rows.
+product_id is a foreign key to the Product table.
+Each row of this table contains some information about one sale.
+Write an SQL query that reports the best seller by total sales price, If there is a tie, report them all.
+Return the result table in any order.
+The query result format is in the following example.
+Explanation: Both sellers with id 1 and 3 sold products with the most total price of 2800.
+Ans. 
+SELECT seller_id
+FROM Sales
+GROUP BY seller_id
+HAVING SUM(quantity * price) = (
+  SELECT SUM(quantity * price)
+  FROM Sales
+  GROUP BY seller_id
+  ORDER BY SUM(quantity * price) DESC
+  LIMIT 1
+)
+***********************************************************************************************************************************************************************
+Q66. product_id is the primary key of this table.
+Each row of this table indicates the name and the price of each product.This table has no primary key, it can have repeated rows.
+product_id is a foreign key to the Product table.
+Each row of this table contains some information about one sale.
+Write an SQL query that reports the buyers who have bought S8 but not iPhone. Note that S8 and
+iPhone are products present in the Product table.
+Return the result table in any order.
+The query result format is in the following example.
+Explanation:
+The buyer with id 1 bought an S8 but did not buy an iPhone. The buyer with id 3 bought both.
+Ans. 
+SELECT books.book_id, books.name
+FROM books
+LEFT JOIN orders ON books.book_id = orders.book_id
+WHERE orders.dispatch_date IS NULL;
+*********************************************************************************************************************************************************************
+Q67. (customer_id, visited_on) is the primary key for this table.
+This table contains data about customer transactions in a restaurant.
+visited_on is the date on which the customer with ID (customer_id) has visited the restaurant.
+amount is the total paid by a customer.
+You are the restaurant owner and you want to analyse a possible expansion (there will be at least one
+customer every day).
+Write an SQL query to compute the moving average of how much the customer paid in a seven days
+window (i.e., current day + 6 days before). average_amount should be rounded to two decimal places.
+Return result table ordered by visited_on in ascending order.
+The query result format is in the following example.
+Explanation:
+1st moving average from 2019-01-01 to 2019-01-07 has an average_amount of (100 + 110 + 120 +
+130 + 110 + 140 + 150)/7 = 122.86
+2nd moving average from 2019-01-02 to 2019-01-08 has an average_amount of (110 + 120 + 130 +
+110 + 140 + 150 + 80)/7 = 120
+3rd moving average from 2019-01-03 to 2019-01-09 has an average_amount of (120 + 130 + 110 +
+140 + 150 + 80 + 110)/7 = 120
+4th moving average from 2019-01-04 to 2019-01-10 has an average_amount of (130 + 110 + 140 +
+150 + 80 + 110 + 130 + 150)/7 = 142.86
+Ans.
+SELECT visited_on, 
+       SUM(amount) AS amount, 
+       ROUND(AVG(amount) OVER (ORDER BY visited_on ROWS BETWEEN 6 PRECEDING AND CURRENT ROW), 2) AS average_amount 
+FROM Customer 
+GROUP BY visited_on 
+ORDER BY visited_on ASC;
+
+***********************************************************************************************************************************************************************
+Q68. (gender, day) is the primary key for this table.
+A competition is held between the female team and the male team.
+Each row of this table indicates that a player_name and with gender has scored score_point in
+someday.
+Gender is 'F' if the player is in the female team and 'M' if the player is in the male team.
+Write an SQL query to find the total score for each gender on each day.
+Return the result table ordered by gender and day in ascending order.
+The query result format is in the following example.
+Ans.
+SELECT gender, day, SUM(score_points) AS total
+FROM Scores
+GROUP BY gender, day
+ORDER BY gender ASC, day ASC;
+*******************************************************************************************************************************************************************
+Q69. log_id is the primary key for this table.
+Each row of this table contains the ID in a log Table.
+Write an SQL query to find the start and end number of continuous ranges in the table Logs.
+Return the result table ordered by start_id.
+The query result format is in the following example.
+Ans.
+SELECT 
+  MIN(log_id) as start_id, 
+  MAX(log_id) as end_id
+FROM 
+  Logs l
+GROUP BY 
+  (SELECT COUNT(*) 
+   FROM Logs l2 
+   WHERE l2.log_id <= l.log_id) 
+   - log_id
+ORDER BY 
+  start_id ASC;
+*******************************************************************************************************************************************************************
+Q70. student_id is the primary key for this table.
+Each row of this table contains the ID and the name of one student in the school.subject_name is the primary key for this table.
+Each row of this table contains the name of one subject in the school.There is no primary key for this table. It may contain duplicates.
+Each student from the Students table takes every course from the Subjects table.
+Each row of this table indicates that a student with ID student_id attended the exam of subject_name.
+Ans.
+SELECT 
+  s.student_id, 
+  s.student_name, 
+  sb.subject_name, 
+  COUNT(e.subject_name) AS attended_exams
+FROM 
+  Students s
+  CROSS JOIN Subjects sb
+  LEFT JOIN Examinations e 
+    ON s.student_id = e.student_id 
+    AND sb.subject_name = e.subject_name
+GROUP BY 
+  s.student_id, 
+  s.student_name, 
+  sb.subject_name
+ORDER BY 
+  s.student_id, 
+  sb.subject_name;
+***********************************************************************************************************************************************************************
+Q71. employee_id is the primary key for this table.
+Each row of this table indicates that the employee with ID employee_id and name employee_name
+reports his work to his/her direct manager with manager_id
+The head of the company is the employee with employee_id = 1.
+Write an SQL query to find employee_id of all employees that directly or indirectly report their work to
+the head of the company.
+The indirect relation between managers will not exceed three managers as the company is small.
+Return the result table in any order.
+The query result format is in the following example.
+Ans.
+WITH RECURSIVE subordinates AS (
+  SELECT employee_id, manager_id
+  FROM Employees
+  WHERE manager_id = 1
+  UNION ALL
+  SELECT e.employee_id, e.manager_id
+  FROM Employees e
+  INNER JOIN subordinates s
+  ON e.manager_id = s.employee_id
+)
+SELECT employee_id
+FROM subordinates;
+**********************************************************************************************************************************************************************
+Q72. id is the primary key of this table.
+The table has information about incoming transactions.
+The state column is an enum of type ["approved", "declined"].
+Write an SQL query to find for each month and country, the number of transactions and their total
+amount, the number of approved transactions and their total amount.
+Return the result table in any order.
+Ans. 
+SELECT 
+    DATE_FORMAT(trans_date, '%Y-%m') AS month,
+    country,
+    COUNT(*) AS trans_count,
+    SUM(amount) AS trans_total_amount,
+    SUM(CASE WHEN state = 'approved' THEN 1 ELSE 0 END) AS approved_count,
+    SUM(CASE WHEN state = 'approved' THEN amount ELSE 0 END) AS approved_total_amount
+FROM Transactions
+GROUP BY month, country
+ORDER BY month, country;
+***********************************************************************************************************************************************************************
+Q73. There is no primary key for this table, it may have duplicate rows.
+The action column is an ENUM type of ('view', 'like', 'reaction', 'comment', 'report', 'share').
+The extra column has optional information about the action, such as a reason for the report or a type
+of reaction.post_id is the primary key of this table.
+Each row in this table indicates that some post was removed due to being reported or as a result of an
+admin review.
+Write an SQL query to find the average daily percentage of posts that got removed after being
+reported as spam, rounded to 2 decimal places.
+Ans.
+SELECT 
+  action_date, 
+  COUNT(DISTINCT post_id) AS total_reports
+FROM 
+  Actions 
+WHERE 
+  action = 'report' 
+GROUP BY 
+  action_date
+
+SELECT 
+  a.action_date, 
+  COUNT(DISTINCT r.post_id) AS removed_reports, 
+  COUNT(DISTINCT a.post_id) AS total_reports
+FROM 
+  Actions a 
+  JOIN Removals r ON a.post_id = r.post_id
+WHERE 
+  a.action = 'report' 
+GROUP BY 
+  a.action_date
+
+SELECT 
+  action_date, 
+  ROUND(AVG(removed_reports * 100.0 / total_reports), 2) AS average_daily_percentage
+FROM 
+  (
+    SELECT 
+      a.action_date, 
+      COUNT(DISTINCT r.post_id) AS removed_reports, 
+      COUNT(DISTINCT a.post_id) AS total_reports
+    FROM 
+      Actions a 
+      JOIN Removals r ON a.post_id = r.post_id
+    WHERE 
+      a.action = 'report' 
+    GROUP BY 
+      a.action_date
+  ) subquery
+GROUP BY 
+  action_date
+***********************************************************************************************************************************************************************
+Q74. (player_id, event_date) is the primary key of this table.
+This table shows the activity of players of some games.
+Each row is a record of a player who logged in and played a number of games (possibly 0) before
+logging out on someday using some device.
+Write an SQL query to report the fraction of players that logged in again on the day after the day they
+first logged in, rounded to 2 decimal places. In other words, you need to count the number of players
+that logged in for at least two consecutive days starting from their first login date, then divide that
+number by the total number of players.
+Ans. 
+SELECT ROUND(COUNT(DISTINCT a.player_id, a.event_date - INTERVAL 1 DAY) / COUNT(DISTINCT a.player_id), 2) as fraction
+FROM Activity a
+JOIN (
+  SELECT player_id, MIN(event_date) as first_login
+  FROM Activity
+  GROUP BY player_id
+) b ON a.player_id = b.player_id AND a.event_date = b.first_login
+JOIN Activity c ON a.player_id = c.player_id AND a.event_date + INTERVAL 1 DAY = c.event_date
+********************************************************************************************************************************************************************
+Q75. (player_id, event_date) is the primary key of this table.
+This table shows the activity of players of some games.
+Each row is a record of a player who logged in and played a number of games (possibly 0) before
+logging out on someday using some device.
+Write an SQL query to report the fraction of players that logged in again on the day after the day they
+first logged in, rounded to 2 decimal places. In other words, you need to count the number of players
+that logged in for at least two consecutive days starting from their first login date, then divide that
+number by the total number of players.
+The query result format is in the following ex 
+Ans.
+SELECT ROUND(COUNT(DISTINCT a1.player_id, a1.event_date) / COUNT(DISTINCT a1.player_id), 2) AS fraction
+FROM Activity a1
+JOIN Activity a2 ON a1.player_id = a2.player_id AND a1.event_date = DATE_ADD(a2.event_date, INTERVAL -1 DAY)
+
+***********************************************************************************************************************************************************************
+Q76. (company_id, employee_id) is the primary key for this table.
+This table contains the company id, the id, the name, and the salary for an employee.
+Write an SQL query to find the salaries of the employees after applying taxes. Round the salary to the
+nearest integer.
+The tax rate is calculated for each company based on the following criteria:
+● 0% If the max salary of any employee in the company is less than $1000.
+● 24% If the max salary of any employee in the company is in the range [1000, 10000] inclusive.
+● 49% If the max salary of any employee in the company is greater than $10000.
+Return the result table in any order.
+
+Ans.
+SELECT s.company_id, s.employee_id, s.employee_name, ROUND(s.salary - (CASE
+    WHEN max_salary < 1000 THEN 0
+    WHEN max_salary <= 10000 THEN 0.24
+    ELSE 0.49
+  END) * s.salary) AS salary
+FROM Salaries s
+JOIN (
+  SELECT company_id, MAX(salary) AS max_salary
+  FROM Salaries
+  GROUP BY company_id
+) t ON s.company_id = t.company_id
+ORDER BY s.company_id, s.employee_id
+*********************************************************************************************************************************************************************
+Q77. (left_operand, operator, right_operand) is the primary key for this table.
+This table contains a boolean expression that should be evaluated.
+operator is an enum that takes one of the values ('<', '>', '=')
+The values of left_operand and right_operand are guaranteed to be in the Variables table.
+Write an SQL query to evaluate the boolean expressions in Expressions table.
+Return the result table in any order.
+
+Ans.
+SELECT left_operand, operator, right_operand, 
+    CASE 
+        WHEN operator = '<' THEN v1.value < v2.value
+        WHEN operator = '>' THEN v1.value > v2.value
+        WHEN operator = '=' THEN v1.value = v2.value
+    END AS value
+FROM Expressions e
+JOIN Variables v1 ON e.left_operand = v1.name
+JOIN Variables v2 ON e.right_operand = v2.name;
+*********************************************************************************************************************************************************************
+Q78. id is the primary key for this table.
+Each row of this table contains the name of a person and their phone number.
+Phone number will be in the form 'xxx-yyyyyyy' where xxx is the country code (3 characters) and
+yyyyyyy is the phone number (7 characters) where x and y are digits. Both can contain leading zeros.country_code is the primary key for this table.
+Each row of this table contains the country name and its code. country_code will be in the form 'xxx'
+where x is digits.There is no primary key for this table, it may contain duplicates.
+Each row of this table contains the caller id, callee id and the duration of the call in minutes. caller_id
+!= callee_id
+A telecommunications company wants to invest in new countries. The company intends to invest in
+the countries where the average call duration of the calls in this country is strictly greater than the
+global average call duration.
+Write an SQL query to find the countries where this company can invest.
+Return the result table in any order.
+The query result format is in the following example.
+Ans.
+WITH global_avg AS (
+    SELECT AVG(duration) AS global_avg_duration
+    FROM Calls
+),
+country_avg AS (
+    SELECT p.id, c.name, AVG(duration) AS country_avg_duration
+    FROM Calls c
+    JOIN Person p ON c.caller_id = p.id
+    JOIN Country co ON LEFT(p.phone_number, 3) = co.country_code
+    GROUP BY p.id, c.name
+)
+SELECT name AS country
+FROM country_avg
+JOIN global_avg ON country_avg_duration > global_avg_duration
+GROUP BY name
+**********************************************************************************************************************************************************************
+Q79. Write a query that prints a list of employee names (i.e.: the name attribute) from the Employee table in
+alphabetical order.
+Level - Easy
+Hint - Use ORDER BY
+Input Format
+The Employee table containing employee data for a company is described as follows:
+where employee_id is an employee's ID number, name is their name, months is the total number of
+months they've been working for the company, and salary is their monthly salary.
+Ans.
+SELECT name FROM Employee ORDER BY name ASC;
+**********************************************************************************************************************************************************************
+Q80. Assume you are given the table below containing information on user transactions for particular
+products. Write a query to obtain the year-on-year growth rate for the total spend of each product for
+each year.
+Output the year (in ascending order) partitioned by product id, current year's spend, previous year's
+spend and year-on-year growth rate (percentage rounded to 2 decimal places).
+Ans.
+SELECT 
+  extract(year from t1.transaction_date) AS year, 
+  t1.product_id, 
+  SUM(t1.spend) AS curr_year_spend, 
+  SUM(t2.spend) AS prev_year_spend, 
+  ROUND(((SUM(t1.spend) - SUM(t2.spend)) / SUM(t2.spend)) * 100, 2) AS yoy_rate
+FROM user_transactions t1
+LEFT JOIN user_transactions t2 
+  ON t1.product_id = t2.product_id 
+  AND extract(year from t1.transaction_date) = extract(year from t2.transaction_date) + 1
+GROUP BY extract(year from t1.transaction_date), t1.product_id
+ORDER BY t1.product_id, year;
+***********************************************************************************************************************************************************************Q81. 
+
+
