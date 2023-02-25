@@ -1033,11 +1033,203 @@ SequenceFileAsTextInputFormat – SequenceFileAsTextInputFormat is a variant of 
 
 TextInputFormat – TextInputFormat is the default InputFormat. Each record is a line of input. The key, a LongWritable, is the byte offset within the file of the beginning of the line. The value is the contents of the line, excluding any line terminators.
 **********************************************************************************************************************************************************************
-Q71. 
+Q71. How can you prevent a large job from running for a long time in a hive?
+Ans.
+There are several strategies you can use to prevent a large job from running for a long time in Hive:
 
+Tune Hive settings: Hive provides various settings that can be tuned to improve query performance. You can optimize Hive configuration settings such as the number of map and reduce tasks, memory allocation, and query execution time.
 
+Use Partitioning and Bucketing: Partitioning data based on columns can help speed up queries by reducing the amount of data that needs to be scanned. Bucketing further optimizes the performance by dividing large data sets into smaller buckets.
 
+Optimize Queries: Optimizing queries can help reduce the execution time of Hive jobs. You can optimize queries by reducing the amount of data scanned, avoiding subqueries, and using efficient join strategies.
 
+Use Vectorization: Hive Vectorization is a technique that improves the performance of queries by processing multiple rows of data at a time.
+
+Use Tez or Spark Execution Engine: Hive supports various execution engines like Tez and Spark, which can be used to speed up the execution of queries.
+
+Split the job into smaller ones: You can split large jobs into smaller ones to reduce the execution time. This can be done by breaking down queries into multiple steps or running multiple queries in parallel.
+
+Overall, a combination of the above strategies can help prevent a large job from running for a long time in Hive.
+**********************************************************************************************************************************************************************
+Q72. When do we use explode in Hive?
+Ans.
+In Hive, the explode() function is used to transform an array or a map column into multiple rows, each containing one element or key-value pair from the original column. It is commonly used to perform operations that involve working with arrays or maps.
+
+Here are some scenarios where explode() can be used in Hive:
+
+Exploding arrays: If you have a column that contains an array of values, you can use explode() to transform the array into multiple rows. This can be useful when you want to perform calculations or filtering based on individual elements in the array.
+
+Exploding maps: If you have a column that contains a map of key-value pairs, you can use explode() to transform the map into multiple rows, each containing one key-value pair. This can be useful when you want to perform operations that involve working with individual key-value pairs.
+
+Joining tables: If you have two tables with columns that contain arrays or maps, you can use explode() to join the tables based on the elements or key-value pairs in these columns.
+
+Data analysis: If you have data in an array or map format and want to perform statistical analysis, you can use explode() to transform the data into a format that is more conducive to analysis.
+
+Overall, explode() is a versatile function in Hive that can be used in many scenarios involving arrays or maps.
+**********************************************************************************************************************************************************************
+Q73. Can Hive process any type of data formats? Why? Explain in very detail
+Ans.
+Hive is a data warehousing tool that is designed to work with structured data stored in various formats. Hive supports various data formats, including text, Parquet, ORC, Avro, RCFile, SequenceFile, and others.
+
+Here are some details about each of these data formats and how Hive can process them:
+
+Text: The text format is the most common data format used in Hive. Text files store data in plain text format, with each record separated by a delimiter such as a comma, tab, or space. Hive can read and write text files in various encodings, including UTF-8, ASCII, and others.
+
+Parquet: Parquet is a columnar storage format that is optimized for querying large datasets. It stores data in a compressed format and supports advanced features such as predicate pushdown and column pruning. Hive can read and write Parquet files using the Parquet SerDe.
+
+ORC: ORC is another columnar storage format that is optimized for Hive. It stores data in a highly compressed format and supports features such as predicate pushdown, column pruning, and type evolution. Hive can read and write ORC files using the ORC SerDe.
+
+Avro: Avro is a row-based data format that is optimized for storing complex data structures. It stores data in a compact binary format and supports schema evolution. Hive can read and write Avro files using the Avro SerDe.
+
+RCFile: RCFile is a row-based data format that is optimized for Hive. It stores data in a compressed format and supports features such as predicate pushdown and column pruning. Hive can read and write RCFile using the RCFile SerDe.
+
+SequenceFile: SequenceFile is a binary file format that is optimized for storing large datasets. It stores data in a key-value pair format and supports compression. Hive can read and write SequenceFile using the SequenceFile SerDe.
+
+In conclusion, Hive supports a wide range of data formats, including both row-based and columnar storage formats, as well as various compression and encoding options. This flexibility makes it possible to work with different types of data sources and integrate with other data processing tools in the Hadoop ecosystem.
+**********************************************************************************************************************************************************************
+Q74. Whenever we run a Hive query, a new metastore_db is created. Why?
+Ans.
+When a Hive query is executed, a new metastore database is not created by default. Instead, Hive uses a pre-existing metastore database to store metadata about tables, partitions, and other objects in the Hive environment. The metastore database is used to keep track of the schema and location of data, as well as other metadata such as column names and data types.
+
+However, it is possible for a new metastore database to be created under certain circumstances. One possible scenario is when a new instance of Hive is started with a new configuration, which may include a new metastore database location. In this case, Hive will create a new metastore database at the specified location.
+
+Another possible scenario is when there is a problem with the existing metastore database, such as corruption or a failure to start. In such cases, Hive may create a new metastore database as a fallback option to ensure that queries can continue to be executed.
+
+It is worth noting that creating a new metastore database can result in the loss of metadata about existing tables and partitions, which can have implications for running queries and accessing data. Therefore, it is generally advisable to use caution when creating a new metastore database and to ensure that all necessary backups and recovery procedures are in place.
+**********************************************************************************************************************************************************************
+Q75. .Can we change the data type of a column in a hive table? Write a 
+complete query.
+Ans. 
+Yes, we can change the data type of a column in a Hive table using the ALTER TABLE statement. Here is an example query:
+
+ALTER TABLE my_table
+CHANGE COLUMN my_column my_column_new_type;
+In the above query, my_table is the name of the table and my_column is the name of the column that we want to change the data type for. my_column_new_type is the new data type that we want to use for the column.
+
+For example, suppose we have a table named sales_data with a column named sales_amount of type INT, and we want to change its data type to DOUBLE. The query to do this would be:
+
+ALTER TABLE sales_data
+CHANGE COLUMN sales_amount sales_amount DOUBLE;
+This query will change the data type of the sales_amount column in the sales_data table from INT to DOUBLE. Note that changing the data type of a column can result in the loss of precision or data truncation, so it is important to ensure that the new data type is appropriate for the data that is being stored in the column. Additionally, changing the data type of a column can impact the performance of queries that access the column, so it is recommended to test the impact of any changes before making them in a production environment.
+**********************************************************************************************************************************************************************
+Q76. While loading data into a hive table using the LOAD DATA clause, how 
+do you specify it is a hdfs file and not a local file ?
+Ans.
+When using the LOAD DATA clause in Hive to load data into a table, we can specify whether the file to be loaded is located on the local file system or on HDFS by using the LOCATION keyword followed by the HDFS path to the file.
+
+To specify that the file is located on HDFS, we need to provide the HDFS path to the file in the LOCATION parameter. For example, to load data from a file named sample.txt located in the /user/hadoop/input directory on HDFS into a table named my_table, the query would be:
+
+LOAD DATA INPATH '/user/hadoop/input/sample.txt' INTO TABLE my_table;
+In this example, we have specified the INPATH keyword to indicate that we are loading data from a file, and the file path /user/hadoop/input/sample.txt on HDFS. Hive will automatically look for the file on HDFS and load it into the specified table.
+
+Note that the file path specified in the INPATH parameter must be an HDFS path and not a local file system path. If you provide a local file path instead of an HDFS path, Hive will not be able to find the file and the LOAD DATA operation will fail.
+**********************************************************************************************************************************************************************
+Q77. What is the precedence order in Hive configuration?
+ANs.
+In Hive, there are several ways to set configuration properties, including:
+
+System properties: These are properties that are set using the -D command line option when starting the Hive service.
+
+Hive site configuration file: This is a configuration file named hive-site.xml that is located in the Hive configuration directory. This file can be used to set Hive-specific configuration properties.
+
+Hadoop site configuration file: This is a configuration file named hadoop-site.xml that is located in the Hadoop configuration directory. This file can be used to set Hadoop-specific configuration properties that are used by Hive.
+
+Environment variables: These are environment variables that are set in the shell environment from which the Hive service is started.
+
+The order of precedence for these configuration options is as follows:
+
+System properties have the highest precedence. If a configuration property is set using a system property, it will override any other configuration settings.
+
+Next, the hive-site.xml configuration file is checked. If a property is set in this file, it will override any corresponding properties set in the hadoop-site.xml configuration file.
+
+If a property is not set in either the hive-site.xml or hadoop-site.xml configuration files, the environment variables are checked. If a property is set as an environment variable, it will override any corresponding properties set in the configuration files.
+
+Finally, if a property is not set using any of the above methods, the default value for the property will be used.
+
+It is worth noting that some configuration properties have different names in the different configuration options. In such cases, the configuration property that is checked will depend on the name used in the specific configuration option.
+**********************************************************************************************************************************************************************
+Q78. Which interface is used for accessing the Hive metastore?
+Ans.
+The Hive metastore can be accessed using the Hive Metastore Thrift API. This API provides a set of remote procedure calls (RPCs) that can be used to interact with the metastore from other applications and services. The Thrift API uses a binary protocol for communication and supports multiple programming languages, including Java, Python, and C++.
+
+The Hive Metastore Thrift API provides a range of operations for managing the metastore, including creating and deleting tables, adding and modifying partitions, and querying metadata about tables and partitions. It also provides a range of configuration options that can be used to customize the behavior of the metastore service.
+
+In addition to the Thrift API, Hive also provides a Command Line Interface (CLI) and a Web Interface for managing the metastore. The CLI provides a set of commands for performing administrative tasks, while the web interface provides a graphical interface for managing the metastore. However, these interfaces rely on the Thrift API for communication with the metastore service.
+**********************************************************************************************************************************************************************
+Q79. .Is it possible to compress json in the Hive external table ?
+Ans.
+Yes, it is possible to compress JSON data in an external table in Hive. Hive supports a range of compression formats, including Gzip, Bzip2, Snappy, LZO, and Deflate. These compression formats can be used to reduce the storage requirements for JSON data and improve query performance by reducing the amount of data that needs to be read from disk.
+
+To compress JSON data in an external table in Hive, you can use the STORED AS clause to specify the compression format. For example, to create an external table named my_table that stores JSON data in Gzip format, the query would be:
+
+CREATE EXTERNAL TABLE my_table (
+  col1 string,
+  col2 int,
+  col3 array<string>
+)
+ROW FORMAT SERDE 'org.apache.hive.hcatalog.data.JsonSerDe'
+STORED AS INPUTFORMAT 'org.apache.hadoop.mapred.TextInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION '/path/to/json/files'
+TBLPROPERTIES ('compression.type'='gzip');
+In this example, we have specified the compression.type table property to indicate that the JSON data should be compressed using Gzip. Hive will automatically compress the data as it is written to disk and decompress it when it is read back into memory for query processing.
+
+It is important to note that not all compression formats are supported by all Hadoop distributions or versions. It is also worth considering the trade-off between compression ratio and query performance when choosing a compression format. Some compression formats may provide better compression ratios but may be slower to read and write, which can impact query performance.
+**********************************************************************************************************************************************************************
+Q80. What is the difference between local and remote metastores?
+Ans.
+In Hive, the metastore is responsible for storing metadata about Hive tables, including their schema, location, and partitioning scheme. The metastore can be configured to run either locally or remotely, depending on the deployment requirements and use case.
+
+A local metastore runs on the same node as the Hive service, and stores metadata in a local database. In this configuration, all Hive clients that connect to the same Hive service share the same metastore. This can simplify the deployment and management of the Hive service, as there is only one metastore to maintain. However, it can also introduce scaling issues, as the local metastore may become a bottleneck as the number of clients or tables increases.
+
+A remote metastore runs on a separate node or cluster, and stores metadata in a separate database. In this configuration, the metastore can be shared across multiple Hive services or clusters, which can improve scalability and enable more complex deployments. However, it can also introduce additional complexity in terms of network configuration and management, as the Hive service must be able to connect to the remote metastore over the network.
+
+In summary, the main difference between local and remote metastores is the location of the metadata database. A local metastore runs on the same node as the Hive service and stores metadata in a local database, while a remote metastore runs on a separate node or cluster and stores metadata in a separate database. The choice of metastore configuration depends on the specific deployment requirements and use case, and both options have their own advantages and disadvantages.
+**********************************************************************************************************************************************************************
+Q81. What is the purpose of archiving tables in Hive?
+Ans.
+Archiving tables in Hive involves moving the data of a table to a separate location, typically in a compressed format, and keeping only the metadata (such as table structure and schema) in the original location. The purpose of archiving tables in Hive is to free up storage space in the original location while preserving the data for future reference or analysis.
+
+Archiving tables can be useful in several scenarios, including:
+
+Historical data analysis: In many cases, historical data can provide valuable insights for analysis and decision-making. However, storing large amounts of historical data in the original location can be expensive and may impact query performance. Archiving old data to a separate location can help preserve the data while freeing up storage space and improving query performance.
+
+Compliance and regulatory requirements: Certain industries and organizations are required by law to retain data for a certain period of time. Archiving data can help organizations meet these requirements while still managing storage costs.
+
+Data backup and recovery: Archiving data can also serve as a form of data backup and recovery. In the event of data loss or corruption, archived data can be restored to the original location or another location for recovery purposes.
+
+In Hive, archiving tables can be done using various techniques, such as creating a new table with the same schema as the original table and loading the archived data into it, or using the INSERT OVERWRITE DIRECTORY command to write the archived data to a separate location. The specific technique used depends on the requirements of the use case and the available resources.
+**********************************************************************************************************************************************************************
+Q82. What is DBPROPERTY in Hive?
+Ans.
+DBPROPERTY is a Hive function that is used to retrieve metadata about a database. Specifically, it is used to retrieve the value of a specified property for a given database. Properties in Hive are key-value pairs that can be used to customize the behavior of the Hive environment, such as setting the compression codec to use for a particular file format, or setting the default location for a database.
+
+The syntax for the DBPROPERTY function in Hive is as follows:
+
+DBPROPERTY(database_name, property_name)
+Here, database_name is the name of the database for which the property value is to be retrieved, and property_name is the name of the property whose value is to be retrieved.
+
+For example, to retrieve the value of the location property for the mydatabase database, the following query can be used:
+
+SELECT DBPROPERTY('mydatabase', 'location');
+This will return the value of the location property for the mydatabase database.
+
+Overall, DBPROPERTY is a useful function in Hive for retrieving metadata about databases and customizing the behavior of the Hive environment. It can be used in conjunction with other Hive functions and commands to create more customized and efficient Hive environments for data processing and analysis.
+**********************************************************************************************************************************************************************
+Q83. Differentiate between local mode and MapReduce mode in Hive.
+Ans.
+Hive can be run in two different execution modes: local mode and MapReduce mode. The main differences between these modes are described below:
+
+Local Mode: In local mode, Hive runs within the same process as the client that submits the query. This mode is useful for testing and debugging queries because it does not require a Hadoop cluster to be set up. Instead, Hive runs directly on the client machine, which can be a single machine or a small cluster of machines.
+Local mode can be useful for small datasets that can be processed within the memory of the client machine, but it is not suitable for large datasets or complex queries that require the parallel processing capabilities of a Hadoop cluster.
+
+MapReduce Mode: In MapReduce mode, Hive runs as a MapReduce job on a Hadoop cluster. This mode is designed for processing large datasets that require the parallel processing capabilities of a Hadoop cluster.
+In MapReduce mode, Hive submits a MapReduce job to the Hadoop cluster to process the query. The job is split into smaller tasks that are executed in parallel across the nodes in the cluster. The output from each task is then collected and combined to produce the final result.
+
+MapReduce mode is the default mode for Hive, and is suitable for processing large datasets and complex queries that require the parallel processing capabilities of a Hadoop cluster.
+
+Overall, the choice of execution mode in Hive depends on the requirements of the use case and the available resources. Local mode can be useful for testing and debugging queries, while MapReduce mode is designed for processing large datasets that require the parallel processing capabilities of a Hadoop cluster.
+**********************************************************************************************************************************************************************
 
 
 
