@@ -1,1 +1,39 @@
 
+Question 1: Strengths and weaknesses of each option for Scenario I
+Ans.
+
+Option A: Modifying the Instructor dimension by adding special rows representing instructor teams. This option can accurately capture the fact that some courses have multiple instructors. By doing so, it is possible to retain the Instructor dimension in the fact table, which is useful for answering queries about instructor-related attributes such as department and tenure flag. However, this option creates additional complexity, as it requires the addition of special rows representing instructor teams, and also makes it difficult to track individual instructor performance.
+
+Option B: Changing the grain of the fact table to be one row per student enrollment per course per instructor. This option accurately captures the fact that some courses have multiple instructors. It also enables tracking individual instructor performance. However, it requires more storage space due to the increase in fact rows, and queries involving instructor attributes will be more complicated.
+
+Option C: Creating two fact tables, one with the Instructor dimension and one without. This option allows for the retention of the Instructor dimension in the fact table while avoiding the storage and query performance issues of Option B. However, it requires more storage space due to the creation of an additional fact table.
+
+Question 2: Which option would you choose and why?
+
+Ans. Based on the trade-offs mentioned above, I would choose Option C. It allows for the retention of the Instructor dimension in the fact table while avoiding the storage and query performance issues of Option B. While it requires more storage space due to the creation of an additional fact table, storage is generally less of a concern than query performance.
+
+Question 3: Would your answer to Question 2 be different if the majority of classes had multiple instructors? How about if only one or two classes had multiple instructors?
+
+Ans. If the majority of classes had multiple instructors, I would choose Option B instead. This is because creating special rows to represent instructor teams in Option A may become unwieldy and difficult to maintain. Furthermore, the storage requirements of Option B become more reasonable when there are more classes with multiple instructors.
+
+If only one or two classes had multiple instructors, I would still choose Option C because the storage requirements of Option B would not be justified for a small percentage of classes.
+
+Question 4: Can you think of another reasonable alternative design besides Options A, B, and C? If so, what are the advantages and disadvantages of your alternative design?
+
+Ans. Another alternative design could be to use a bridge table to link the fact table to the Instructor dimension. The bridge table would have one row per student enrollment per course, with additional columns for the instructors teaching the course. This approach would allow for the retention of the Instructor dimension while avoiding the storage and query performance issues of Option B. However, it requires the creation of a new table and may be more difficult to query than Option C.
+**********************************************************************************************************************************************************************
+Question 1. What are the strengths and weaknesses of each option?
+Ans.
+
+Option A (Type 1 Slowly Changing Dimension): The strength of this option is that it is simple to implement and requires less storage space. However, it does not retain historical information and cannot provide insights into how customer activity or profitability scores change over time.
+Option B (Type 2 Slowly Changing Dimension): The strength of this option is that it retains historical information and can provide insights into how customer activity or profitability scores change over time. However, it requires more storage space and may be more complex to implement.
+Option C (Separate CustomerScores dimension): The strength of this option is that it allows for easy filtering and grouping by activity and profitability scores, as well as easy tracking of changes in score combinations over time. However, it requires an additional dimension table, which may increase query complexity and maintenance.
+Option D (CustomerScores outrigger table): The strength of this option is that it allows for easy filtering and grouping by activity and profitability scores, and does not require an additional dimension table. However, it may be less flexible than Option C in terms of tracking changes in score combinations over time.
+Question 2. Which option would you choose and why?
+Ans. The choice of option depends on the specific needs of the organization and the queries that will be run most frequently. In general, Option B (Type 2 Slowly Changing Dimension) is a good choice because it retains historical information and can provide insights into how customer activity or profitability scores change over time. This can be particularly useful for tracking changes in customer behavior and identifying trends. Additionally, with modern data storage solutions, storage space is less of a concern.
+
+Question 3. Would your answer to Question 2 be different if the customer base was much larger (e.g., 10 million customers)? How about if it was much smaller (e.g., 1,000 customers)?
+Ans. If the customer base was much larger, storage space may become a concern, and Option A (Type 1 Slowly Changing Dimension) may be more appropriate. However, if the organization is focused on tracking changes in customer behavior over time, Option B (Type 2 Slowly Changing Dimension) may still be the best choice. If the customer base was much smaller, the storage space and complexity concerns are likely to be less of an issue, and any of the options may be appropriate.
+
+Question 4. [OPTIONAL] Can you think of another reasonable alternative design besides Options A, B, C, and D? If so, what are the advantages and disadvantages of your alternative design?
+Ans. One alternative design could be to store the customer scores in a separate fact table that is related to the Trades fact table by the Customer dimension. This would allow for easy filtering and grouping by activity and profitability scores, and also retain historical information. However, it may increase query complexity and require more maintenance
