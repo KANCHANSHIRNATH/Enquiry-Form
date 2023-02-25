@@ -656,9 +656,384 @@ Hive comes with built-in SerDes for various file formats like TEXTFILE, ORC, and
 ***********************************************************************************************************************************************************************
 Q41. Explain how Hive Deserializes and serialises the data?
 Ans.
+In Hive, deserialization and serialization are the processes of converting structured data stored in a file format such as CSV, TSV, or JSON into Hive table format and vice versa.
 
+Deserialization involves converting data in its raw form into a structured format that can be easily processed by Hive. During deserialization, Hive reads the data from the input file format, interprets it, and then converts it into an internal binary format called ObjectInspector.
 
+Serialization, on the other hand, is the process of converting Hive table data into a file format such as CSV, TSV, or JSON. During serialization, Hive writes data from its internal binary format back to the file format, which can then be used by other applications.
 
+In order to perform these operations, Hive uses a SerDe (Serializer/Deserializer), which is a combination of two classes that define the logic for deserializing and serializing data. A SerDe reads data from a file, splits it into columns, and then converts it into a format that can be loaded into Hive tables. It also performs the opposite function when writing data from Hive tables back to a file.
+
+Hive comes with several built-in SerDe classes that can be used to read and write data in various formats, such as CSV, TSV, JSON, and Avro. In addition, users can also create their own SerDe classes to support custom data formats.
+***********************************************************************************************************************************************************************
+Q42. Write the name of the built-in serde in hive.
+Ans.
+The built-in serde in Hive is called "LazySimpleSerDe".
+***********************************************************************************************************************************************************************
+Q43. What is the need of custom Serde?
+Ans.
+The default built-in SerDe (Serializer/Deserializer) in Hive can handle most common data formats such as CSV, TSV, and JSON. However, in some cases, the data may be in a custom format or have a custom encoding or schema that cannot be handled by the built-in SerDe. In such cases, custom SerDe can be used to handle the data.
+
+Custom SerDes can be created to handle any type of data format, including binary formats or data with complex structures. They can also be used to perform custom data transformation and manipulation during serialization and deserialization. Overall, custom SerDes provide flexibility and control over the handling of data in Hive.
+***********************************************************************************************************************************************************************
+Q44. Can you write the name of a complex data type(collection data types) in 
+Hive?
+Ans.
+Yes, some of the complex data types in Hive are:
+
+Array
+Map
+Struct
+***********************************************************************************************************************************************************************
+Q45. .Can hive queries be executed from script files? How?
+Ans.
+Yes, Hive queries can be executed from script files. We can create a script file with the ".hql" extension and save it with the Hive queries that need to be executed. Then, we can run the script file using the Hive command line interface.
+
+Assuming the script file is named "my_script.hql", we can run it using the following command:
+
+hive -f my_script.hql
+This will execute all the Hive queries present in the "my_script.hql" file.
+***********************************************************************************************************************************************************************
+Q46. What are the default record and field delimiter used for hive text files?
+Ans.
+The default record delimiter used for Hive text files is the newline character ("\n"), and the default field delimiter used is the tab character ("\t"). However, both delimiters can be customized while creating a Hive table using the ROW FORMAT and FIELDS TERMINATED BY clauses, respectively.
+***********************************************************************************************************************************************************************
+Q47. How do you list all databases in Hive whose name starts with s?
+Ans.
+To list all databases in Hive whose name starts with "s", you can use the following command:
+
+SHOW DATABASES LIKE 's*';
+This command will display a list of all databases in Hive whose name starts with the letter "s". The asterisk (*) is a wildcard character that matches any sequence of characters.
+***********************************************************************************************************************************************************************
+Q48. What is the difference between LIKE and RLIKE operators in Hive?
+Ans.
+In Hive, both LIKE and RLIKE operators are used for pattern matching in string data. However, there is a difference in the way they interpret the pattern:
+
+LIKE is used to match a pattern using simple regular expressions. The pattern can include the wildcard characters % (matching any sequence of characters) and _ (matching any single character).
+
+RLIKE (or REGEXP) is used to match a pattern using regular expressions. The pattern can include complex regular expressions with features like character classes, quantifiers, and grouping.
+
+For example, to find all records in a table where the name column starts with "s", we can use the LIKE operator as follows:
+
+SELECT * FROM my_table WHERE name LIKE 's%';
+This will match any string in the name column that starts with "s".
+
+On the other hand, if we want to find all records in a table where the name column contains a sequence of three letters in a row, we can use the RLIKE operator as follows:
+
+SELECT * FROM my_table WHERE name RLIKE '[a-zA-Z]{3}';
+This will match any string in the name column that contains three letters in a row, regardless of their position in the string.
+***********************************************************************************************************************************************************************
+Q49. How to change the column data type in Hive?
+Ans.
+In Hive, you can use the ALTER TABLE command to change the column data type. Here's an example of how to do it:
+
+Suppose you have a table named "my_table" with a column named "my_column" of data type INT, and you want to change it to STRING. The following command will achieve that:
+
+ALTER TABLE my_table CHANGE my_column my_column STRING;
+Note that you need to use the CHANGE keyword followed by the column name and the new data type. Also, keep in mind that changing the data type of a column can result in data loss or data corruption if the new data type is not compatible with the existing data.
+***********************************************************************************************************************************************************************
+Q50. How will you convert the string ’51.2’ to a float value in the particular 
+column?
+Ans.
+You can use the CAST function to convert a string to a float value in Hive. Here is an example query to convert the string '51.2' to a float value in the value column:
+
+SELECT CAST(value AS FLOAT) FROM your_table;
+This query will return the value column with float values for each row, including the value '51.2' converted to 51.2. You can use this query in a CREATE TABLE statement to create a new table with the converted values, or in an INSERT INTO statement to insert the converted values into an existing table.
+***********************************************************************************************************************************************************************
+Q51. What will be the result when you cast ‘abc’ (string) as INT?
+Ans.
+When you cast a string like 'abc' to an integer (INT), it will result in an error. This is because 'abc' cannot be represented as a valid integer value.
+
+Here's an example of the error message you may encounter when casting 'abc' to INT in Hive:
+
+lua
+Copy code
+Failed with exception java.io.IOException:org.apache.hadoop.hive.ql.metadata.HiveException:java.lang.NumberFormatException: For input string: "abc"
+***********************************************************************************************************************************************************************
+Q52. What does the following query do?
+a. INSERT OVERWRITE TABLE employees
+b. PARTITION (country, state)
+c. SELECT ..., se.cnty, se.st
+d. FROM staged_employees se;
+Ans.
+The given query performs the following actions:
+
+a. It is an INSERT OVERWRITE statement, which means that it will replace the existing data in the employees table with the new data being inserted.
+
+b. The PARTITION (country, state) clause specifies that the data will be partitioned by country and state.
+
+c. The SELECT statement selects the required columns from the staged_employees table and also selects two additional columns cnty and st.
+
+d. staged_employees se is the source table from which the data is being inserted into the employees table.
+
+Overall, this query inserts the data from the staged_employees table into the employees table while partitioning it by country and state columns.
+***********************************************************************************************************************************************************************
+Q53. Write a query where you can overwrite data in a new table from the 
+existing table?
+Ans.
+To overwrite data in a new table from the existing table, you can use the INSERT OVERWRITE command in Hive. The query can be written as:
+
+INSERT OVERWRITE TABLE new_table
+SELECT * FROM existing_table;
+This query will insert all the data from the existing_table into the new_table and overwrite any existing data in the new_table. If you only want to overwrite specific partitions, you can add a PARTITION clause to the query, as shown below:
+
+INSERT OVERWRITE TABLE new_table
+PARTITION (partition_column=value)
+SELECT * FROM existing_table
+WHERE partition_column=value;
+This query will overwrite only the partition specified in the PARTITION clause, and leave all other partitions in the new_table intact.
+***********************************************************************************************************************************************************************
+Q54. What is the maximum size of a string data type supported by Hive? 
+Explain how Hive supports binary formats.
+Ans.
+In Hive, the maximum size of a string data type is 2 GB (2^31 - 1 bytes).
+
+Hive supports binary formats through the use of the binary data type. The binary data type is used to represent data in a binary format, such as images or compressed data. When working with binary data in Hive, you can use functions such as from_base64() and to_base64() to convert the data to and from base64 encoding. Hive also supports the use of the serde (Serializer/Deserializer) framework, which allows for the serialization and deserialization of binary data using custom Java classes.
+
+In addition to the binary data type, Hive also supports the use of other data types for handling binary data, such as the array<tinyint> data type for representing binary data as an array of bytes. Overall, Hive provides several options for working with binary data, making it a flexible and powerful tool for handling a wide variety of data formats.
+***********************************************************************************************************************************************************************
+Q55. What File Formats and Applications Does Hive Support?
+Ans.
+Hive supports a variety of file formats and applications, including:
+
+Text File Formats: Hive supports text file formats such as CSV, TSV, and plain text files. These files can be read and written using Hive's built-in SerDe (Serializer/Deserializer) or custom SerDe libraries.
+
+SequenceFile: SequenceFile is a binary file format that stores key-value pairs. Hive can read and write data in the SequenceFile format.
+
+ORC (Optimized Row Columnar): ORC is a columnar storage format that is optimized for Hive workloads. It provides high compression ratios and fast performance for queries that only need to access a subset of columns.
+
+Parquet: Parquet is a columnar storage format that is optimized for use with Hadoop. Hive can read and write data in the Parquet format.
+
+Avro: Avro is a data serialization format that is designed to be compact and fast. Hive can read and write data in the Avro format.
+
+JSON and XML: Hive can also read and write data in JSON and XML formats.
+
+In addition to supporting a variety of file formats, Hive can also integrate with a variety of external applications and data sources. For example, Hive can use JDBC and ODBC to connect to external databases, and it can use HCatalog to access data stored in Hadoop Distributed File System (HDFS). Hive can also integrate with Apache Spark, allowing it to process data in memory and execute more complex queries.
+***********************************************************************************************************************************************************************
+Q56. How do ORC format tables help Hive to enhance its performance?
+Ans.
+ORC (Optimized Row Columnar) is a high-performance columnar storage format that is optimized for Hadoop workloads, and it can help Hive to enhance its performance in several ways:
+
+Compression: ORC uses a combination of compression algorithms to achieve high compression ratios while still providing fast access to the data. This reduces the amount of disk I/O required to read data, which can improve query performance.
+
+Predicate Pushdown: ORC supports predicate pushdown, which means that it can apply filtering conditions at the storage layer, rather than at the query processing layer. This can reduce the amount of data that needs to be read from disk, which can improve query performance.
+
+Type Evolution: ORC supports type evolution, which means that it can store data in a more efficient format as the data types change over time. For example, if a string column is converted to an integer column, ORC can automatically adjust the storage format to reflect the new data type, without the need for manual intervention.
+
+Indexing: ORC supports various types of indexing, such as Bloom filters and min/max indexes, which can speed up queries that involve range-based filtering.
+
+Vectorization: Hive's execution engine supports vectorization, which means that it can perform operations on entire vectors of data at once, rather than processing data row by row. ORC format tables are designed to work well with vectorized queries, which can further improve query performance.
+
+Overall, ORC format tables can significantly improve Hive's performance by reducing the amount of disk I/O required to access data, applying filtering conditions at the storage layer, and providing support for efficient indexing and vectorized queries.
+***********************************************************************************************************************************************************************
+Q57. How can Hive avoid mapreduce while processing the query?
+Ans.
+Hive can avoid using MapReduce while processing a query by using Tez or Spark as the execution engine. Tez and Spark are both cluster computing frameworks that provide faster and more efficient processing of Hive queries compared to MapReduce.
+
+Tez is an application framework built on top of YARN that provides a more flexible and efficient way of processing data. Tez can execute DAGs (Directed Acyclic Graphs) of tasks, which allows it to optimize the processing of Hive queries by minimizing the number of MapReduce jobs required. When running on Tez, Hive can leverage various optimizations, such as data-locality, pipelining, and dynamic partition pruning, which can further improve query performance.
+
+Spark is a distributed computing framework that is designed to provide faster and more efficient processing of large datasets. Spark provides an in-memory computing model, which allows it to process data much faster than MapReduce. When running on Spark, Hive can use the Spark SQL engine to process queries, which can provide significant performance improvements compared to MapReduce.
+
+To configure Hive to use Tez or Spark as the execution engine, you need to set the appropriate configuration properties in the hive-site.xml file. For Tez, you need to set hive.execution.engine to tez, and for Spark, you need to set hive.execution.engine to spark. Once configured, Hive will automatically use Tez or Spark to execute queries, depending on the configuration property value.
+***********************************************************************************************************************************************************************
+Q58. What is view and indexing in hive?
+Ans.
+In Hive, a view is a virtual table that is defined by a SQL query. When you create a view, you define a SELECT statement that specifies the columns and rows to include in the view. The view does not contain any data of its own but instead provides a way to access data from one or more underlying tables. Once a view is created, you can query it just like any other table in Hive. Views can be used to simplify complex queries, hide sensitive data, and provide a consistent view of data across multiple tables.
+
+To create a view in Hive, you can use the CREATE VIEW statement, like this:
+
+CREATE VIEW my_view AS
+SELECT col1, col2, col3
+FROM my_table
+WHERE col4 = 'value';
+An index in Hive is a data structure that is used to improve the performance of queries by providing fast access to data based on certain criteria. Hive supports several types of indexes, including bitmap indexes, compact indexes, and bloom filters. When an index is created on a table, it provides a way to quickly locate rows that match specific criteria, rather than scanning the entire table.
+
+To create an index in Hive, you can use the CREATE INDEX statement, like this:
+
+CREATE INDEX my_index ON my_table (col1, col2) AS 'BITMAP';
+This creates a bitmap index on the columns col1 and col2 of the my_table table. When a query is executed that filters on these columns, Hive can use the index to quickly locate the matching rows, rather than scanning the entire table.
+
+Indexes can significantly improve the performance of queries in Hive, especially for large tables. However, they can also increase the time and resources required for data loading and updates, so it's important to carefully consider the trade-offs when deciding whether to use indexes in Hive.
+***********************************************************************************************************************************************************************
+Q59. Can the name of a view be the same as the name of a hive table?
+ANS.
+Yes, in Hive, the name of a view can be the same as the name of a table, as long as the names are in different namespaces. By default, Hive uses two namespaces: the default namespace, and the TEMPORARY namespace. If you create a view and a table with the same name in the same namespace, Hive will return an error message.
+
+For example, if you have a table named my_table in the default namespace, and you want to create a view with the same name, you can do so by specifying a different namespace for the view. For example:
+
+CREATE VIEW my_view
+AS SELECT * FROM default.my_table;
+In this case, the view my_view is created in the default namespace, but it references the table my_table in the same namespace.
+
+Alternatively, you can create a temporary view with the same name as a table, as long as the view is created in the TEMPORARY namespace. Temporary views are session-specific and are automatically dropped when the session ends. For example:
+
+CREATE TEMPORARY VIEW my_table AS SELECT * FROM my_database.my_table;
+In this case, the temporary view my_table is created in the TEMPORARY namespace, and it references the table my_table in the my_database namespace. Once the session ends, the temporary view will be automatically dropped.
+***********************************************************************************************************************************************************************
+Q60. What types of costs are associated in creating indexes on hive tables?
+Ans.
+Creating indexes on Hive tables can incur several costs, including:
+
+Storage cost: Indexes require additional storage space, which can increase the overall size of the table. The amount of storage required for an index depends on the size of the table, the number of indexed columns, and the type of index.
+
+Computational cost: Building an index requires computing resources, such as CPU and memory. The amount of computational resources required for an index depends on the size of the table, the number of indexed columns, and the type of index.
+
+Maintenance cost: Indexes must be updated whenever data in the table changes. This can require additional computational resources and can slow down data loading and updates. The amount of maintenance required for an index depends on the frequency of data changes, the number of indexed columns, and the type of index.
+
+Query performance cost: Although indexes can improve query performance, they can also increase the time required to execute queries that modify the data in the table. This is because each change to the data may require the index to be updated, which can slow down query execution.
+
+Design cost: Designing and selecting the appropriate type of index for a given use case can require additional effort and expertise. Different types of indexes have different strengths and weaknesses, and choosing the wrong type of index can lead to suboptimal performance.
+
+When considering whether to create an index on a Hive table, it's important to carefully consider these costs and weigh the benefits against the potential drawbacks. In some cases, indexes can significantly improve query performance, while in other cases they may not be necessary or may even slow down query execution.
+***********************************************************************************************************************************************************************
+Q61. Give the command to see the indexes on a table.
+ANs.
+In Hive, you can use the SHOW INDEXES command to see the list of indexes created on a table. The syntax of the command is as follows:
+
+SHOW INDEXES ON table_name;
+For example, to see the indexes created on a table named my_table, you can use the following command:
+
+SHOW INDEXES ON my_table;
+This command will return a list of all the indexes created on the table, including the name of the index, the columns it is indexed on, and the type of index. For example:
+
+Index name      | Indexed columns         | Type
+---------------------------------------------------
+my_index        | col1, col2              | BITMAP
+my_other_index  | col3, col4              | COMPACT
+This output indicates that the my_table table has two indexes, named my_index and my_other_index, which are indexed on different columns and have different types. You can use this information to help optimize queries on the table and determine whether additional indexes are needed.
+***********************************************************************************************************************************************************************
+Q62. Explain the process to access subdirectories recursively in Hive queries.
+Ans.
+In Hive, you can access subdirectories recursively using the * wildcard character in combination with the RCFILE or TEXTFILE formats. The * character tells Hive to search for all files in the specified directory and its subdirectories.
+
+Here is the process to access subdirectories recursively in Hive queries:
+
+Create an external table using the RCFILE or TEXTFILE format, and specify the parent directory that contains the subdirectories you want to access. For example:
+
+CREATE EXTERNAL TABLE my_table (
+  col1 INT,
+  col2 STRING
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS RCFILE
+LOCATION '/path/to/parent_directory';
+Run a Hive query that includes the * wildcard character in the table location. For example:
+
+SELECT * FROM my_table WHERE input_file_name() LIKE '/path/to/parent_directory/*';
+This query will search for all files in the parent_directory and its subdirectories, and return the records that match the query conditions.
+
+Note that accessing subdirectories recursively in Hive queries can be slow and resource-intensive, especially if the parent directory contains a large number of files or subdirectories. To optimize performance, it is recommended to partition the data and use partition filters to limit the amount of data scanned by the query. Additionally, you can consider using a different storage format, such as ORC or Parquet, which can improve query performance and reduce storage space.
+***********************************************************************************************************************************************************************
+Q63. If you run a select * query in Hive, why doesn't it run MapReduce?
+Ans.
+In Hive, running a SELECT * query does not necessarily require running a MapReduce job, because Hive uses a technique called "fetch optimization" to minimize the amount of data that needs to be processed.
+
+When you run a SELECT * query in Hive, the first step is to fetch the metadata of the table, including the column names, types, and locations of the data files. This metadata is stored in the Hive metastore, which is a relational database that keeps track of the schema and location of tables.
+
+Once the metadata is fetched, Hive can determine the locations of the data files that contain the table's data. If the table is stored in a file format that supports splitable compression, such as ORC or Parquet, Hive can use the InputFormat class of the file format to read the data files directly, without running a MapReduce job. This is because splitable compression allows the data files to be split into smaller chunks that can be processed in parallel.
+
+If the table is stored in a file format that does not support splitable compression, such as TEXTFILE, Hive may need to run a MapReduce job to read the data files and extract the required columns. However, even in this case, Hive can use fetch optimization to minimize the amount of data that needs to be processed. Specifically, Hive can use a technique called "column projection" to only read the columns that are required by the query, rather than reading the entire row.
+
+By using fetch optimization and column projection, Hive can minimize the amount of data that needs to be processed and avoid running a MapReduce job whenever possible, which can significantly improve query performance. However, it's important to note that not all queries can be optimized in this way, and some queries may still require running a MapReduce job.
+***********************************************************************************************************************************************************************
+Q64. What are the uses of Hive Explode?
+Ans.
+In Hive, explode is a built-in UDTF (User-Defined Table-Generating Function) that is used to split an array or a map column into multiple rows, one for each element or key-value pair. The explode function can be used in a SELECT or LATERAL VIEW statement to expand a column that contains nested data into a set of rows.
+
+Here are some common use cases for explode in Hive:
+
+Flattening nested data: If a Hive table contains a column that contains nested data, such as an array or a map, the explode function can be used to flatten the data and generate one row per element or key-value pair. This can be useful for processing the nested data using standard SQL functions and aggregations.
+
+Counting occurrences: If a Hive table contains a column that contains repeated values, such as a list of tags or categories, the explode function can be used to count the occurrences of each value. This can be useful for generating frequency tables and histograms.
+
+Joining tables: If two Hive tables contain a common column that contains nested data, such as an array of IDs, the explode function can be used to create a join table that maps each ID to a row in the second table. This can be useful for performing complex joins on nested data.
+
+Overall, the explode function is a powerful tool for working with nested data in Hive, and can be used in a variety of ways to extract and manipulate information from complex data structures.
+***********************************************************************************************************************************************************************
+Q65. What is the available mechanism for connecting applications when we 
+run Hive as a server?
+Ans.
+When running Hive as a server, there are several mechanisms available for connecting applications to Hive:
+
+Hive JDBC driver: Hive provides a JDBC driver that allows Java applications to connect to Hive using the standard JDBC API. This driver can be used with any programming language that supports JDBC, and can be configured to connect to Hive using a JDBC URL.
+
+Hive ODBC driver: Hive also provides an ODBC driver that allows applications to connect to Hive using the Open Database Connectivity (ODBC) standard. This driver can be used with any programming language that supports ODBC, and can be configured to connect to Hive using a connection string.
+
+Hive Thrift API: Hive provides a Thrift API that allows applications to connect to Hive using a client-server architecture. The Thrift API provides a set of remote procedure calls (RPCs) that allow clients to interact with Hive over a network connection.
+
+Beeline CLI: Hive includes a command-line interface (CLI) called Beeline that can be used to connect to Hive and run queries from a terminal or shell script. Beeline uses the JDBC driver to connect to Hive, and provides a convenient way to interact with Hive from the command line.
+
+Overall, there are many ways to connect applications to Hive when running it as a server, and the choice of mechanism will depend on the specific requirements of the application and the programming language being used.
+**********************************************************************************************************************************************************************
+Q66. Can the default location of a managed table be changed in Hive?
+Ans.
+Yes, the default location of a managed table can be changed in Hive by setting the hive.metastore.warehouse.dir property in the hive-site.xml configuration file. By default, this property is set to /user/hive/warehouse, which is the location where managed tables are stored in HDFS.
+
+To change the default location of managed tables, you can follow these steps:
+
+Locate the hive-site.xml configuration file in your Hive installation directory.
+
+Open the hive-site.xml file in a text editor.
+
+Add the following property to the file:
+
+<property>
+  <name>hive.metastore.warehouse.dir</name>
+  <value>/path/to/new/warehouse/dir</value>
+</property>
+Replace /path/to/new/warehouse/dir with the desired location for your managed tables.
+
+Save the hive-site.xml file and restart the Hive server to apply the changes.
+
+After changing the default location of managed tables, any new tables created in Hive will be stored in the new location. Existing tables will continue to be stored in their original location unless you explicitly move them using ALTER TABLE statements or HDFS commands. Note that changing the default location of managed tables may have implications for other components of your Hadoop ecosystem, such as backup and recovery processes. Therefore, it is important to plan and test any changes carefully before implementing them in a production environment.
+**********************************************************************************************************************************************************************Q67. What is the Hive ObjectInspector function?
+Ans.
+In Hive, ObjectInspector is a Java interface that provides a standard way to inspect and manipulate objects of arbitrary types. The ObjectInspector interface defines a set of methods for accessing and retrieving the fields of an object, as well as for creating new objects of a specific type.
+
+The ObjectInspector function is used extensively in Hive to serialize and deserialize data between the MapReduce framework and the Hive query engine. When data is read from a file or HDFS, it is typically represented as a byte array, which must be converted into an object that Hive can work with. Similarly, when data is written to a file or HDFS, it must be serialized into a byte array that can be stored.
+
+The ObjectInspector function is used in both these scenarios to inspect the data type of an object and to convert it into a byte array or vice versa. This enables Hive to work with a wide variety of data types and to integrate with other Hadoop components that may use different serialization formats.
+
+In addition to serialization and deserialization, ObjectInspector is also used in Hive to perform various operations on objects, such as accessing individual fields or performing type conversions. For example, when a user queries a Hive table, the query engine uses ObjectInspector to inspect the schema of the table and to retrieve the appropriate fields for the query. Overall, ObjectInspector plays a critical role in enabling Hive to work with complex data types and to integrate with the larger Hadoop ecosystem.
+**********************************************************************************************************************************************************************
+Q68. What is UDF in Hive?
+Ans.
+UDF stands for User-Defined Function in Hive. It is a feature in Hive that allows users to create their own custom functions to perform specific tasks that are not available in the built-in functions of Hive. UDFs are implemented using Java, and they can be used in Hive queries just like built-in functions.
+
+There are three types of UDFs in Hive:
+
+1) GenericUDF: This type of UDF can take any number of input arguments and return a single value. It is the most flexible type of UDF and can be used to implement a wide range of functions.
+
+2) GenericUDAF: This type of UDF is used to perform aggregation functions such as SUM, AVG, and COUNT. It takes a set of input rows and returns a single output row.
+
+3) GenericUDTF: This type of UDF is used to transform a single input row into multiple output rows. It is typically used for tasks such as exploding arrays or splitting strings.
+
+UDFs can be very useful in Hive because they allow users to perform custom operations on their data without having to write complex MapReduce jobs. For example, a user might create a UDF to perform a specialized text processing task that is not available in the built-in Hive functions. Once the UDF is created, it can be used in Hive queries just like any other function.
+**********************************************************************************************************************************************************************
+Q69. Write a query to extract data from hdfs to hive.
+Ans.
+To extract data from HDFS and load it into a Hive table, you can use the following SQL command in the Hive command line interface:
+
+CREATE TABLE mytable (column1 datatype1, column2 datatype2, ...) 
+ROW FORMAT DELIMITED 
+FIELDS TERMINATED BY ',' 
+STORED AS TEXTFILE;
+
+LOAD DATA INPATH '/path/to/hdfs/file' OVERWRITE INTO TABLE mytable;
+In this example, replace mytable with the name of your Hive table and specify the column names and data types as appropriate. The ROW FORMAT DELIMITED clause tells Hive that the input file is delimited by a specific character (in this case, a comma), while the STORED AS TEXTFILE clause specifies that the data will be stored as plain text.
+
+The second command, LOAD DATA INPATH, tells Hive to load the data from the specified HDFS file into the mytable table. The OVERWRITE keyword indicates that any existing data in the table should be overwritten with the new data.
+
+Note that the file path specified in the INPATH clause should be a full HDFS path, starting with the hdfs:// prefix. Also, make sure that the file is accessible by the user running the Hive command. If necessary, you may need to adjust the file permissions or ownership in HDFS.
+**********************************************************************************************************************************************************************
+Q70. What is TextInputFormat and SequenceFileInputFormat in hive.
+Ans.
+SequenceFileAsTextInputFormat – SequenceFileAsTextInputFormat is a variant of SequenceFileInputFormat that converts the sequence file’s keys and values to Text objects. The conversion is performed by calling toString() on the keys and values. This format makes sequence files suitable input for Streaming
+
+TextInputFormat – TextInputFormat is the default InputFormat. Each record is a line of input. The key, a LongWritable, is the byte offset within the file of the beginning of the line. The value is the contents of the line, excluding any line terminators.
+**********************************************************************************************************************************************************************
+Q71. 
 
 
 
