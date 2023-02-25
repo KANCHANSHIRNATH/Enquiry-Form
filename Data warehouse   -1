@@ -101,6 +101,8 @@ c. Primary keys: ride_id, customer_id, driver_id, car_id.
 d. Foreign keys: customer_id, driver_id, and car_id in the ride table.
 e. Star schema design: Ride as the center fact table with customer, driver, and car tables as the dimension tables.
 f. SQL queries:
+
+
 Total revenue generated in a particular month
 Top 10 drivers based on the number of rides completed
 Average fare per kilometer for a particular car type
@@ -141,11 +143,14 @@ f. SQL queries:
 Total number of reservations made in a particular month
 Top 10 most popular restaurants based on the number of reservations
 
+
+
 a. Total number of reservations made in a particular month:
 
 SELECT COUNT(*) as total_reservations
 FROM reservation
 WHERE MONTH(reservation.reservation_date) = 9 AND YEAR(reservation.reservation_date) = 2022;
+
 b. Top 10 most popular restaurants based on the number of reservations:
 
 SELECT restaurant.restaurant_name, COUNT(*) as total_reservations
