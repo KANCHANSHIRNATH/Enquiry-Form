@@ -1,0 +1,909 @@
+Q101. There is no primary key for this table. It may contain duplicates.
+This table contains information about the activity performed by each user in a period of time.
+A person with a username performed an activity from startDate to endDate.
+Write an SQL query to show the second most recent activity of each user.
+If the user only has one activity, return that one. A user cannot perform more than one activity at the
+same time.
+Return the result table in any order.
+Ans.
+SELECT ua.username, ua.activity, ua.startDate, ua.endDate
+FROM UserActivity ua
+WHERE ua.startDate = (
+  SELECT MAX(startDate)
+  FROM UserActivity
+  WHERE startDate < (
+    SELECT MAX(startDate)
+    FROM UserActivity
+    WHERE username = ua.username
+  )
+  AND username = ua.username
+) OR ua.username NOT IN (
+  SELECT username
+  FROM UserActivity
+  GROUP BY username
+  HAVING COUNT(*) = 1
+)
+**************************************************************************************************************************************************************************
+Q102. There is no primary key for this table. It may contain duplicates.
+This table contains information about the activity performed by each user in a period of time.
+A person with a username performed an activity from startDate to endDate.
+Write an SQL query to show the second most recent activity of each user.
+If the user only has one activity, return that one. A user cannot perform more than one activity at the
+same time.
+Return the result table in any order.
+The query result format is in the following example.
+Ans. Duplicate of Q101
+***********************************************************************************************************************************************************************
+Query the Name of any student in STUDENTS who scored higher than 75 Marks. Order your output by
+the last three characters of each name. If two or more students both have names ending in the same
+last three characters (i.e.: Bobby, Robby, etc.), secondary sort them by ascending ID.
+The Name column only contains uppercase (A-Z) and lowercase (a-z) letters.
+Sample Input. Sample Output
+Ashley
+Julia
+Belvet
+Ans.
+SELECT Name
+FROM STUDENTS
+WHERE Marks > 75
+ORDER BY SUBSTR(Name, LENGTH(Name) - 2), ID ASC;
+***********************************************************************************************************************************************************************Q104. Write a query that prints a list of employee names (i.e.: the name attribute) for employees in
+Employee having a salary greater than $2000 per month who have been employees for less than 10
+months. Sort your result by ascending employee_id.
+Input Format
+The Employee table containing employee data for a company is described as follows:
+where employee_id is an employee's ID number, name is their name, months is the total number of
+months they've been working for the company, and salary is the their monthly salary.
+Sample Input
+Ans.
+SELECT name
+FROM Employee
+WHERE salary > 2000 AND month < 10
+ORDER BY employee_id ASC;
+***********************************************************************************************************************************************************************
+Q105. Write a query identifying the type of each record in the TRIANGLES table using its three side lengths.
+Output one of the following statements for each record in the table:
+● Equilateral: It's a triangle with sides of equal length.
+● Isosceles: It's a triangle with sides of equal length.
+● Scalene: It's a triangle with sides of differing lengths.
+● Not A Triangle: The given values of A, B, and C don't form a triangle.
+Ans.
+SELECT 
+    CASE 
+        WHEN A + B <= C OR A + C <= B OR B + C <= A THEN 'Not A Triangle'
+        WHEN A = B AND B = C THEN 'Equilateral'
+        WHEN A = B OR B = C OR C = A THEN 'Isosceles'
+        ELSE 'Scalene'
+    END
+FROM 
+    TRIANGLES;
+**********************************************************************************************************************************************************************
+Q106. Samantha was tasked with calculating the average monthly salaries for all employees in the
+EMPLOYEES table, but did not realise her keyboard's 0 key was broken until after completing the
+calculation. She wants your help finding the difference between her miscalculation (using salaries
+with any zeros removed), and the actual average salary.
+Write a query calculating the amount of error (i.e.: actual - miscalculated average monthly salaries),
+and round it up to the next integer.
+Ans.
+SELECT CEIL(AVG(salary) - AVG(REPLACE(salary, '0', '')))
+FROM Employees;
+**********************************************************************************************************************************************************************
+Q107. We define an employee's total earnings to be their monthly salary * months worked, and the
+maximum total earnings to be the maximum total earnings for any employee in the Employee table.
+Write a query to find the maximum total earnings for all employees as well as the total number of
+employees who have maximum total earnings. Then print these values as 2 space-separated
+integers.
+Level - Easy
+Hint - Use Aggregation functions
+Input Format.
+where employee_id is an employee's ID number, name is their name, months is the total number of
+months they've been working for the company, and salary is the their monthly salary.
+Sample Input
+Ans.
+SELECT MAX(salary * months) AS max_earnings, COUNT(*) AS num_employees
+FROM Employee
+WHERE salary * months = (SELECT MAX(salary * months) FROM Employee)
+
+**********************************************************************************************************************************************************************
+Q108. Query an alphabetically ordered list of all names in OCCUPATIONS, immediately followed by
+the first letter of each profession as a parenthetical (i.e.: enclosed in parentheses). For
+example: AnActorName(A), ADoctorName(D), AProfessorName(P), and ASingerName(S).
+Query the number of occurrences of each occupation in OCCUPATIONS. Sort the occurrences in
+ascending order, and output them in the following format:
+Level - Medium
+There are a total of [occupation_count] [occupation]s.
+2. where [occupation_count] is the number of occurrences of an occupation in OCCUPATIONS and
+[occupation] is the lowercase occupation name. If more than one Occupation has the same
+[occupation_count], they should be ordered alphabetically.
+Note: There will be at least two entries in the table for each type of occupation.
+Input Format
+
+Ans.
+SELECT CONCAT(name, '(', LEFT(occupation, 1), ')')
+FROM OCCUPATIONS
+ORDER BY name ASC;
+
+
+SELECT CONCAT('There are a total of ', COUNT(*), ' ', LOWER(occupation), 's.')
+FROM OCCUPATIONS
+GROUP BY occupation
+ORDER BY COUNT(*) ASC, occupation ASC;
+***********************************************************************************************************************************************************************
+Q109. Pivot the Occupation column in OCCUPATIONS so that each Name is sorted alphabetically and
+displayed underneath its corresponding Occupation. The output column headers should be Doctor,
+Professor, Singer, and Actor, respectively.
+Note: Print NULL when there are no more names corresponding to an occupation.
+Ans.
+SELECT 
+    MAX(CASE WHEN occupation = 'Doctor' THEN name ELSE NULL END) AS Doctor,
+    MAX(CASE WHEN occupation = 'Professor' THEN name ELSE NULL END) AS Professor,
+    MAX(CASE WHEN occupation = 'Singer' THEN name ELSE NULL END) AS Singer,
+    MAX(CASE WHEN occupation = 'Actor' THEN name ELSE NULL END) AS Actor
+FROM 
+    OCCUPATIONS
+GROUP BY name
+ORDER BY name;
+***********************************************************************************************************************************************************************Q110. You are given a table, BST, containing two columns: N and P, where N represents the value of a node
+in Binary Tree, and P is the parent of N.
+Write a query to find the node type of Binary Tree ordered by the value of the node. Output one of the
+following for each node:
+● Root: If node is root node.
+● Leaf: If node is leaf node.
+● Inner: If node is neither root nor leaf node.
+Ans.
+SELECT N,
+    CASE 
+        WHEN P IS NULL THEN 'Root'
+        WHEN N NOT IN (SELECT P FROM BST) THEN 'Leaf'
+        ELSE 'Inner'
+    END AS Type
+FROM BST
+ORDER BY N;
+***********************************************************************************************************************************************************************
+Q111.
+Ans.
+select c.company_code, c.founder,
+       count(distinct l.lead_manager_code),
+       count(distinct s.senior_manager_code),
+       count(distinct m.manager_code),
+       count(distinct e.employee_code)
+from Company as c 
+join Lead_Manager as l 
+on c.company_code = l.company_code
+join Senior_Manager as s
+on l.lead_manager_code = s.lead_manager_code
+join Manager as m 
+on m.senior_manager_code = s.senior_manager_code
+join Employee as e
+on e.manager_code = m.manager_code
+group by c.company_code, c.founder
+order by c.company_code;
+***********************************************************************************************************************************************************************Q112. Write a query to print all prime numbers less than or equal to 1000. Print your result on a single line,
+and use the ampersand () character as your separator (instead of a space).
+For example, the output for all prime numbers <=10 would be: 2&3&5&7
+Hint - Firstly, select L Prime_Number from (select Level L from Dual connect Level ≤ 1000) and then do
+the same thing to create Level M, and then filter by M ≤ L and then group by L having count(case when
+L/M = truc(L/M) then ‘Y’ end) = 2 order by L
+Ans.
+SELECT listagg(n, '&') WITHIN GROUP (ORDER BY n) AS primes
+FROM (
+  SELECT LEVEL AS n
+  FROM DUAL
+  CONNECT BY LEVEL <= 1000
+)
+WHERE n > 1
+GROUP BY n
+HAVING COUNT(CASE WHEN MOD(n, level) = 0 THEN 'Y' END) = 2;
+***********************************************************************************************************************************************************************
+Q113. P(R) represents a pattern drawn by Julia in R rows. The following pattern represents P(5):
+*
+* *
+* * *
+* * * *
+* * * * *
+Write a query to print the pattern P(20).
+Level - Easy
+Source - Hackerrank
+Hint - Use SYS_CONNECT_BY_PATH(NULL, '* ') FROM DUAL
+Ans.
+SELECT TRIM(SYS_CONNECT_BY_PATH(NULL, '* '))
+FROM (
+  SELECT LEVEL
+  FROM DUAL
+  CONNECT BY LEVEL <= 20
+)
+WHERE LEVEL = CONNECT_BY_ISLEAF
+START WITH LEVEL = 1
+CONNECT BY PRIOR LEVEL + 1 = LEVEL;
+***********************************************************************************************************************************************************************
+Q114. P(R) represents a pattern drawn by Julia in R rows. The following pattern represents P(5):
+* * * * *
+* * * *
+* * *
+* *
+*
+Write a query to print the pattern P(20).
+Level - Easy
+Hint - Use SYS_CONNECT_BY_PATH(NULL, '* ') FROM DUAL
+Ans.
+SELECT REPLACE(SYS_CONNECT_BY_PATH(NULL, '* '), ' ', '') AS PATTERN
+FROM (SELECT LEVEL AS L FROM DUAL CONNECT BY LEVEL <= 20)
+WHERE LEVEL <= 20
+START WITH L = 20
+CONNECT BY LEVEL <= L
+ORDER SIBLINGS BY L DESC;
+***********************************************************************************************************************************************************************
+Q115. You are given a table, Functions, containing two columns: X and Y.
+Two pairs (X1, Y1) and (X2, Y2) are said to be symmetric pairs if X1 = Y2 and X2 = Y1.
+Write a query to output all such symmetric pairs in ascending order by the value of X. List the rows
+such that X1 ≤ Y1.
+Ans.
+SELECT DISTINCT F1.X, F1.Y
+FROM Functions F1
+JOIN Functions F2 ON F1.X = F2.Y AND F1.Y = F2.X
+WHERE F1.X <= F1.Y
+ORDER BY F1.X ASC
+***********************************************************************************************************************************************************************
+Q116. Query the Name of any student in STUDENTS who scored higher than 75 Marks. Order your output by
+the last three characters of each name. If two or more students both have names ending in the same
+last three characters (i.e.: Bobby, Robby, etc.), secondary sort them by ascending ID.
+Level - Easy
+Hint - Use Like
+Input Format
+The STUDENTS table is described as follows:
+The Name column only contains uppercase (A-Z) and lowercase (a-z) letters.
+Ans.
+SELECT Name FROM STUDENTS
+WHERE marks > 75
+ORDER BY SUBSTR(Name, -3), ID ASC;
+***********************************************************************************************************************************************************************
+Q117. Write a query that prints a list of employee names (i.e.: the name attribute) from the Employee table
+in alphabetical order.
+Level - Easy
+Hint - Use ORDER BY
+Input Format
+The Employee table containing employee data for a company is described as follows:
+where employee_id is an employee's ID number, name is their name, months is the total number of
+months they've been working for the company, and salary is their monthly salary.
+Ans.
+SELECT name
+FROM Employee
+ORDER BY name ASC;
+***********************************************************************************************************************************************************************
+Q118. Write a query that prints a list of employee names (i.e.: the name attribute) for employees in
+Employee having a salary greater than $2000 per month who have been employees for less than 10
+months. Sort your result by ascending employee_id.
+Level - Easy
+Hint - Use Ascending
+Input Format
+The Employee table containing employee data for a company is described as follows:
+where employee_id is an employee's ID number, name is their name, months is the total number of
+months they've been working for the company, and salary is the their monthly salary.
+Ans.
+SELECT name FROM Employee
+WHERE salary > 2000 AND month < 10
+ORDER BY employee_id ASC;
+***********************************************************************************************************************************************************************
+Q119. Write a query identifying the type of each record in the TRIANGLES table using its three side
+lengths. Output one of the following statements for each record in the table:
+● Equilateral: It's a triangle with sides of equal length.
+● Isosceles: It's a triangle with sides of equal length.
+● Scalene: It's a triangle with sides of differing lengths.
+● Not A Triangle: The given values of A, B, and C don't form a triangle.
+Level - Easy
+Hint - Use predefined functions for calculation.
+Ans.
+SELECT 
+    CASE
+        WHEN A + B <= C OR A + C <= B OR B + C <= A THEN 'Not A Triangle'
+        WHEN A = B AND B = C THEN 'Equilateral'
+        WHEN A = B OR B = C OR A = C THEN 'Isosceles'
+        ELSE 'Scalene'
+    END AS TYPE
+FROM 
+    TRIANGLES
+***********************************************************************************************************************************************************************
+Q119. 
+Ans.
+SELECT t1.product_id,
+       EXTRACT(YEAR FROM t1.transaction_date) AS curr_year,
+       SUM(CASE WHEN EXTRACT(YEAR FROM t1.transaction_date) = EXTRACT(YEAR FROM t2.transaction_date) THEN t1.spend ELSE 0 END) AS curr_year_spend,
+       SUM(CASE WHEN EXTRACT(YEAR FROM t1.transaction_date) = EXTRACT(YEAR FROM t2.transaction_date) - 1 THEN t2.spend ELSE 0 END) AS prev_year_spend,
+       ROUND(((SUM(CASE WHEN EXTRACT(YEAR FROM t1.transaction_date) = EXTRACT(YEAR FROM t2.transaction_date) THEN t1.spend ELSE 0 END) / SUM(CASE WHEN EXTRACT(YEAR FROM t1.transaction_date) = EXTRACT(YEAR FROM t2.transaction_date) - 1 THEN t2.spend ELSE 0 END)) - 1) * 100, 2) AS yoy_rate
+FROM user_transactions t1
+LEFT JOIN user_transactions t2
+ON t1.product_id = t2.product_id AND EXTRACT(YEAR FROM t1.transaction_date) = EXTRACT(YEAR FROM t2.transaction_date) + 1
+GROUP BY t1.product_id, EXTRACT(YEAR FROM t1.transaction_date)
+ORDER BY t1.product_id, EXTRACT(YEAR FROM t1.transaction_date);
+***********************************************************************************************************************************************************************
+Q120. 
+Ans.
+SELECT item_type, COUNT(*) AS item_count
+FROM (
+  SELECT item_type,
+    SUM(square_footage) OVER (PARTITION BY item_type) AS total_sq_ft
+  FROM inventory
+) AS subquery
+WHERE total_sq_ft <= 500000
+GROUP BY item_type;
+***********************************************************************************************************************************************************************
+Q121. 
+Ans.
+SELECT 
+    7 AS month, 
+    COUNT(DISTINCT ua1.user_id) AS monthly_active_users
+FROM 
+    user_actions ua1 
+WHERE 
+    EXISTS (
+        SELECT 1 
+        FROM user_actions ua2 
+        WHERE ua1.user_id = ua2.user_id 
+            AND ua2.event_date >= DATE('2022-06-01') 
+            AND ua2.event_date < DATE('2022-07-01') 
+    )
+    AND EXISTS (
+        SELECT 1 
+        FROM user_actions ua3 
+        WHERE ua1.user_id = ua3.user_id 
+            AND ua3.event_date >= DATE('2022-07-01') 
+            AND ua3.event_date < DATE('2022-08-01') 
+    )
+***********************************************************************************************************************************************************************
+Q122. 
+Ans.
+WITH cumulative_searches AS (
+  SELECT searches, num_users, SUM(num_users) OVER (ORDER BY searches) AS cumulative_users
+  FROM search_frequency
+)
+SELECT ROUND(AVG(searches), 1) AS median
+FROM cumulative_searches
+WHERE cumulative_users >= (SELECT SUM(num_users) / 2.0 FROM search_frequency)
+***********************************************************************************************************************************************************************
+Q123. 
+Ans.
+UPDATE advertiser
+SET status = CASE 
+  WHEN daily_pay.paid IS NULL THEN 'CHURN'
+  WHEN advertiser.status = 'NEW' THEN 'EXISTING'
+  WHEN advertiser.status = 'EXISTING' THEN 
+    CASE 
+      WHEN daily_pay.paid > 0 THEN 'EXISTING'
+      ELSE 'CHURN'
+    END
+  WHEN advertiser.status = 'CHURN' THEN 
+    CASE 
+      WHEN daily_pay.paid > 0 THEN 'RESURRECT'
+      ELSE 'CHURN'
+    END
+  WHEN advertiser.status = 'RESURRECT' THEN 
+    CASE 
+      WHEN daily_pay.paid > 0 THEN 'EXISTING'
+      ELSE 'CHURN'
+    END
+END
+FROM advertiser
+LEFT JOIN daily_pay ON advertiser.user_id = daily_pay.user_id
+ORDER BY advertiser.user_id;
+***********************************************************************************************************************************************************************
+Q124. 
+Ans.
+WITH server_uptime AS (
+  SELECT 
+    server_id, 
+    TIMESTAMP_DIFF(
+      MAX(status_time), 
+      MIN(status_time), 
+      SECOND
+    ) AS uptime_seconds
+  FROM 
+    server_utilization
+  GROUP BY 
+    server_id
+)
+
+SELECT 
+  FLOOR(SUM(uptime_seconds) / (60 * 60 * 24)) AS total_uptime_days
+FROM 
+  server_uptime;
+***********************************************************************************************************************************************************************
+Q225.
+Ans.
+WITH duplicates AS (
+  SELECT 
+    ROW_NUMBER() OVER (PARTITION BY merchant_id, credit_card_id, amount ORDER BY transaction_timestamp) AS row_num
+  FROM 
+    transactions
+)
+SELECT 
+  COUNT(*) AS payment_count
+FROM 
+  duplicates
+WHERE 
+  row_num > 1 AND 
+  transaction_timestamp - LAG(transaction_timestamp) OVER (PARTITION BY merchant_id, credit_card_id, amount ORDER BY transaction_timestamp) <= INTERVAL '10' MINUTE;
+***********************************************************************************************************************************************************************
+Q226.
+Ans. 
+WITH new_users AS (
+  SELECT customer_id, signup_timestamp
+  FROM customers
+  WHERE EXTRACT(YEAR_MONTH FROM signup_timestamp) = '202206'
+), bad_orders AS (
+  SELECT o.customer_id, o.order_id
+  FROM orders o
+  JOIN new_users nu
+  ON o.customer_id = nu.customer_id
+  WHERE o.order_timestamp >= nu.signup_timestamp
+    AND o.order_timestamp < DATE_ADD(nu.signup_timestamp, INTERVAL 14 DAY)
+    AND (o.status = 'completed incorrectly' OR o.status = 'never received')
+    OR (o.status = 'completed successfully' AND 
+        NOT EXISTS (
+          SELECT 1
+          FROM trips t
+          WHERE t.trip_id = o.trip_id
+            AND t.actual_delivery_timestamp <= DATE_ADD(o.order_timestamp, INTERVAL 30 MINUTE)
+        )
+       )
+)
+SELECT ROUND(COUNT(DISTINCT bad_orders.order_id) * 100.0 / COUNT(DISTINCT orders.order_id), 2) AS bad_experience_pct
+FROM bad_orders
+JOIN orders
+ON bad_orders.order_id = orders.order_id;
+***********************************************************************************************************************************************************************
+Q227. 
+Ans.
+SELECT gender, day, SUM(score_points) as total
+FROM Scores
+GROUP BY gender, day
+ORDER BY gender ASC, day ASC;
+***********************************************************************************************************************************************************************
+Q228.
+Ans.
+SELECT c.name AS country
+FROM Calls cl
+JOIN Person p1 ON cl.caller_id = p1.id
+JOIN Person p2 ON cl.callee_id = p2.id
+JOIN Country c ON p1.phone_number LIKE CONCAT('%', c.country_code, '-%')
+WHERE cl.duration > (
+  SELECT AVG(duration)
+  FROM Calls
+) 
+GROUP BY c.name
+HAVING AVG(cl.duration) > (
+  SELECT AVG(duration)
+  FROM Calls
+);
+***********************************************************************************************************************************************************************
+Q229.
+Ans.
+SELECT num AS median
+FROM (
+  SELECT num, frequency, SUM(frequency) OVER (ORDER BY num) AS cumulative_frequency
+  FROM Numbers
+) AS decompressed
+WHERE cumulative_frequency >= (SELECT CEILING(SUM(frequency)/2.0) FROM Numbers)
+LIMIT 1;
+***********************************************************************************************************************************************************************
+
+Q130.
+Ans.
+SELECT 
+    DATE_FORMAT(s.pay_date, '%Y-%m') AS pay_month, 
+    e.department_id, 
+    CASE 
+        WHEN AVG(s.amount) > c.avg_salary THEN 'higher'
+        WHEN AVG(s.amount) < c.avg_salary THEN 'lower'
+        ELSE 'same'
+    END AS comparison
+FROM 
+    Salary s 
+    JOIN Employee e ON s.employee_id = e.employee_id 
+    JOIN (SELECT AVG(amount) AS avg_salary FROM Salary) c 
+GROUP BY 
+    pay_month, 
+    department_id
+***********************************************************************************************************************************************************************
+Q131.
+Ans.
+SELECT
+  event_date AS install_dt,
+  COUNT(DISTINCT player_id) AS installs,
+  ROUND(
+    COUNT(
+      DISTINCT CASE
+        WHEN LEAD(event_date) OVER (PARTITION BY player_id ORDER BY event_date) = DATEADD(day, 1, event_date) THEN player_id
+        ELSE NULL
+      END
+    ) * 1.0 / COUNT(DISTINCT player_id),
+  2) AS Day1_retention
+FROM
+  Activity
+GROUP BY
+  event_date;
+***********************************************************************************************************************************************************************
+Q132. 
+Ans.
+WITH PlayerScores AS (
+  SELECT
+    p.player_id,
+    p.group_id,
+    SUM(CASE WHEN m.first_player = p.player_id THEN m.first_score ELSE m.second_score END) AS total_score
+  FROM
+    Players p
+    JOIN Matches m ON p.group_id = (CASE WHEN m.first_player = p.player_id THEN m.second_player ELSE m.first_player END)
+  GROUP BY
+    p.player_id,
+    p.group_id
+)
+SELECT
+  group_id,
+  player_id
+FROM (
+  SELECT
+    group_id,
+    player_id,
+    ROW_NUMBER() OVER (PARTITION BY group_id ORDER BY total_score DESC, player_id ASC) AS rank
+  FROM
+    PlayerScores
+) t
+WHERE
+  rank = 1;
+***********************************************************************************************************************************************************************
+Q133.
+Ans.
+SELECT s.student_id, s.student_name
+FROM Student s
+WHERE s.student_id IN (
+  SELECT e.student_id
+  FROM Exam e
+  GROUP BY e.student_id
+  HAVING MIN(e.score) > (SELECT MIN(score) FROM Exam WHERE exam_id = e.exam_id)
+    AND MAX(e.score) < (SELECT MAX(score) FROM Exam WHERE exam_id = e.exam_id)
+)
+ORDER BY s.student_id;
+***********************************************************************************************************************************************************************
+Q134.
+Ans.
+SELECT s.student_id, s.student_name
+FROM Student s
+WHERE s.student_id IN (
+  SELECT e.student_id
+  FROM Exam e
+  GROUP BY e.student_id
+  HAVING MIN(e.score) > (
+    SELECT MIN(score)
+    FROM Exam
+    WHERE exam_id = e.exam_id
+  ) AND MAX(e.score) < (
+    SELECT MAX(score)
+    FROM Exam
+    WHERE exam_id = e.exam_id
+  )
+) AND s.student_id IN (
+  SELECT student_id
+  FROM Exam
+)
+ORDER BY s.student_id;
+***********************************************************************************************************************************************************************
+Q135.
+Ans.
+SELECT ua.username, ua.activity, ua.startDate, ua.endDate
+FROM UserActivity ua
+WHERE ua.endDate = (
+  SELECT MAX(endDate)
+  FROM UserActivity
+  WHERE username = ua.username AND endDate < (
+    SELECT MAX(endDate)
+    FROM UserActivity
+    WHERE username = ua.username
+  )
+);
+***********************************************************************************************************************************************************************
+Q136.
+Ans.
+SELECT ua.username, ua.activity, ua.startDate, ua.endDate
+FROM UserActivity ua
+LEFT JOIN (
+    SELECT username, MAX(endDate) AS most_recent
+    FROM UserActivity
+    GROUP BY username
+) mr ON ua.username = mr.username
+WHERE ua.endDate < mr.most_recent OR mr.most_recent IS NULL
+AND (
+    SELECT COUNT(*) FROM UserActivity ua2
+    WHERE ua2.username = ua.username
+) > 1
+ORDER BY ua.username;
+***********************************************************************************************************************************************************************
+Q137.
+Ans.
+SELECT CEIL(AVG(Salary) - AVG(REPLACE(Salary, '0', ''))) AS Error
+FROM Employees;
+***********************************************************************************************************************************************************************
+Q138.
+Ans.
+SELECT MAX(monthly_salary * months_worked), COUNT(*) 
+FROM Employee 
+WHERE monthly_salary * months_worked = (SELECT MAX(monthly_salary * months_worked) FROM Employee);
+***********************************************************************************************************************************************************************
+Q139.
+Ans.
+Duplicate of Q108
+***********************************************************************************************************************************************************************
+Q140.
+Ans.
+SELECT
+d.Name AS Doctor,
+p.Name AS Professor,
+s.Name AS Singer,
+a.Name AS Actor
+FROM
+(SELECT Name, ROW_NUMBER() OVER (ORDER BY Name) AS row_num FROM OCCUPATIONS WHERE Occupation = 'Doctor') d
+FULL OUTER JOIN
+(SELECT Name, ROW_NUMBER() OVER (ORDER BY Name) AS row_num FROM OCCUPATIONS WHERE Occupation = 'Professor') p
+ON d.row_num = p.row_num
+FULL OUTER JOIN
+(SELECT Name, ROW_NUMBER() OVER (ORDER BY Name) AS row_num FROM OCCUPATIONS WHERE Occupation = 'Singer') s
+ON COALESCE(d.row_num, p.row_num) = s.row_num
+FULL OUTER JOIN
+(SELECT Name, ROW_NUMBER() OVER (ORDER BY Name) AS row_num FROM OCCUPATIONS WHERE Occupation = 'Actor') a
+ON COALESCE(d.row_num, p.row_num, s.row_num) = a.row_num
+ORDER BY COALESCE(d.row_num, p.row_num, s.row_num, a.row_num)
+***********************************************************************************************************************************************************************
+Q141.
+Ans. Duplicate of Q110
+***********************************************************************************************************************************************************************
+Q142.
+Ans.
+Duplicate of Q111
+***********************************************************************************************************************************************************************
+Q143. 
+Ans.
+SELECT F1.X, F1.Y
+FROM Functions F1
+INNER JOIN Functions F2
+ON F1.X = F2.Y AND F1.Y = F2.X
+WHERE F1.X <= F1.Y
+ORDER BY F1.X ASC;
+***********************************************************************************************************************************************************************
+Q144.
+Ans.
+SELECT s.Name
+FROM Students s
+JOIN Friends f ON s.ID = f.ID
+JOIN Packages p ON f.Friend_ID = p.ID
+WHERE p.Salary > (SELECT Salary FROM Packages WHERE ID = s.ID)
+ORDER BY p.Salary;
+***********************************************************************************************************************************************************************
+Q145.
+Ans.
+SQL--> select months*salary, count(*) from employee
+group by months*salary
+order by months*salary desc
+limit 1;
+
+MYSQL--> select concat((select max(months*salary) from employee), ' ',
+              (select count(*) from
+               (select rank() over (order by months*salary desc) as  
+ 
+                 rnk from employee) t where t.rnk = 1)
+               );
+               
+  SELECT s.hacker_id, h.name
+FROM (
+  SELECT hacker_id, challenge_id, SUM(score) AS total_score
+  FROM Submissions
+  GROUP BY hacker_id, challenge_id
+) AS s
+JOIN Challenges AS c ON s.challenge_id = c.challenge_id
+JOIN Difficulty AS d ON c.difficulty_level = d.difficulty_level AND s.total_score = d.score
+JOIN Hackers AS h ON s.hacker_id = h.hacker_id
+GROUP BY s.hacker_id, h.name
+HAVING COUNT(*) > 1
+ORDER BY COUNT(*) DESC, s.hacker_id ASC;
+
+***********************************************************************************************************************************************************************
+Q146.
+Ans.
+SELECT Start_Date, min(End_Date)
+FROM 
+ (SELECT Start_Date FROM Projects WHERE Start_Date NOT IN (SELECT End_Date FROM Projects)) a ,
+ (SELECT End_Date FROM Projects WHERE End_Date NOT IN (SELECT Start_Date FROM Projects)) b
+WHERE Start_Date < End_Date
+GROUP BY Start_Date
+ORDER BY DATEDIFF(min(End_Date), Start_Date) ASC, Start_Date ASC;
+***********************************************************************************************************************************************************************
+Q147.
+Ans.
+SELECT user_id
+FROM (
+  SELECT user_id, transaction_date,
+    ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY transaction_date) AS rn,
+    DATEDIFF(day, LAG(transaction_date) OVER (PARTITION BY user_id ORDER BY transaction_date), transaction_date) AS diff
+  FROM transactions
+) t
+WHERE EXISTS (
+  SELECT 1
+  FROM (
+    SELECT user_id, COUNT(*) AS num_consecutive
+    FROM (
+      SELECT user_id, transaction_date,
+        DATEDIFF(day, LAG(transaction_date) OVER (PARTITION BY user_id ORDER BY transaction_date), transaction_date) AS diff
+      FROM transactions
+    ) tt
+    WHERE diff = 1
+    GROUP BY user_id, DATEADD(day, -rn, transaction_date)
+  ) s
+  WHERE s.user_id = t.user_id AND s.num_consecutive >= 2
+)
+GROUP BY user_id
+HAVING COUNT(*) >= 1
+ORDER BY user_id
+***********************************************************************************************************************************************************************
+Q149.
+Ans.
+SELECT COUNT(DISTINCT user_id) AS users
+FROM (
+  SELECT user_id, spend, RANK() OVER (PARTITION BY user_id ORDER BY transaction_date) AS rank
+  FROM user_transactions
+) t
+WHERE rank = 1 AND spend >= 50
+***********************************************************************************************************************************************************************
+Q150.
+Ans.
+SELECT DATE(measurement_time) AS measurement_day,
+       SUM(CASE WHEN MOD(measurement_id, 2) = 1 THEN measurement_value ELSE 0 END) AS odd_sum,
+       SUM(CASE WHEN MOD(measurement_id, 2) = 0 THEN measurement_value ELSE 0 END) AS even_sum
+FROM measurements
+GROUP BY measurement_day;
+***********************************************************************************************************************************************************************
+Q150.
+
+Q148.
+Ans.
+SELECT COUNT(*) AS unique_relationships
+FROM (
+  SELECT MIN(payer_id, recipient_id) AS sender, MAX(payer_id, recipient_id) AS receiver
+  FROM payments
+  GROUP BY sender, receiver
+  HAVING SUM(CASE WHEN payer_id < recipient_id THEN amount ELSE -amount END) <> 0
+) AS unique_pairs;
+***********************************************************************************************************************************************************************
+Q149.
+Ans.
+SELECT COUNT(DISTINCT user_id) AS users
+FROM (
+  SELECT user_id, spend, RANK() OVER (PARTITION BY user_id ORDER BY transaction_date) AS rank
+  FROM user_transactions
+) t
+WHERE rank = 1 AND spend >= 50
+***********************************************************************************************************************************************************************
+Q150.
+Ans.
+SELECT DATE(measurement_time) AS measurement_day,
+       SUM(CASE WHEN MOD(measurement_id, 2) = 1 THEN measurement_value ELSE 0 END) AS odd_sum,
+       SUM(CASE WHEN MOD(measurement_id, 2) = 0 THEN measurement_value ELSE 0 END) AS even_sum
+FROM measurements
+GROUP BY measurement_day;
+***********************************************************************************************************************************************************************
+Q151.
+Ans.
+SELECT t1.user_id
+FROM transactions t1
+JOIN transactions t2 ON t1.user_id = t2.user_id AND t2.transaction_date = DATE_ADD(t1.transaction_date, INTERVAL 1 DAY)
+JOIN transactions t3 ON t1.user_id = t3.user_id AND t3.transaction_date = DATE_ADD(t2.transaction_date, INTERVAL 1 DAY)
+GROUP BY t1.user_id
+HAVING COUNT(*) >= 1
+ORDER BY t1.user_id ASC;
+***********************************************************************************************************************************************************************
+Q152.
+Ans.
+SELECT COUNT(DISTINCT CONCAT(a.rental_id, '_', b.rental_id)) AS matching_airbnb
+FROM rental_amenities a
+JOIN rental_amenities b ON a.amenity = b.amenity AND a.rental_id < b.rental_id
+GROUP BY a.rental_id, b.rental_id
+HAVING COUNT(*) = (SELECT COUNT(*) FROM rental_amenities WHERE rental_id = a.rental_id)
+***********************************************************************************************************************************************************************
+
+Q153.
+Ans.
+SELECT advertiser_id, ROUND(SUM(revenue)/SUM(spend), 2) AS ROAS
+FROM ad_campaigns
+GROUP BY advertiser_id
+ORDER BY advertiser_id;
+***********************************************************************************************************************************************************************
+Q154.
+Ans.
+WITH avg_salary AS (
+  SELECT title, AVG(salary) AS avg_salary
+  FROM employee_pay
+  GROUP BY title
+)
+SELECT employee_id, salary, 
+  CASE 
+    WHEN salary > 2*avg_salary THEN 'Overpaid'
+    WHEN salary < 0.5*avg_salary THEN 'Underpaid'
+    ELSE NULL
+  END AS status
+FROM employee_pay
+JOIN avg_salary ON employee_pay.title = avg_salary.title
+WHERE salary > 2*avg_salary OR salary < 0.5*avg_salary
+ORDER BY employee_id
+***********************************************************************************************************************************************************************
+Q155.
+Ans. 
+SELECT COUNT(DISTINCT payer_id, recipient_id)
+FROM payments p1
+WHERE EXISTS (
+  SELECT *
+  FROM payments p2
+  WHERE p1.payer_id = p2.recipient_id AND p1.recipient_id = p2.payer_id
+);
+***********************************************************************************************************************************************************************
+Q156.
+Ans.
+SELECT COUNT(DISTINCT user_id) AS repeat_purchasers
+FROM purchases
+GROUP BY user_id, product_id
+HAVING COUNT(DISTINCT DATE(purchase_date)) > 1;
+***********************************************************************************************************************************************************************
+Q157.
+Ans.
+SELECT 
+  transaction_date,
+  SUM(CASE 
+        WHEN type = 'deposit' THEN amount
+        WHEN type = 'withdrawal' THEN -amount
+        ELSE 0 
+      END) OVER (ORDER BY transaction_date) AS balance
+FROM transactions
+GROUP BY LAST_DAY(transaction_date)
+***********************************************************************************************************************************************************************
+Q158.
+Ans.
+SELECT category, product, total_spend
+FROM (
+  SELECT 
+    category, 
+    product, 
+    SUM(spend) AS total_spend, 
+    ROW_NUMBER() OVER (PARTITION BY category ORDER BY SUM(spend) DESC) AS rank
+  FROM product_spend
+  WHERE YEAR(transaction_date) = 2022
+  GROUP BY category, product
+) t
+WHERE rank <= 2;
+***********************************************************************************************************************************************************************
+Q159.
+Ans.
+SELECT EXTRACT(WEEK FROM signup_date) AS signup_week,
+  ROUND(SUM(CASE WHEN last_login < DATE_ADD(signup_date, INTERVAL 28 DAY) THEN 1 ELSE 0 END) / COUNT(*), 2) AS churn_rate
+FROM users
+WHERE signup_date >= '2022-06-01' AND signup_date < '2022-07-01'
+GROUP BY signup_week
+***********************************************************************************************************************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
