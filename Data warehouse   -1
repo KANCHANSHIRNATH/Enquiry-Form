@@ -1,0 +1,231 @@
+Que. Design Data Warehouses For Given Below Products:
+Note : While designing any Data Warehouse make sure to cover given below points.
+a. Design Fact & Dimension tables
+b. Create meaningful Primary & Foreign keys
+c. Try to follow Star/SnowFlake Schema Design
+d. Try to write few SQL queries to generate insightful business metrics (This is the critical
+point because you need to understand the Data & Business both)
+1. Design a Data Warehouse for IPL Cricket Tournament (Asked in Flipkart Interview for
+Senior Data Engineer role)
+2. Design a Data Warehouse for Food delivery app like Swiggy, Zomato (Asked in Grab
+for Data Engineer role)
+3. Design a Data Warehouse for cab ride service like Uber, Lyft (Asked in Google for Data
+Engineer role)
+4. Design a Data Warehouse for Restaurent table booking app like Dineout (Asked in
+McKinsey for Consultant Data Engineer role)
+5. Design a Data Warehouse for Covid Vaccination Application (Asked in Livsapce for
+Data Engineer role)
+
+
+
+Ans.
+
+1) Design a Data Warehouse for IPL Cricket Tournament:
+a. Fact table: Match result with fields like match_id, team1_id, team2_id, winner_id, venue_id, date, etc.
+b. Dimension tables: Team with fields like team_id, team_name, etc., Player with fields like player_id, player_name, team_id, etc., Venue with fields like venue_id, venue_name, city, etc.
+c. Primary keys: match_id, team_id, player_id, venue_id.
+d. Foreign keys: team_id in the player table, team_id and venue_id in the match result table.
+e. Star schema design: Match result as the center fact table with team, player, and venue tables as the dimension tables.
+f. SQL queries:
+Total number of matches played in a season
+Top 10 batsmen based on the number of runs scored
+Average score for each team in a particular venue
+
+
+For IPL Cricket Tournament:
+a. Total number of matches played in a season:
+
+SELECT COUNT(*) as total_matches
+FROM match_result;
+b. Top 10 batsmen based on the number of runs scored:
+
+SELECT player.player_name, SUM(score.runs) as total_runs
+FROM player
+INNER JOIN score ON player.player_id = score.player_id
+GROUP BY player.player_name
+ORDER BY total_runs DESC
+LIMIT 10;
+c. Average score for each team in a particular venue:
+
+SELECT team.team_name, venue.city, AVG(score.runs) as avg_score
+FROM match_result
+INNER JOIN team ON match_result.team1_id = team.team_id OR match_result.team2_id = team.team_id
+INNER JOIN score ON match_result.match_id = score.match_id
+INNER JOIN venue ON match_result.venue_id = venue.venue_id
+GROUP BY team.team_name, venue.city;
+For Food delivery app like Swiggy, Zomato:
+a. Total revenue generated in a particular month:
+                                                      
+                                                      ******************************************
+                                                      
+2) Design a Data Warehouse for Food delivery app like Swiggy, Zomato:
+a. Fact table: Order with fields like order_id, customer_id, restaurant_id, order_date, total_amount, etc.
+b. Dimension tables: Customer with fields like customer_id, customer_name, etc., Restaurant with fields like restaurant_id, restaurant_name, etc., Menu with fields like menu_id, menu_item, price, etc.
+c. Primary keys: order_id, customer_id, restaurant_id, menu_id.
+d. Foreign keys: customer_id and restaurant_id in the order table, menu_id in the order and menu table.
+e. Star schema design: Order as the center fact table with customer, restaurant, and menu tables as the dimension tables.
+f. SQL queries:
+Total revenue generated in a particular month
+Top 10 most ordered food items
+Average order value for a particular restaurant
+
+SELECT SUM(order.total_amount) as total_revenue
+FROM order
+WHERE MONTH(order.order_date) = 9 AND YEAR(order.order_date) = 2022;
+b. Top 10 most ordered food items:
+
+SELECT menu.menu_item, COUNT(*) as total_orders
+FROM order
+INNER JOIN menu ON order.menu_id = menu.menu_id
+GROUP BY menu.menu_item
+ORDER BY total_orders DESC
+LIMIT 10;
+c. Average order value for a particular restaurant:
+
+SELECT restaurant.restaurant_name, AVG(order.total_amount) as avg_order_value
+FROM order
+INNER JOIN restaurant ON order.restaurant_id = restaurant.restaurant_id
+WHERE restaurant.restaurant_name = 'ABC Restaurant'
+GROUP BY restaurant.restaurant_name;
+
+
+
+
+                                                               ****************************************
+
+
+3) Design a Data Warehouse for cab ride service like Uber, Lyft:
+a. Fact table: Ride with fields like ride_id, customer_id, driver_id, start_time, end_time, distance, fare, etc.
+b. Dimension tables: Customer with fields like customer_id, customer_name, etc., Driver with fields like driver_id, driver_name, etc., Car with fields like car_id, car_type, etc.
+c. Primary keys: ride_id, customer_id, driver_id, car_id.
+d. Foreign keys: customer_id, driver_id, and car_id in the ride table.
+e. Star schema design: Ride as the center fact table with customer, driver, and car tables as the dimension tables.
+f. SQL queries:
+Total revenue generated in a particular month
+Top 10 drivers based on the number of rides completed
+Average fare per kilometer for a particular car type
+
+For cab ride service like Uber, Lyft:
+a. Total revenue generated in a particular month:
+
+SELECT SUM(ride.fare) as total_revenue
+FROM ride
+WHERE MONTH(ride.start_time) = 9 AND YEAR(ride.start_time) = 2022;
+b. Top 10 drivers based on the number of rides completed:
+
+SELECT driver.driver_name, COUNT(*) as total_rides
+FROM ride
+INNER JOIN driver ON ride.driver_id = driver.driver_id
+GROUP BY driver.driver_name
+ORDER BY total_rides DESC
+LIMIT 10;
+c. Average fare per kilometer for a particular car type:
+
+SELECT car.car_type, AVG(ride.fare/ride.distance) as avg_fare_per_km
+FROM ride
+INNER JOIN car ON ride.car_id = car.car_id
+WHERE car.car_type = 'Sedan'
+GROUP BY car.car_type;
+
+
+
+                                                                 *********************************
+
+4) Design a Data Warehouse for Restaurant table booking app like Dineout:
+a. Fact table: Reservation with fields like reservation_id, restaurant_id, customer_id, reservation_date, party_size, etc.
+b. Dimension tables: Restaurant with fields like restaurant_id, restaurant_name, etc., Customer with fields like customer_id, customer_name, etc., Table with fields like table_id, table_number, seating_capacity, etc.
+c. Primary keys: reservation_id, restaurant_id, customer_id, table_id.
+d. Foreign keys: restaurant_id and customer_id in the reservation table, table_id in the reservation and table table.
+e. Star schema design: Reservation as the center fact table with restaurant, customer, and table tables as the dimension tables.
+f. SQL queries:
+Total number of reservations made in a particular month
+Top 10 most popular restaurants based on the number of reservations
+
+a. Total number of reservations made in a particular month:
+
+SELECT COUNT(*) as total_reservations
+FROM reservation
+WHERE MONTH(reservation.reservation_date) = 9 AND YEAR(reservation.reservation_date) = 2022;
+b. Top 10 most popular restaurants based on the number of reservations:
+
+SELECT restaurant.restaurant_name, COUNT(*) as total_reservations
+FROM reservation
+INNER JOIN restaurant ON reservation.restaurant_id = restaurant.restaurant_id
+GROUP BY restaurant.restaurant_name
+ORDER BY total_reservations DESC
+LIMIT 10;
+
+c. Average party size for a particular restaurant:
+
+SELECT restaurant.restaurant_name, AVG(reservation.party_size) as avg_party_size
+FROM reservation
+INNER JOIN restaurant ON reservation.restaurant_id = restaurant.restaurant_id
+WHERE restaurant.restaurant_name = 'ABC Restaurant'
+GROUP BY restaurant
+
+                                                              *********************************************
+5) To design a data warehouse for a Covid Vaccination Application, we need to identify the main entities involved in the system and their relationships. Based on that, we can create fact and dimension tables, meaningful primary and foreign keys, and choose a star or snowflake schema design.
+
+Here are some entities that we can consider for our Covid Vaccination Application data warehouse:
+Patient - this table would store information about the patients who received the vaccine, such as patient id, name, age, address, etc.
+Vaccine - this table would store information about the types of vaccines available, such as vaccine id, name, manufacturer, dosage, etc.
+Vaccine Center - this table would store information about the vaccine centers, such as center id, name, address, phone number, etc.
+Appointment - this table would store information about the appointments made by the patients, such as appointment id, patient id, center id, date, time, etc.
+Vaccination - this table would store information about the vaccination details, such as vaccination id, patient id, vaccine id, center id, date, time, dosage, etc.
+Fact Table:
+
+Vaccinations Fact Table - The fact table would store the key metrics of the vaccinations such as vaccination_id, patient_id, vaccine_id, center_id, vaccination_date, vaccination_time, and dosage.
+Dimension Tables:
+
+Patient Dimension - This dimension would contain patient demographic details such as patient_id, name, age, address, etc.
+Vaccine Dimension - This dimension would contain the vaccine details such as vaccine_id, vaccine_name, vaccine_manufacturer, dosage, etc.
+Vaccine Center Dimension - This dimension would contain the vaccine center details such as center_id, center_name, center_address, phone_number, etc.
+Date Dimension - This dimension would contain the date details such as date_id, date, day, week, month, quarter, and year.
+Time Dimension - This dimension would contain the time details such as time_id, hour, minute, and second.
+Primary Keys:
+
+patient_id in the Patient Dimension
+vaccine_id in the Vaccine Dimension
+center_id in the Vaccine Center Dimension
+date_id in the Date Dimension
+time_id in the Time Dimension
+vaccination_id in the Vaccinations Fact Table
+Foreign Keys:
+
+patient_id in the Vaccinations Fact Table would reference patient_id in the Patient Dimension
+vaccine_id in the Vaccinations Fact Table would reference vaccine_id in the Vaccine Dimension
+center_id in the Vaccinations Fact Table would reference center_id in the Vaccine Center Dimension
+date_id in the Vaccinations Fact Table would reference date_id in the Date Dimension
+time_id in the Vaccinations Fact Table would reference time_id in the Time Dimension
+Schema Design:
+We can follow the star schema design for our data warehouse, where the fact table is at the center and surrounded by the dimension tables.
+
+SQL Queries:
+Here are some SQL queries that can generate insightful business metrics:
+
+Total vaccinations by date and vaccine name:
+SELECT d.date, v.vaccine_name, COUNT(*) AS total_vaccinations
+FROM VaccinationsFactTable vf
+JOIN DateDimension d ON vf.date_id = d.date_id
+JOIN VaccineDimension v ON vf.vaccine_id = v.vaccine_id
+GROUP BY d.date, v.vaccine_name
+
+Total vaccinations by vaccine center:
+SELECT vc.center_name, COUNT(*) AS total_vaccinations
+FROM VaccinationsFactTable vf
+JOIN VaccineCenterDimension vc ON vf.center_id = vc.center_id
+GROUP BY vc.center_name
+
+Total vaccinations by patient age group:
+SELECT CASE
+WHEN age <= 18 THEN '0-18'
+WHEN age BETWEEN 19 AND 30 THEN '19-30'
+                                                              
+
+                                                    *****************************************************
+
+
+
+
+
+
