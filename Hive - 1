@@ -1,0 +1,168 @@
+Question:
+
+  1. Download vechile sales data -> https://github.com/shashank-mishra219/Hive-Class/blob/main/sales_order_data.csv
+	
+
+	2. Store raw data into hdfs location
+	
+
+	3. Create a internal hive table "sales_order_csv" which will store csv data sales_order_csv .. make sure to skip header row while creating table
+	
+
+	4. Load data from hdfs path into "sales_order_csv" 
+	
+
+	5. Create an internal hive table which will store data in ORC format "sales_order_orc"
+	
+
+	6. Load data from "sales_order_csv" into "sales_order_orc"
+	
+
+	
+
+	Perform below menioned queries on "sales_order_orc" table :
+	
+
+	a. Calculatye total sales per year
+	b. Find a product for which maximum orders were placed
+	c. Calculate the total sales for each quarter
+	d. In which quarter sales was minimum
+	e. In which country sales was maximum and in which country sales was minimum
+	f. Calculate quartelry sales for each city
+	h. Find a month for each year in which maximum number of quantities were sold
+
+Ans.
+
+3) 
+CREATE TABLE sales_order_csv (
+  order_number INT,
+  quantity_ordered INT,
+  price_each FLOAT,
+  order_line_number INT,
+  sales FLOAT,
+  status STRING,
+  qtr_id INT,
+  month_id INT,
+  year_id INT,
+  product_line STRING,
+  msrp FLOAT,
+  product_code STRING,
+  phone STRING,
+  city STRING,
+  state STRING,
+  postal_code STRING,
+  country STRING,
+  territory STRING,
+  contact_last_name STRING,
+  contact_first_name STRING,
+  deal_size STRING
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+TBLPROPERTIES ("skip.header.line.count"="1");
+
+
+4)
+LOAD DATA INPATH 'C:\Data\Dataset_hive.xlsx' INTO TABLE sales_order_csv;
+
+SELECT * FROM sales_order_csv;
+
+5)
+CREATE TABLE sales_order_orc (
+  order_number INT,
+  quantity_ordered INT,
+  price_each FLOAT,
+  order_line_number INT,
+  sales FLOAT,
+  status STRING,
+  qtr_id INT,
+  month_id INT,
+  year_id INT,
+  product_line STRING,
+  msrp FLOAT,
+  product_code STRING,
+  phone STRING,
+  city STRING,
+  state STRING,
+  postal_code STRING,
+  country STRING,
+  territory STRING,
+  contact_last_name STRING,
+  contact_first_name STRING,
+  deal_size STRING
+)
+STORED AS ORC;
+
+6)
+INSERT INTO TABLE sales_order_orc
+SELECT * FROM sales_order_csv;
+
+
+a) Calculate total sales per year:
+SELECT year_id, SUM(sales) AS total_sales
+FROM sales_order_orc
+GROUP BY year_id;
+
+b)  Find a product for which maximum orders were placed:
+SELECT product_line, COUNT(*) AS order_count
+FROM sales_order_orc
+GROUP BY product_line
+ORDER BY order_count DESC
+LIMIT 1;
+
+c) Calculate the total sales for each quarter:
+SELECT year_id, 
+  CASE WHEN qtr_id = 1 THEN 'Q1'
+       WHEN qtr_id = 2 THEN 'Q2'
+       WHEN qtr_id = 3 THEN 'Q3'
+       WHEN qtr_id = 4 THEN 'Q4'
+  END AS quarter,
+  SUM(sales) AS total_sales
+FROM sales_order_orc
+GROUP BY year_id, qtr_id;
+
+d) In which quarter sales was minimum:
+SELECT year_id, 
+  CASE WHEN qtr_id = 1 THEN 'Q1'
+       WHEN qtr_id = 2 THEN 'Q2'
+       WHEN qtr_id = 3 THEN 'Q3'
+       WHEN qtr_id = 4 THEN 'Q4'
+  END AS quarter,
+  MIN(sales) AS min_sales
+FROM sales_order_orc
+GROUP BY year_id, qtr_id
+ORDER BY min_sales ASC
+LIMIT 1;
+
+e) In which country sales was maximum and in which country sales was minimum:
+SELECT country, SUM(sales) AS total_sales
+FROM sales_order_orc
+GROUP BY country
+ORDER BY total_sales DESC
+LIMIT 1;
+
+SELECT country, SUM(sales) AS total_sales
+FROM sales_order_orc
+GROUP BY country
+ORDER BY total_sales ASC
+LIMIT 1;
+
+f) Calculate quarterly sales for each city:
+SELECT CITY, QTR_ID, SUM(SALES) AS QUARTERLY_SALES
+FROM sales_order_orc
+GROUP BY CITY, QTR_ID;
+
+g) Calculate the total sales for each product line in each year
+SELECT YEAR_ID, PRODUCTLINE, SUM(SALES) AS TOTAL_SALES
+FROM sales_order_orc
+GROUP BY YEAR_ID, PRODUCTLINE;
+
+h) Find a month for each year in which maximum number of quantities were sold
+SELECT YEAR_ID, MONTH_ID, QUANTITYORDERED
+FROM (
+  SELECT YEAR_ID, MONTH_ID, QUANTITYORDERED, RANK() OVER (PARTITION BY YEAR_ID, MONTH_ID ORDER BY QUANTITYORDERED DESC) AS RANK
+  FROM sales_order_orc
+) t
+WHERE RANK = 1;
+
+
