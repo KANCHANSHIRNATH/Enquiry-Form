@@ -63,7 +63,7 @@ TBLPROPERTIES ("skip.header.line.count"="1");
 
 
 4)
-LOAD DATA INPATH 'C:\Data\Dataset_hive.xlsx' INTO TABLE sales_order_csv;
+LOAD DATA INPATH '\Data\Dataset_hive.xlsx' INTO TABLE sales_order_csv;
 
 SELECT * FROM sales_order_csv;
 
