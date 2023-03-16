@@ -1,0 +1,197 @@
+Que. This is a real time dataset of the ineuron technical consultant team. You have to perform hive analysis on this given dataset.
+
+Download Dataset 1 - https://drive.google.com/file/d/1WrG-9qv6atP-W3P_-gYln1hHyFKRKMHP/view
+
+Download Dataset 2 - https://drive.google.com/file/d/1-JIPCZ34dyN6k9CqJa-Y8yxIGq6vTVXU/view
+
+Note: both files are csv files. 
+
+
+1. Create a schema based on the given dataset
+2. Dump the data inside the hdfs in the given schema location.
+3. List of all agents' names. 
+4. Find out agent average rating.
+5. Total working days for each agents 
+6. Total query that each agent have taken 
+7. Total Feedback that each agent have received 
+8. Agent name who have average rating between 3.5 to 4 
+9. Agent name who have rating less than 3.5 
+10. Agent name who have rating more than 4.5 
+11. How many feedback agents have received more than 4.5 average
+12. average weekly response time for each agent 
+13. average weekly resolution time for each agents 
+14. Find the number of chat on which they have received a feedback 
+15. Total contribution hour for each and every agents weekly basis 
+16. Perform inner join, left join and right join based on the agent column and after joining the table export that data into your local system.
+17. Perform partitioning on top of the agent column and then on top of that perform bucketing for each partitioning.
+
+Ans.
+
+1) Create a schema based on the given dataset
+We can create a schema for both tables using the following commands:
+
+CREATE TABLE login_data (
+  sl_no INT,
+  agent STRING,
+  date DATE,
+  login_time TIMESTAMP,
+  logout_time TIMESTAMP,
+  duration INT
+) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE;
+
+CREATE TABLE chat_data (
+  sl_no INT,
+  date DATE,
+  agent_name STRING,
+  total_chats INT,
+  avg_response_time FLOAT,
+  avg_resolution_time FLOAT,
+  avg_rating FLOAT,
+  total_feedback INT
+) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE;
+**********************************************************************************************************************************************************************
+2) Dump the data inside the HDFS in the given schema location.
+We can use the following commands to load data into HDFS:
+
+LOAD DATA INPATH 'c/User/Kanchan/Hive/hive_data1.csv INTO TABLE login_data;
+LOAD DATA INPATH 'c/User/Kanchan/Hive/hive_data2.csv' INTO TABLE chat_data;
+**********************************************************************************************************************************************************************
+
+3) List of all agents' names.
+We can get a list of all agent names using the following command:
+
+SELECT DISTINCT agent FROM login_data UNION SELECT DISTINCT agent_name FROM chat_data;
+**********************************************************************************************************************************************************************
+
+4) Find out agent average rating.
+We can find the average rating of each agent using the following command:
+
+SELECT agent, AVG(avg_rating) AS average_rating FROM chat_data GROUP BY agent;
+**********************************************************************************************************************************************************************
+
+5) Total working days for each agent.
+We can find the total working days for each agent using the following command:
+
+SELECT agent, COUNT(DISTINCT date) AS working_days FROM login_data GROUP BY agent;
+**********************************************************************************************************************************************************************
+
+6) Total queries that each agent has taken.
+We can find the total queries taken by each agent using the following command:
+
+SELECT agent_name, SUM(total_chats) AS total_queries FROM chat_data GROUP BY agent_name;
+**********************************************************************************************************************************************************************
+
+7) Total feedback that each agent has received.
+We can find the total feedback received by each agent using the following command:
+
+SELECT agent_name, SUM(total_feedback) AS total_feedback_received FROM chat_data GROUP BY agent_name;
+**********************************************************************************************************************************************************************
+
+8) Agent name who has an average rating between 3.5 to 4.
+We can find the agents who have an average rating between 3.5 to 4 using the following command:
+
+SELECT agent, AVG(avg_rating) AS average_rating 
+FROM chat_data 
+GROUP BY agent 
+HAVING AVG(avg_rating) >= 3.5 AND AVG(avg_rating) <= 4;
+**********************************************************************************************************************************************************************
+
+9) Agent name who has a rating less than 3.5.
+We can find the agents who have a rating less than 3.5 using the following command:
+
+SELECT agent, AVG(avg_rating) AS average_rating 
+FROM chat_data 
+GROUP BY agent 
+HAVING AVG(avg_rating) < 3.5;
+**********************************************************************************************************************************************************************
+
+10) Agent name who has a rating more than 4.5.
+We can find the agents who have a rating more than 4.5 using the following command:
+
+SELECT agent, AVG(avg_rating) AS average_rating 
+FROM chat_data 
+GROUP BY agent 
+HAVING AVG(avg_rating) > 4.5;
+**********************************************************************************************************************************************************************
+
+11) How many feedback agents have received more than 4.5 average.
+We can find the number of feedback agents have received more than 4.5 average using the following command:
+
+SELECT COUNT(agent_name) AS feedback_count
+FROM chat_data
+WHERE avg_rating > 4.5;
+**********************************************************************************************************************************************************************
+
+12) Average weekly response time for each agent.
+We can find the average weekly response time for each agent using the following command:
+
+SELECT agent_name, AVG(avg_response_time) AS avg_weekly_response_time
+FROM chat_data
+WHERE DATEDIFF(date, '2022-01-01') % 7 = 0
+GROUP BY agent_name;
+Here, we are grouping the chat data by agent_name and calculating the average of avg_response_time for each agent for every 7 days. We are using the DATEDIFF function to calculate the number of days between the given date and '2022-01-01'. Then we are using the modulo operator to group the data for every 7 days.
+**********************************************************************************************************************************************************************
+
+13) Average weekly resolution time for each agent.
+We can find the average weekly resolution time for each agent using the following command:
+
+SELECT agent_name, AVG(avg_resolution_time) AS avg_weekly_resolution_time
+FROM chat_data
+WHERE DATEDIFF(date, '2022-01-01') % 7 = 0
+GROUP BY agent_name;
+Here, we are following the same approach as in the previous command to group the data for every 7 days.
+**********************************************************************************************************************************************************************
+
+14) Find the number of chats on which they have received feedback.
+We can find the number of chats on which agents have received feedback using the following command:
+
+SELECT agent_name, SUM(total_feedback) AS feedback_count
+FROM chat_data
+GROUP BY agent_name;
+Here, we are grouping the chat data by agent_name and calculating the sum of total_feedback for each agent.
+**********************************************************************************************************************************************************************
+
+15) Total contribution hours for each agent on a weekly basis.
+We can find the total contribution hours for each agent on a weekly basis using the following command:
+
+SELECT agent, SUM(duration)/3600 AS total_contribution_hours
+FROM login_data
+WHERE DATEDIFF(date, '2022-01-01') % 7 = 0
+GROUP BY agent;
+Here, we are grouping the login data by agent and calculating the sum of duration for each agent for every 7 days. We are converting the duration from seconds to hours by dividing it by 3600.
+**********************************************************************************************************************************************************************
+
+16) Perform inner join, left join and right join based on the agent column and after joining the table export that data into your local system.
+We can perform inner join, left join, and right join on the agent column using the following commands:
+
+-- Inner join
+SELECT * FROM login_data INNER JOIN chat_data ON login_data.agent = chat_data.agent_name;
+
+-- Left join
+SELECT * FROM login_data LEFT JOIN chat_data ON login_data.agent = chat_data.agent_name;
+
+-- Right join
+SELECT * FROM login_data RIGHT JOIN chat_data ON login_data.agent = chat_data.agent_name;
+To export the joined data to the local system, we can use the following command:
+
+
+INSERT OVERWRITE LOCAL DIRECTORY '/path/to/export' SELECT * FROM <joined_table>;
+Here, we need to replace <joined_table> with the table name from which we want to export the data.
+**********************************************************************************************************************************************************************
+
+17) Perform partitioning on top of the agent column and then on top of that perform bucketing for each partitioning.
+We can perform partitioning and bucketing on the agent column using the following commands:
+
+-- Partitioning
+CREATE TABLE login_data_partitioned (
+  sl_no INT,
+  date DATE,
+  login_time TIMESTAMP,
+  logout_time TIMESTAMP,
+  duration INT
+) PARTITIONED BY (agent STRING) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE;
+
+ALTER TABLE login_data_partitioned ADD PARTITION (agent='agent1') LOCATION '/path/to/partitioned_data/agent1';
+
+-- Bucketing
+CREATE
