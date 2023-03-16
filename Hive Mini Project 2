@@ -1,0 +1,206 @@
+
+
+
+
+Ans.
+Part-I: Examine the data:
+
+1.) Find the total number of tickets for the year.
+
+To find the total number of tickets for the year, we need to count the number of rows in the dataset.
+
+SELECT COUNT(*) as total_tickets
+FROM parking_violoation;
+*************************************************************************************************************************************************************************
+2.) Find out how many unique states the cars which got parking tickets came from.
+
+To find the number of unique states from where the cars which got parking tickets came from, we can use the DISTINCT keyword to select unique values from the "Registration State" column and count them.
+
+SELECT COUNT(DISTINCT `Registration State`) as unique_states
+FROM parking_violoation;
+*************************************************************************************************************************************************************************
+3.) Some parking tickets don’t have addresses on them, which is cause for concern. Find out how many such tickets there are (i.e. tickets where either "Street Code 1" or "Street Code 2" or "Street Code 3" is empty)
+
+To find the number of parking tickets where the "Street Code 1" or "Street Code 2" or "Street Code 3" is empty, we can use the IS NULL operator to select the rows where these columns have NULL values.
+
+SELECT COUNT(*) as tickets_with_empty_address
+FROM parking_violoation
+WHERE `Street Code 1` IS NULL OR `Street Code 2` IS NULL OR `Street Code 3` IS NULL;
+*************************************************************************************************************************************************************************
+
+Part-II: Aggregation tasks:
+
+1) How often does each violation code occur? (frequency of violation codes - find the top 5)
+
+SELECT `Violation Code`, COUNT(*) as freq 
+FROM parking_violoation 
+GROUP BY `Violation Code` 
+ORDER BY freq DESC 
+LIMIT 5;
+***********************************************************************************************************************************************************************
+2) How often does each vehicle body type get a parking ticket? How about the vehicle make? (find the top 5 for both)
+-- Vehicle Body Type
+SELECT `Vehicle Body Type`, COUNT(*) as freq 
+FROM parking_violoation 
+GROUP BY `Vehicle Body Type` 
+ORDER BY freq DESC 
+LIMIT 5;
+
+-- Vehicle Make
+SELECT `Vehicle Make`, COUNT(*) as freq 
+FROM parking_violoation 
+GROUP BY `Vehicle Make` 
+ORDER BY freq DESC 
+LIMIT 5;
+***********************************************************************************************************************************************************************
+3) To find the 5 highest frequencies of violating precincts and issuer precincts, we can use the COUNT() function and GROUP BY clause in Hive.
+
+a.) To find the 5 highest frequencies of violating precincts:
+
+SELECT `Violation Precinct`, COUNT(*) AS `Frequency`
+FROM parking_violoation
+GROUP BY `Violation Precinct`
+ORDER BY `Frequency` DESC
+LIMIT 5;
+b.) To find the 5 highest frequencies of issuer precincts:
+
+SELECT `Issuer Precinct`, COUNT(*) AS `Frequency`
+FROM parking_violoation
+GROUP BY `Issuer Precinct`
+ORDER BY `Frequency` DESC
+LIMIT 5;
+Note: Replace "parking_tickets" with the actual name of the table in your Hive database where the parking ticket data is stored.
+***********************************************************************************************************************************************************************
+4) To find the violation code frequency across 3 precincts which have issued the most number of tickets, you can use the following query:
+
+SELECT violation_code, COUNT(*) as frequency
+FROM parking_violoation
+WHERE issuer_precinct IN (SELECT issuer_precinct 
+                          FROM your_table_name 
+                          GROUP BY issuer_precinct 
+                          ORDER BY COUNT(*) DESC 
+                          LIMIT 3)
+GROUP BY violation_code
+ORDER BY frequency DESC;
+This query will give you the violation codes and their frequency across the top 3 precincts that have issued the most number of tickets. You can then examine if these precinct zones have an exceptionally high frequency of certain violation codes.
+***********************************************************************************************************************************************************************
+5) To find out the properties of parking violations across different times of the day, you need to convert the Violation Time field into a time attribute that you can use to divide into groups. You can use the following query to convert the Violation Time field into a time attribute:
+
+SELECT violation_code, TO_DATE(FROM_UNIXTIME(UNIX_TIMESTAMP(issue_date,'MM/dd/yyyy'),'yyyy-MM-dd')) AS violation_date,
+       FROM_UNIXTIME(UNIX_TIMESTAMP(violation_time, 'HHmmss'),'HH:mm:ss') AS violation_time_formatted
+FROM parking_violoation;
+This query will convert the Violation Time field into a time attribute that you can use to divide into groups based on the time of day.
+***********************************************************************************************************************************************************************
+6.) Divide 24 hours into 6 equal discrete bins of time. The intervals you choose are at your discretion. For each of these groups, find the 3 most commonly occurring violations.
+
+Here's the query for this operation:
+
+SELECT CASE
+         WHEN hour BETWEEN 0 AND 3 THEN '12am-4am'
+         WHEN hour BETWEEN 4 AND 7 THEN '4am-8am'
+         WHEN hour BETWEEN 8 AND 11 THEN '8am-12pm'
+         WHEN hour BETWEEN 12 AND 15 THEN '12pm-4pm'
+         WHEN hour BETWEEN 16 AND 19 THEN '4pm-8pm'
+         ELSE '8pm-12am'
+       END AS hour_range,
+       violation_code,
+       COUNT(*) AS frequency
+FROM
+  (SELECT regexp_extract(violation_time, '([0-9][0-9])', 1) AS hour, violation_code
+   FROM parking_violoation
+   WHERE violation_time IS NOT NULL) a
+GROUP BY CASE
+           WHEN hour BETWEEN 0 AND 3 THEN '12am-4am'
+           WHEN hour BETWEEN 4 AND 7 THEN '4am-8am'
+           WHEN hour BETWEEN 8 AND 11 THEN '8am-12pm'
+           WHEN hour BETWEEN 12 AND 15 THEN '12pm-4pm'
+           WHEN hour BETWEEN 16 AND 19 THEN '4pm-8pm'
+           ELSE '8pm-12am'
+         END, violation_code
+ORDER BY hour_range, frequency DESC
+LIMIT 18;
+***********************************************************************************************************************************************************************
+
+7.) Now, try another direction. For the 3 most commonly occurring violation codes, find the most common times of day (in terms of the bins from the previous part).
+
+Here's the query for this operation:
+
+SELECT violation_code, hour_range, COUNT(*) AS frequency
+FROM
+  (SELECT regexp_extract(violation_time, '([0-9][0-9])', 1) AS hour,
+          violation_code,
+          CASE
+            WHEN hour BETWEEN 0 AND 3 THEN '12am-4am'
+            WHEN hour BETWEEN 4 AND 7 THEN '4am-8am'
+            WHEN hour BETWEEN 8 AND 11 THEN '8am-12pm'
+            WHEN hour BETWEEN 12 AND 15 THEN '12pm-4pm'
+            WHEN hour BETWEEN 16 AND 19 THEN '4pm-8pm'
+            ELSE '8pm-12am'
+          END AS hour_range
+   FROM parking_violoation
+   WHERE violation_time IS NOT NULL) a
+WHERE violation_code IN (SELECT violation_code
+                         FROM
+                           (SELECT violation_code, COUNT(*) AS frequency
+                            FROM parking_violoation
+                            GROUP BY violation_code
+                            ORDER BY frequency DESC
+                            LIMIT 3) top_violations)
+GROUP BY violation_code, hour_range
+ORDER BY violation_code, frequency DESC;
+***********************************************************************************************************************************************************************
+8) To find the seasonality in the parking ticket data, we will first divide the year into 4 seasons as per the given hint:
+
+Spring: March, April, May
+Summer: June, July, August
+Fall: September, October, November
+Winter: December, January, February
+Then, we will find the frequencies of tickets for each season and the 3 most common violations for each season. Here are the Hive queries for these tasks:
+
+a) Frequencies of tickets for each season:
+
+SELECT 
+    CASE 
+        WHEN MONTH(issue_date) IN (3, 4, 5) THEN 'Spring'
+        WHEN MONTH(issue_date) IN (6, 7, 8) THEN 'Summer'
+        WHEN MONTH(issue_date) IN (9, 10, 11) THEN 'Fall'
+        ELSE 'Winter'
+    END AS season,
+    COUNT(*) AS num_tickets
+FROM 
+    parking_violoation
+GROUP BY 
+    season
+ORDER BY 
+    season;
+b) 3 most common violations for each season:
+
+WITH 
+    season_tickets AS (
+        SELECT 
+            CASE 
+                WHEN MONTH(issue_date) IN (3, 4, 5) THEN 'Spring'
+                WHEN MONTH(issue_date) IN (6, 7, 8) THEN 'Summer'
+                WHEN MONTH(issue_date) IN (9, 10, 11) THEN 'Fall'
+                ELSE 'Winter'
+            END AS season,
+            violation_code
+        FROM 
+            parking_violoation
+    )
+SELECT 
+    season,
+    violation_code,
+    COUNT(*) AS num_tickets
+FROM 
+    parking_violoation
+GROUP BY 
+    season,
+    violation_code
+ORDER BY 
+    season,
+    num_tickets DESC
+LIMIT 
+    3;
+Note: parking_tickets is the name of the table containing the parking ticket data.
+***********************************************************************************************************************************************************************
