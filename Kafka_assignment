@@ -1,0 +1,98 @@
+1.) MySQL Table (Table should have some column like created_at or updated_at so that can be used for incremental read).
+
+Ans.
+CREATE TABLE your_table_name (
+    id INT NOT NULL AUTO_INCREMENT,
+    column1 VARCHAR(255),
+    column2 INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+);
+
+**************************************************************************************************************************************************************************
+2.) Write a python script which is running in infinite loop and inserting 4-5 dummy/dynamically prepared records
+    in MySQL Table.
+Ans.
+import random
+import mysql.connector
+from mysql.connector import Error
+
+# MySQL connection details
+db_host = 'Kanchan'
+db_user = 'root'
+db_password = 'root'
+db_name = 'world'
+
+# function to generate a random record
+def generate_record():
+    # replace with your actual column names and data types
+    record = {
+        'column1': random.choice(['value1', 'value2', 'value3']),
+        'column2': random.randint(1, 100),
+        'created_at': 'NOW()',
+        'updated_at': 'NOW()'
+    }
+    return record
+
+# function to insert records into MySQL table
+def insert_records(records):
+    try:
+        connection = mysql.connector.connect(
+            host=Kanchan,
+            user=root,
+            password=root,
+            database=world
+        )
+        cursor = connection.cursor()
+        # replace with your actual table name
+        table_name = 'kafka'
+        # prepare the SQL query to insert records
+        query = f"INSERT INTO {table_name} (column1, column2, created_at, updated_at) VALUES (%s, %s, {records['created_at']}, {records['updated_at']})"
+        # execute the query with the records
+        cursor.execute(query, (records['column1'], records['column2']))
+        # commit the changes to the database
+        connection.commit()
+        print(f"{cursor.rowcount} record(s) inserted successfully into the {table_name} table")
+    except Error as e:
+        print(f"Error while inserting records: {e}")
+    finally:
+        # close the database connection
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+# infinite loop to generate and insert records every few seconds
+while True:
+    records = []
+    # generate 4-5 records
+    for i in range(random.randint(4, 5)):
+        record = generate_record()
+        records.append(record)
+    # insert the records into the MySQL table
+    insert_records(records)
+    # wait for a few seconds before generating and inserting more records
+    time.sleep(random.randint(5, 10))
+
+**************************************************************************************************************************************************************************
+3.) Setup Confluent Kafka.
+Ans.
+**************************************************************************************************************************************************************************
+4.) Create Topic.
+Ans.
+**************************************************************************************************************************************************************************
+5.) Create json schema on schema registry (depends on what kind of data you are publishing in mysql table).
+Ans.
+**************************************************************************************************************************************************************************
+6.) Write a producer code which will read the data from MySQL table incrementally (hint : use and maintain create_at column).
+Ans.
+**************************************************************************************************************************************************************************
+7.) Producer will publish data in Kafka Topic.
+Ans.
+**************************************************************************************************************************************************************************
+8.) Write consumer group to consume data from Kafka topic.
+Ans.
+**************************************************************************************************************************************************************************
+9.) In Kafka consumer code do some changes or transformation for each record and write it in Cassandra table.
+Ans.
+**************************************************************************************************************************************************************************
