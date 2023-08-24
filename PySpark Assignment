@@ -1,0 +1,327 @@
+Que. Create a producer with a python connector in confluent kafka and
+stream your data.
+
+Ans.
+
+from confluent_kafka import Consumer, KafkaError
+from cassandra.cluster import Cluster
+
+# Kafka broker configuration
+bootstrap_servers = 'localhost:9092'
+group_id = 'my-consumer-group'
+topics = ['my-topic']
+
+# Create a Kafka consumer instance
+consumer_config = {
+    'bootstrap.servers': bootstrap_servers,
+    'group.id': group_id,
+    'auto.offset.reset': 'earliest'
+}
+consumer = Consumer(consumer_config)
+
+# Cassandra configuration
+cassandra_contact_points = ['localhost']
+cassandra_keyspace = 'my_keyspace'
+
+# Create a Cassandra cluster instance
+cluster = Cluster(cassandra_contact_points)
+session = cluster.connect(cassandra_keyspace)
+
+# Function to process and write data to Cassandra
+def process_and_write_to_cassandra(message):
+    try:
+        key = message.key()
+        value = message.value()
+        
+        # Perform transformations on the value if needed
+        transformed_data = {
+            'id': key,
+            'data': value,
+            # Add other transformed fields
+        }
+        
+        # Insert the transformed data into the Cassandra table
+        insert_query = """
+            INSERT INTO information (id, data) VALUES (?, ?)
+        """
+        session.execute(insert_query, (transformed_data['id'], transformed_data['data']))
+        
+        print(f"Processed and written to Cassandra: {transformed_data}")
+    except Exception as e:
+        print(f"Error processing message: {e}")
+
+# Main loop to consume messages and write to Cassandra
+def main():
+    while True:
+        msg = consumer.poll(1.0)
+
+        if msg is None:
+            continue
+        if msg.error():
+            if msg.error().code() == KafkaError._PARTITION_EOF:
+                print("End of partition reached.")
+            else:
+                print(f"Error while consuming: {msg.error()}")
+        else:
+            process_and_write_to_cassandra(msg)
+
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("Consumer stopped.")
+    finally:
+        consumer.close()
+        session.shutdown()
+        cluster.shutdown()
+
+*************************************************************************************************************************************************************************************************
+Que. Consume your data through the python connector and dump it in
+mongodb atlas.
+
+Ans.
+
+from confluent_kafka import Consumer, KafkaError
+from pymongo import MongoClient
+import json
+
+# Kafka broker configuration
+bootstrap_servers = 'localhost:9092'
+group_id = 'my-consumer-group'
+topics = ['my-topic']
+
+# Create a Kafka consumer instance
+consumer_config = {
+    'bootstrap.servers': bootstrap_servers,
+    'group.id': group_id,
+    'auto.offset.reset': 'earliest'
+}
+consumer = Consumer(consumer_config)
+
+# MongoDB Atlas configuration
+mongo_username = 'your_mongo_username'
+mongo_password = 'your_mongo_password'
+mongo_cluster_url = 'your_mongo_cluster_url'
+mongo_database = 'your_mongo_database'
+mongo_collection = 'your_mongo_collection'
+
+# Create a MongoDB client
+mongo_client = MongoClient(f"mongodb+srv://{mongo_username}:{mongo_password}@{mongo_cluster_url}/{mongo_database}?retryWrites=true&w=majority")
+db = mongo_client[mongo_database]
+collection = db[mongo_collection]
+
+# Function to process messages and insert into MongoDB
+def process_and_insert_to_mongodb(message):
+    try:
+        value = json.loads(message.value())
+        # Perform transformations on value if needed
+        
+        # Insert the transformed data into MongoDB
+        collection.insert_one(value)
+        print(f"Inserted into MongoDB: {value}")
+    except Exception as e:
+        print(f"Error processing message: {e}")
+
+# Main loop to consume messages and insert into MongoDB
+def main():
+    consumer.subscribe(topics)
+    
+    while True:
+        msg = consumer.poll(1.0)
+        
+        if msg is None:
+            continue
+        if msg.error():
+            if msg.error().code() == KafkaError._PARTITION_EOF:
+                print("End of partition reached.")
+            else:
+                print(f"Error while consuming: {msg.error()}")
+        else:
+            process_and_insert_to_mongodb(msg)
+
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("Consumer stopped.")
+    finally:
+        consumer.close()
+        mongo_client.close()
+************************************************************************************************************************************************************************************
+Que. Collect your data as a pyspark dataframe and perform different
+operations.
+
+a. Read the data, show it and Count the number of records.
+b. Describe the data with a describe function.
+c. If there is any duplicate value drop it.
+d. Use limit function for showcasing a limited number of
+records.
+e. If you find the column name is not suitable, change the
+column name.[optional]
+f. Select the subset of the columns.
+g. If there is any null value, fill it with any random value or drop
+it.
+h. Filter the data based on different columns or variables and
+do the best analysis.
+For example: We can filter a data frame using multiple
+conditions using AND(&), OR(|) and NOT(~) conditions. For
+example, we may want to find out all the dif erent
+infection_case in Daegu Province with more than 10
+confirmed cases.
+i. Sort the number of confirmed cases. Confirmed column is
+there in the dataset. Check with descending sort also.
+j. In case of any wrong data type, cast that data type from
+integer to string or string to integer.
+k. Use group by on top of province and city column and agg it
+with sum of confirmed cases. For example
+df.groupBy(["province","city"]).agg(function.sum("co
+nfirmed")
+l. For joins we will need one more file.you can use region file.
+User different different join methods.for example
+cases.join(regions, ['province','city'],how='left')
+You can do your best analysis.
+
+Ans.
+
+files Taken: case.csv, region.csv, and TimeProvince.csv.
+
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col
+
+# Create a Spark session
+spark = SparkSession.builder.appName("COVID19Analysis").getOrCreate()
+
+# Read the data files
+case_df = spark.read.csv("C:\Python\Code\case.csv", header=True, inferSchema=True)
+region_df = spark.read.csv("C:\Python\Code\region.csv", header=True, inferSchema=True)
+time_province_df = spark.read.csv("C:\Python\Code\TimeProvince.csv", header=True, inferSchema=True)
+
+# a. Show data and count
+case_df.show()
+print("Number of records in case_df:", case_df.count())
+
+# b. Describe data
+case_df.describe().show()
+
+# c. Drop duplicates
+case_df = case_df.dropDuplicates()
+
+# d. Use limit to show limited records
+case_df.limit(5).show()
+
+# e. Rename columns (optional)
+case_df = case_df.withColumnRenamed("province", "region")
+
+# f. Select subset of columns
+selected_cols_df = case_df.select("region", "city", "infection_case", "confirmed")
+
+# g. Drop null values
+case_df = case_df.dropna()
+
+# h. Filter data
+filtered_df = case_df.filter((col("region") == "Daegu") & (col("confirmed") > 10))
+
+# i. Sort data
+sorted_df = case_df.orderBy("confirmed")
+sorted_desc_df = case_df.orderBy(col("confirmed").desc())
+
+# j. Change data type
+case_df = case_df.withColumn("confirmed", col("confirmed").cast("string"))
+
+# k. Group by and aggregate
+grouped_df = case_df.groupBy("region", "city").agg({"confirmed": "sum"})
+
+# l. Join with region_df
+joined_df = case_df.join(region_df, on=["region", "city"], how="left")
+
+# Use SQL with data frames
+case_df.createOrReplaceTempView("cases")
+spark.sql("SELECT * FROM cases WHERE confirmed > 10").show()
+
+# Stop the Spark session
+spark.stop()
+
+***************************************************************************************************************************************************************************************
+Que. If you want, you can also use SQL with data frames. Let us try to
+run some SQL on the cases table.
+For example:
+cases.registerTempTable('cases_table')
+newDF = sqlContext.sql('select * from cases_table where
+confirmed>100')
+newDF.show()
+Here is a example how you can use df for sql now you can perform
+various operations with GROUP BY, HAVING, AND ORDER BY
+
+
+Ans.
+
+from pyspark.sql import SparkSession
+
+# Create a Spark session
+spark = SparkSession.builder.appName("COVID19Analysis").getOrCreate()
+
+# Read the case data
+case_df = spark.read.csv("case.csv", header=True, inferSchema=True)
+
+# Register DataFrame as a temporary table
+case_df.createOrReplaceTempView("cases_table")
+
+# Perform SQL operations
+sql_query = """
+    SELECT region, city, SUM(confirmed) as total_confirmed
+    FROM cases_table
+    WHERE confirmed > 100
+    GROUP BY region, city
+    HAVING total_confirmed > 1000
+    ORDER BY total_confirmed DESC
+"""
+
+result_df = spark.sql(sql_query)
+result_df.show()
+
+# Stop the Spark session
+spark.stop()
+
+***********************************************************************************************************************************************************************************
+Que. Create Spark UDFs
+Create function casehighlow()
+If case is less than 50 return low else return high
+convert into a UDF Function and mention the return type of
+function.
+Note: You can create as many as udf based on analysi
+
+Ans.
+
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import udf
+from pyspark.sql.types import StringType
+
+# Create a Spark session
+spark = SparkSession.builder.appName("COVID19Analysis").getOrCreate()
+
+# Sample DataFrame with confirmed cases
+data = [("Daegu", "CityA", 30),
+        ("Seoul", "CityB", 70),
+        ("Busan", "CityC", 20)]
+columns = ["region", "city", "confirmed"]
+df = spark.createDataFrame(data, columns)
+
+# Define the UDF function
+def case_high_low(confirmed):
+    if confirmed < 50:
+        return "low"
+    else:
+        return "high"
+
+# Register the UDF with the Spark session
+case_high_low_udf = udf(case_high_low, StringType())
+
+# Apply the UDF to the DataFrame
+result_df = df.withColumn("case_status", case_high_low_udf(df["confirmed"]))
+
+# Show the results
+result_df.show()
+
+# Stop the Spark session
+spark.stop()
+**************************************************************************************************************************************************************************************************************
